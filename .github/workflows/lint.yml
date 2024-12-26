@@ -1,0 +1,39 @@
+name: Lint
+
+on:
+    push:
+        branches:
+            - '**'
+    pull_request: ~
+    workflow_dispatch: ~
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+    cancel-in-progress: true
+
+jobs:
+    lint:
+        name: Lint
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Set up PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.3
+                  extensions: intl, zip
+            - name: Cache Composer dependencies
+              uses: actions/cache@v4
+              with:
+                path: vendor
+                key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                restore-keys: ${{ runner.os }}-composer-
+            - name: Validate composer.json and composer.lock
+              run: composer validate --strict
+            - name: Install dependencies
+              run: composer install --no-progress --no-suggest
+            - name: Run PHPStan
+              run: vendor/bin/phpstan analyse --memory-limit=1G --no-progress
+            - name: Run PHP-CS-Fixer
+              run: vendor/bin/php-cs-fixer fix --dry-run --diff --ansi
