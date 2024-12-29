@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\SeatType;
 use App\Repository\SeatRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,6 +22,15 @@ class Seat
 
     #[ORM\Column]
     private ?float $price = null;
+
+    #[ORM\Column(enumType: SeatType::class)]
+    private ?SeatType $class = null;
+
+    #[ORM\ManyToOne(inversedBy: 'seats')]
+    private ?Booking $booking = null;
+
+    #[ORM\ManyToOne(inversedBy: 'seats')]
+    private ?Mission $mission = null;
 
     public function getId(): ?int
     {
@@ -59,6 +69,42 @@ class Seat
     public function setPrice(float $price): static
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getClass(): ?SeatType
+    {
+        return $this->class;
+    }
+
+    public function setClass(SeatType $class): static
+    {
+        $this->class = $class;
+
+        return $this;
+    }
+
+    public function getBooking(): ?Booking
+    {
+        return $this->booking;
+    }
+
+    public function setBooking(?Booking $booking): static
+    {
+        $this->booking = $booking;
+
+        return $this;
+    }
+
+    public function getMission(): ?Mission
+    {
+        return $this->mission;
+    }
+
+    public function setMission(?Mission $mission): static
+    {
+        $this->mission = $mission;
 
         return $this;
     }

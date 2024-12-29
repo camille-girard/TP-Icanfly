@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\StatisticType;
 use App\Repository\StatisticRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -18,6 +19,12 @@ class Statistic
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(enumType: StatisticType::class)]
+    private ?StatisticType $type = null;
+
+    #[ORM\ManyToOne(inversedBy: 'statistics')]
+    private ?Mission $mission = null;
 
     public function getId(): ?int
     {
@@ -44,6 +51,30 @@ class Statistic
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getType(): ?StatisticType
+    {
+        return $this->type;
+    }
+
+    public function setType(StatisticType $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getMission(): ?Mission
+    {
+        return $this->mission;
+    }
+
+    public function setMission(?Mission $mission): static
+    {
+        $this->mission = $mission;
 
         return $this;
     }

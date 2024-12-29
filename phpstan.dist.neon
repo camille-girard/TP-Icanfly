@@ -5,3 +5,6 @@ parameters:
         - config/
         - public/
         - src/
+    ignoreErrors:
+        # Ignorer les avertissements sur les types jamais utilisés sur les propriétés des entités
+        - '#Property .*::\$.* \(.*\) is never assigned .* so it can be removed from the property type.#'
