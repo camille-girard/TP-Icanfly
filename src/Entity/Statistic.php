@@ -23,6 +23,9 @@ class Statistic
     #[ORM\Column(enumType: StatisticType::class)]
     private ?StatisticType $type = null;
 
+    #[ORM\ManyToOne(inversedBy: 'statistics')]
+    private ?Mission $mission = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +63,18 @@ class Statistic
     public function setType(StatisticType $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getMission(): ?Mission
+    {
+        return $this->mission;
+    }
+
+    public function setMission(?Mission $mission): static
+    {
+        $this->mission = $mission;
 
         return $this;
     }

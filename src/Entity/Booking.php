@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Enum\BookingStatusType;
 use App\Repository\BookingRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
@@ -22,6 +24,26 @@ class Booking
 
     #[ORM\Column(enumType: BookingStatusType::class)]
     private ?BookingStatusType $status = null;
+
+    #[ORM\ManyToOne(inversedBy: 'bookings')]
+    private ?User $passenger = null;
+
+    /**
+     * @var Collection<int, Seat>
+     */
+    #[ORM\OneToMany(targetEntity: Seat::class, mappedBy: 'booking')]
+    private Collection $seats;
+
+    #[ORM\ManyToOne(inversedBy: 'bookings')]
+    private ?Mission $mission = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Payment $payment = null;
+
+    public function __construct()
+    {
+        $this->seats = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -60,6 +82,72 @@ class Booking
     public function setStatus(BookingStatusType $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getPassenger(): ?User
+    {
+        return $this->passenger;
+    }
+
+    public function setPassenger(?User $passenger): static
+    {
+        $this->passenger = $passenger;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Seat>
+     */
+    public function getSeats(): Collection
+    {
+        return $this->seats;
+    }
+
+    public function addSeat(Seat $seat): static
+    {
+        if (!$this->seats->contains($seat)) {
+            $this->seats->add($seat);
+            $seat->setBooking($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSeat(Seat $seat): static
+    {
+        if ($this->seats->removeElement($seat)) {
+            // set the owning side to null (unless already changed)
+            if ($seat->getBooking() === $this) {
+                $seat->setBooking(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getMission(): ?Mission
+    {
+        return $this->mission;
+    }
+
+    public function setMission(?Mission $mission): static
+    {
+        $this->mission = $mission;
+
+        return $this;
+    }
+
+    public function getPayment(): ?Payment
+    {
+        return $this->payment;
+    }
+
+    public function setPayment(?Payment $payment): static
+    {
+        $this->payment = $payment;
 
         return $this;
     }

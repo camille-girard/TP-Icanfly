@@ -23,6 +23,12 @@ class Notification
     #[ORM\Column(enumType: NotificationType::class)]
     private ?NotificationType $type = null;
 
+    #[ORM\ManyToOne(inversedBy: 'notifications')]
+    private ?Mission $mission = null;
+
+    #[ORM\ManyToOne(inversedBy: 'notifications')]
+    private ?User $passenger = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +66,30 @@ class Notification
     public function setType(NotificationType $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getMission(): ?Mission
+    {
+        return $this->mission;
+    }
+
+    public function setMission(?Mission $mission): static
+    {
+        $this->mission = $mission;
+
+        return $this;
+    }
+
+    public function getPassenger(): ?User
+    {
+        return $this->passenger;
+    }
+
+    public function setPassenger(?User $passenger): static
+    {
+        $this->passenger = $passenger;
 
         return $this;
     }

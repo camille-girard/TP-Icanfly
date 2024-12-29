@@ -26,6 +26,12 @@ class Seat
     #[ORM\Column(enumType: SeatType::class)]
     private ?SeatType $class = null;
 
+    #[ORM\ManyToOne(inversedBy: 'seats')]
+    private ?Booking $booking = null;
+
+    #[ORM\ManyToOne(inversedBy: 'seats')]
+    private ?Mission $mission = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +81,30 @@ class Seat
     public function setClass(SeatType $class): static
     {
         $this->class = $class;
+
+        return $this;
+    }
+
+    public function getBooking(): ?Booking
+    {
+        return $this->booking;
+    }
+
+    public function setBooking(?Booking $booking): static
+    {
+        $this->booking = $booking;
+
+        return $this;
+    }
+
+    public function getMission(): ?Mission
+    {
+        return $this->mission;
+    }
+
+    public function setMission(?Mission $mission): static
+    {
+        $this->mission = $mission;
 
         return $this;
     }

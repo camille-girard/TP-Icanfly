@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Enum\RoleUserType;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -31,8 +33,36 @@ class User
     #[ORM\Column(nullable: true)]
     private ?int $loyaltyPoints = null;
 
+    /**
+     * @var RoleUserType[]
+     */
     #[ORM\Column(type: Types::SIMPLE_ARRAY, enumType: RoleUserType::class)]
     private array $role = [];
+
+    /**
+     * @var Collection<int, Booking>
+     */
+    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'passenger')]
+    private Collection $bookings;
+
+    /**
+     * @var Collection<int, Mission>
+     */
+    #[ORM\ManyToMany(targetEntity: Mission::class, inversedBy: 'participants')]
+    private Collection $missions;
+
+    /**
+     * @var Collection<int, Notification>
+     */
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'passenger')]
+    private Collection $notifications;
+
+    public function __construct()
+    {
+        $this->bookings = new ArrayCollection();
+        $this->missions = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -107,9 +137,96 @@ class User
         return $this->role;
     }
 
+    /**
+     * @param RoleUserType[] $role
+     */
     public function setRole(array $role): static
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Booking>
+     */
+    public function getBookings(): Collection
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking(Booking $booking): static
+    {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings->add($booking);
+            $booking->setPassenger($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooking(Booking $booking): static
+    {
+        if ($this->bookings->removeElement($booking)) {
+            // set the owning side to null (unless already changed)
+            if ($booking->getPassenger() === $this) {
+                $booking->setPassenger(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Mission>
+     */
+    public function getMissions(): Collection
+    {
+        return $this->missions;
+    }
+
+    public function addMission(Mission $mission): static
+    {
+        if (!$this->missions->contains($mission)) {
+            $this->missions->add($mission);
+        }
+
+        return $this;
+    }
+
+    public function removeMission(Mission $mission): static
+    {
+        $this->missions->removeElement($mission);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setPassenger($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getPassenger() === $this) {
+                $notification->setPassenger(null);
+            }
+        }
 
         return $this;
     }

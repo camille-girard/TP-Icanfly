@@ -6,23 +6,13 @@ use App\Repository\Falcon9Repository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: Falcon9Repository::class)]
-class Falcon9
+class Falcon9 extends SpaceShip
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
     #[ORM\Column]
     private ?int $stageCount = null;
 
     #[ORM\Column]
     private ?bool $reusable = null;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getStageCount(): ?int
     {
