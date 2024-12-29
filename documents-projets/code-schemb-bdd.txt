@@ -1,0 +1,134 @@
+@startuml
+
+'---------------- Main Entities ----------------
+
+entity User {
+  * id: UUID
+  * name: String
+  * email: String
+  * password: String
+  * role: String <<ENUM>> (Client, Operator, Admin)
+  * createdAt: DateTime
+  * loyaltyPoints: Int
+}
+
+entity Mission {
+  * id: UUID
+  * name: String
+  * description: String
+  * destination: String
+  * launchDate: DateTime
+  * seatPrice: Float
+  * duration: Int
+  * status: String <<ENUM>> (Ongoing, Completed, Canceled)
+  * createdAt: DateTime
+}
+
+entity Seat {
+  * id: UUID
+  * number: Int
+  * class: String <<ENUM>> (Economy, Premium)
+  * isReserved: Boolean
+  * price: Float
+}
+
+entity Booking {
+  * id: UUID
+  * bookingDate: DateTime
+  * status: String <<ENUM>> (Pending, Confirmed, Canceled)
+  * totalPrice: Float
+}
+
+entity Payment {
+  * id: UUID
+  * amount: Float
+  * status: String <<ENUM>> (Pending, Paid, Failed)
+  * paymentDate: DateTime
+  * paymentMethod: String <<ENUM>> (Card, PayPal, Other)
+}
+
+entity Notification {
+  * id: UUID
+  * type: String <<ENUM>> (Mission, Payment, Other)
+  * content: String
+  * sentDate: DateTime
+}
+
+entity Statistic {
+  * id: UUID
+  * type: String <<ENUM>> (Booking, Payment, Mission)
+  * value: Float
+  * createdAt: DateTime
+}
+
+
+entity VideoStreaming {
+  * id: UUID
+  * url: String
+  * startDate: DateTime
+  * endDate: DateTime
+}
+
+'---------------- Mission Inheritance ----------------
+
+entity TouristMission {
+  * activities: String
+  * hasGuide: Boolean
+}
+
+entity ScientificMission {
+  * objectives: String
+  * specialEquipment: String
+}
+
+Mission <|-- TouristMission
+Mission <|-- ScientificMission
+
+'---------------- Spaceship Inheritance ----------------
+
+entity Spaceship {
+  * id: UUID
+  * name: String
+  * capacity: Int
+  * type: String <<ENUM>> (Starship, Falcon9, Dragon)
+  * manufacturer: String
+}
+
+entity Starship {
+  * autonomy: Int
+  * cargoCapacity: Float
+}
+
+entity Falcon9 {
+  * stageCount: Int
+  * reusable: Boolean
+}
+
+entity Dragon {
+  * crewCapacity: Int
+  * lifeSupport: Boolean
+}
+
+Spaceship <|-- Starship
+Spaceship <|-- Falcon9
+Spaceship <|-- Dragon
+
+'---------------- Roles Hierarchy ----------------
+
+User <|-- Client
+User <|-- Operator
+User <|-- Admin
+
+'---------------- Entity Relationships ----------------
+
+User "1" --> "0..*" Booking : makes
+Booking "1" --> "1..*" Seat : contains
+Mission "1" --> "1..*" Seat : owns
+Booking "1" --> "1" Mission : concerns
+Mission "1" --> "0..*" Notification : notifies
+Mission "1" --> "0..*" Statistic : generates
+User "0..*" --> "0..*" Mission : participates
+Mission "1" --> "1" VideoStreaming : streams
+Booking "1" --> "1" Payment : includes
+Notification "0..*" --> "1" User : targets
+Mission "1" --> "1" Spaceship : uses
