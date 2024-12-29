@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\BookingStatusType;
 use App\Repository\BookingRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -18,6 +19,9 @@ class Booking
 
     #[ORM\Column]
     private ?float $totalPrice = null;
+
+    #[ORM\Column(enumType: BookingStatusType::class)]
+    private ?BookingStatusType $status = null;
 
     public function getId(): ?int
     {
@@ -44,6 +48,18 @@ class Booking
     public function setTotalPrice(float $totalPrice): static
     {
         $this->totalPrice = $totalPrice;
+
+        return $this;
+    }
+
+    public function getStatus(): ?BookingStatusType
+    {
+        return $this->status;
+    }
+
+    public function setStatus(BookingStatusType $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

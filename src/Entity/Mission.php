@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\MissionStatusType;
 use App\Repository\MissionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -33,6 +34,9 @@ class Mission
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(enumType: MissionStatusType::class)]
+    private ?MissionStatusType $status = null;
 
     public function getId(): ?int
     {
@@ -119,6 +123,18 @@ class Mission
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getStatus(): ?MissionStatusType
+    {
+        return $this->status;
+    }
+
+    public function setStatus(MissionStatusType $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

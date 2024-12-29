@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Enum\PaymentMethodType;
+use App\Enum\PaymentStatusType;
 use App\Repository\PaymentRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -18,6 +20,12 @@ class Payment
 
     #[ORM\Column]
     private ?\DateTimeImmutable $paymentDate = null;
+
+    #[ORM\Column(enumType: PaymentStatusType::class)]
+    private ?PaymentStatusType $status = null;
+
+    #[ORM\Column(enumType: PaymentMethodType::class)]
+    private ?PaymentMethodType $paymentMethod = null;
 
     public function getId(): ?int
     {
@@ -44,6 +52,30 @@ class Payment
     public function setPaymentDate(\DateTimeImmutable $paymentDate): static
     {
         $this->paymentDate = $paymentDate;
+
+        return $this;
+    }
+
+    public function getStatus(): ?PaymentStatusType
+    {
+        return $this->status;
+    }
+
+    public function setStatus(PaymentStatusType $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getPaymentMethod(): ?PaymentMethodType
+    {
+        return $this->paymentMethod;
+    }
+
+    public function setPaymentMethod(PaymentMethodType $paymentMethod): static
+    {
+        $this->paymentMethod = $paymentMethod;
 
         return $this;
     }

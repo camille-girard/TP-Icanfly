@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use App\Enum\RoleUserType;
 use App\Repository\UserRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -28,6 +30,9 @@ class User
 
     #[ORM\Column(nullable: true)]
     private ?int $loyaltyPoints = null;
+
+    #[ORM\Column(type: Types::SIMPLE_ARRAY, enumType: RoleUserType::class)]
+    private array $role = [];
 
     public function getId(): ?int
     {
@@ -90,6 +95,21 @@ class User
     public function setLoyaltyPoints(?int $loyaltyPoints): static
     {
         $this->loyaltyPoints = $loyaltyPoints;
+
+        return $this;
+    }
+
+    /**
+     * @return RoleUserType[]
+     */
+    public function getRole(): array
+    {
+        return $this->role;
+    }
+
+    public function setRole(array $role): static
+    {
+        $this->role = $role;
 
         return $this;
     }

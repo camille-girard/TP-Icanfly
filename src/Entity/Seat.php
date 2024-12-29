@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\SeatType;
 use App\Repository\SeatRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,6 +22,9 @@ class Seat
 
     #[ORM\Column]
     private ?float $price = null;
+
+    #[ORM\Column(enumType: SeatType::class)]
+    private ?SeatType $class = null;
 
     public function getId(): ?int
     {
@@ -59,6 +63,18 @@ class Seat
     public function setPrice(float $price): static
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getClass(): ?SeatType
+    {
+        return $this->class;
+    }
+
+    public function setClass(SeatType $class): static
+    {
+        $this->class = $class;
 
         return $this;
     }

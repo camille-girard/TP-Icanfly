@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\NotificationType;
 use App\Repository\NotificationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -18,6 +19,9 @@ class Notification
 
     #[ORM\Column]
     private ?\DateTimeImmutable $sentDate = null;
+
+    #[ORM\Column(enumType: NotificationType::class)]
+    private ?NotificationType $type = null;
 
     public function getId(): ?int
     {
@@ -44,6 +48,18 @@ class Notification
     public function setSentDate(\DateTimeImmutable $sentDate): static
     {
         $this->sentDate = $sentDate;
+
+        return $this;
+    }
+
+    public function getType(): ?NotificationType
+    {
+        return $this->type;
+    }
+
+    public function setType(NotificationType $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }
