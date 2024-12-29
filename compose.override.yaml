@@ -2,7 +2,7 @@
 services:
   php:
     build:
-      context: symfony-docker
+      context: .
       target: frankenphp_dev
     volumes:
       - ./:/app
@@ -22,3 +22,9 @@ services:
 
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
+
+###> doctrine/doctrine-bundle ###
+  database:
+    ports:
+      - "5432"
+###< doctrine/doctrine-bundle ###
