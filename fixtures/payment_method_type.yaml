@@ -1,0 +1,9 @@
+App\Enum\PaymentMethodType:
+    payment_method_credit_card:
+        name: 'Carte de crédit'
+    
+    payment_method_paypal:
+        name: 'PayPal'
+    
+    payment_method_crypto:
+        name: 'Crypto monnaie'

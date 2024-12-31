@@ -1,0 +1,9 @@
+App\Enum\NotificationType:
+    notification_type_booking_confirmation:
+        name: 'Confirmation de réservation'
+    
+    notification_type_payment_pending:
+        name: 'Payement en attente'
+    
+    notification_type_mission_update:
+        name: 'Mise à jour des missions'

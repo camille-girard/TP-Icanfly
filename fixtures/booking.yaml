@@ -1,0 +1,24 @@
+App\Entity\Booking:
+    booking_1:
+        user: '@user_john'
+        mission: '@mission_mars'
+        seatNumber: 1
+        status: 'Confirmé'
+
+    booking_2:
+        user: '@user_jane'
+        mission: '@mission_mars'
+        seatNumber: 2
+        status: 'En attente'
+
+    booking_3:
+        user: '@user_john'
+        mission: '@mission_starlink'
+        seatNumber: 1
+        status: 'Annulé'
+
+    booking_4:
+        user: '@user_jane'
+        mission: '@mission_iss'
+        seatNumber: 1
+        status: 'Confirmé'

@@ -1,0 +1,15 @@
+App\Entity\Seat:
+    seat_1:
+        number: 1
+        type: '@seat_type_economy'
+        spaceship: '@spaceship_falcon9'
+
+    seat_2:
+        number: 2
+        type: '@seat_type_premium'
+        spaceship: '@spaceship_starship'
+
+    seat_3:
+        number: 3
+        type: '@seat_type_business'
+        spaceship: '@spaceship_dragon'

@@ -1,0 +1,18 @@
+App\Entity\Mission:
+    mission_mars:
+        name: 'Mission sur Mars'
+        description: 'Une mission révolutionnaire pour établir une colonie humaine sur Mars.'
+        status: '@mission_status_scheduled'
+        spaceship: '@spaceship_starship'
+
+    mission_starlink:
+        name: 'Déploiement Starlink'
+        description: 'Déploiement de satellites Starlink pour fournir une couverture Internet mondiale.'
+        status: '@mission_status_completed'
+        spaceship: '@spaceship_falcon9'
+
+    mission_iss:
+        name: 'Mission vers l\'ISS'
+        description: 'Transport d\'astronautes et de fournitures vers la Station Spatiale Internationale.'
+        status: '@mission_status_scheduled'
+        spaceship: '@spaceship_dragon'

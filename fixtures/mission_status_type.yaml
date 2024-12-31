@@ -1,0 +1,6 @@
+App\Enum\MissionStatusType:
+    mission_status_scheduled:
+        name: 'Programmé'
+    
+    mission_status_completed:
+        name: 'Complété'
