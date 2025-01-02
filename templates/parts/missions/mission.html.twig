@@ -1,0 +1,60 @@
+{% extends '/base.html.twig' %}
+
+{% block title %}Les missions{% endblock %}
+
+{% block body %}
+    <!-- Header avec image de fond -->
+    <header class="bg-cover bg-center h-96" style="background-image: url('{{ asset('images/mission_space.jpg') }}');">
+        <div class="flex justify-center items-center h-full bg-black bg-opacity-50">
+            <h1 class="text-5xl font-extrabold text-white">Les missions</h1>
+        </div>
+    </header>
+
+    <div class="container mx-auto mt-8">
+        <div class="flex">
+            <!-- Panneau de filtre -->
+            <div class="w-1/4 bg-[#1E2A38] p-6 text-white rounded-lg">
+                <h3 class="text-2xl font-semibold">Filtrer les missions</h3>
+                <form method="get">
+                    <div class="mb-4">
+                        <label for="destination" class="block">Destination</label>
+                        <select name="destination" id="destination" class="w-full mt-2 p-2 bg-gray-700 text-white rounded">
+                            <option value="">Toutes</option>
+                            <option value="mars">Mars</option>
+                            <option value="lune">Lune</option>
+                            <option value="lune">Déploiement Starlink</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="date" class="block">Date</label>
+                        <input type="date" name="date" id="date" class="w-full mt-2 p-2 bg-gray-700 text-white rounded">
+                    </div>
+                    <div class="mb-4">
+                        <label for="price" class="block">Gamme de prix</label>
+                        <select name="price" id="price" class="w-full mt-2 p-2 bg-gray-700 text-white rounded">
+                            <option value="">Toutes</option>
+                            <option value="cheap">Économique</option>
+                            <option value="cheap">Premium</option>
+                            <option value="expensive">Luxe</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full mt-4 p-2 bg-[#002EFF] text-white rounded hover:bg-[#1E2A38]">Appliquer</button>
+                </form>
+            </div>
+
+            <!-- Cartes de mission -->
+            <div class="w-3/4 ml-8">
+                <div class="grid grid-cols-3 gap-8">
+                    <div class="bg-white shadow-md rounded-lg p-6">
+                        <img src="" alt="Mission image" class="w-full h-48 object-cover rounded-lg">
+                        <h3 class="text-xl font-semibold mt-4">Nom de la mission</h3>
+                        <p class="mt-2 text-gray-700">Destination de la mission</p>
+                        <p class="mt-2 text-gray-700">Prix : prix de la mission€</p>
+                        <p class="mt-2 text-gray-700">Places disponibles : nombre de place dispo</p>
+                        <a href="" class="inline-block mt-4 bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">Voir les détails</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
