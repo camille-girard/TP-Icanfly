@@ -1,5 +1,39 @@
 {% extends 'base.html.twig' %}
+
 {% block title %}Icanfly{% endblock %}
+
 {% block body %}
-    <h1>I Believe I Can Fly</h1>
+    <div class="container mx-auto mt-8">
+        <!-- Section Réservez votre vol spatial -->
+        <section class="bg-cover bg-center rounded-lg p-6 mb-8" style="background-image: url('{{ asset('images/reserve_now.jpg') }}');">
+            <div class="bg-black bg-opacity-50 p-6 rounded-lg">
+                <h2 class="text-4xl font-extrabold text-white">Réservez votre vol spatial dès aujourd'hui !</h2>
+                <a href="#" class="mt-4 inline-block bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">Voir les vols</a>
+            </div>
+        </section>
+
+        <!-- Section À propos de nous -->
+        <section class="bg-cover bg-center rounded-lg p-6 mb-8" style="background-image: url('{{ asset('images/about_us.jpg') }}');">
+            <div class="bg-black bg-opacity-50 p-6 rounded-lg">
+                <h2 class="text-4xl font-extrabold text-white">À propos de nous</h2>
+                <a href="#" class="mt-4 inline-block bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">En savoir plus</a>
+            </div>
+        </section>
+
+        <!-- Section Les missions -->
+        <section class="bg-cover bg-center rounded-lg p-6 mb-8" style="background-image: url('{{ asset('images/mission_space.jpg') }}');">
+            <div class="bg-black bg-opacity-50 p-6 rounded-lg">
+                <h2 class="text-4xl font-extrabold text-white">Les missions</h2>
+                <a href="#" class="mt-4 inline-block bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">Découvrez nos missions</a>
+            </div>
+        </section>
+
+        <!-- Section Nos lives en direct -->
+        <section class="bg-cover bg-center rounded-lg p-6 mb-8" style="background-image: url('{{ asset('images/watch_lives.jpg') }}');">
+            <div class="bg-black bg-opacity-50 p-6 rounded-lg">
+                <h2 class="text-4xl font-extrabold text-white">Nos lives en direct</h2>
+                <a href="#" class="mt-4 inline-block bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">Découvrez nos lives</a>
+            </div>
+        </section>
+    </div>
 {% endblock %}
