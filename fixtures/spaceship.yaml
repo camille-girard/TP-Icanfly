@@ -1,15 +1,15 @@
 App\Entity\SpaceShip:
     spaceship_falcon9:
         name: 'Falcon 9'
-        type: '@spaceship_type_falcon9'
+        type: !php/const \App\Enum\SpaceShipType::FALCON9
         capacity: 7
     
     spaceship_starship:
         name: 'Starship'
-        type: '@spaceship_type_starship'
+        type: !php/const \App\Enum\SpaceShipType::STARSHIP
         capacity: 100
 
     spaceship_dragon:
         name: 'Dragon'
-        type: '@spaceship_type_dragon'
+        type: !php/const \App\Enum\SpaceShipType::DRAGON
         capacity: 7

@@ -22,6 +22,7 @@
         "symfony/framework-bundle": "7.1.*",
         "symfony/http-client": "7.1.*",
         "symfony/mailer": "7.1.*",
+        "symfony/property-access": "7.1.*",
         "symfony/runtime": "7.1.*",
         "symfony/security-bundle": "7.1.*",
         "symfony/twig-bundle": "7.1.*",
@@ -86,6 +87,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.65",
+        "hautelook/alice-bundle": "*",
         "phpstan/phpstan": "^2.0",
         "symfony/maker-bundle": "^1.61",
         "symfony/stopwatch": "7.1.*",

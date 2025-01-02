@@ -12,7 +12,7 @@ App\Entity\Mission:
         spaceship: '@spaceship_falcon9'
 
     mission_iss:
-        name: 'Mission vers l\'ISS'
-        description: 'Transport d\'astronautes et de fournitures vers la Station Spatiale Internationale.'
+        name: 'Mission vers l''ISS'
+        description: 'Transport d''astronautes et de fournitures vers la Station Spatiale Internationale.'
         status: '@mission_status_scheduled'
         spaceship: '@spaceship_dragon'
