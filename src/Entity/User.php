@@ -8,10 +8,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -37,7 +41,7 @@ class User
      * @var RoleUserType[]
      */
     #[ORM\Column(type: Types::SIMPLE_ARRAY, enumType: RoleUserType::class)]
-    private array $role = [];
+    private array $roles = [];
 
     /**
      * @var Collection<int, Booking>
@@ -56,6 +60,9 @@ class User
      */
     #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'passenger')]
     private Collection $notifications;
+
+    #[ORM\Column]
+    private bool $isVerified = false;
 
     public function __construct()
     {
@@ -125,24 +132,6 @@ class User
     public function setLoyaltyPoints(?int $loyaltyPoints): static
     {
         $this->loyaltyPoints = $loyaltyPoints;
-
-        return $this;
-    }
-
-    /**
-     * @return RoleUserType[]
-     */
-    public function getRole(): array
-    {
-        return $this->role;
-    }
-
-    /**
-     * @param RoleUserType[] $role
-     */
-    public function setRole(array $role): static
-    {
-        $this->role = $role;
 
         return $this;
     }
@@ -227,6 +216,56 @@ class User
                 $notification->setPassenger(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * The public representation of the user (e.g. a username, an email address, etc.).
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
