@@ -3,4 +3,46 @@
 {% block title %}À propos de nous{% endblock %}
 
 {% block body %}
+    <!-- Header avec image de fond -->
+    <header class="bg-cover bg-center h-96" style="background-image: url('{{ asset('images/about_us.jpg') }}');">
+        <div class="flex justify-center items-center h-full bg-black bg-opacity-50">
+            <h1 class="text-5xl font-extrabold text-white">À propos de nous</h1>
+        </div>
+    </header>
+
+    <!-- Section principale -->
+    <div class="container mx-auto mt-8">
+        <section class="bg-white p-6 shadow-lg rounded-lg mb-8">
+            <h2 class="text-3xl font-bold mb-4">Notre histoire</h2>
+            <p class="text-gray-700">
+                Chez <strong>ICanFly</strong>, notre objectif est de rendre les voyages spatiaux accessibles à tous.
+                Nous avons commencé avec une vision de démocratiser les vols spatiaux, en mettant à disposition une technologie de pointe pour explorer l'univers.
+            </p>
+            <p class="mt-4 text-gray-700">
+                Notre équipe est composée de passionnés d'astronautique, de scientifiques, d'ingénieurs et d'experts en technologie qui travaillent ensemble pour repousser les frontières du possible.
+            </p>
+        </section>
+
+        <!-- Section Mission -->
+        <section class="bg-gray-100 p-6 shadow-lg rounded-lg mb-8">
+            <h2 class="text-3xl font-bold mb-4">Notre mission</h2>
+            <p class="text-gray-700">
+                Nous croyons fermement que l'exploration spatiale est un élément clé du futur de l'humanité. Notre mission est de rendre les voyages spatiaux plus sûrs, plus accessibles et plus durables pour les générations futures.
+            </p>
+            <p class="mt-4 text-gray-700">
+                Nous proposons une gamme de missions allant de l'exploration de nouvelles planètes à l'instauration de colonies humaines sur Mars, en passant par des missions scientifiques innovantes.
+            </p>
+        </section>
+
+        <!-- Section Vision -->
+        <section class="bg-white p-6 shadow-lg rounded-lg mb-8">
+            <h2 class="text-3xl font-bold mb-4">Notre vision</h2>
+            <p class="text-gray-700">
+                Notre vision est de permettre à l'humanité d'explorer de nouveaux horizons. Nous rêvons d'un avenir où l'espace est accessible à tous, et où l'exploration spatiale devient une partie intégrante de la vie quotidienne.
+            </p>
+            <p class="mt-4 text-gray-700">
+                Nous sommes convaincus que la technologie et l'innovation joueront un rôle crucial dans la création d'un avenir où les voyages spatiaux seront à la portée de tous.
+            </p>
+        </section>
+    </div>
 {% endblock %}

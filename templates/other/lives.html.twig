@@ -3,4 +3,42 @@
 {% block title %}Nos lives{% endblock %}
 
 {% block body %}
+    <!-- Header avec image de fond -->
+    <header class="bg-cover bg-center h-96" style="background-image: url('{{ asset('images/watch_lives.jpg') }}');">
+        <div class="flex justify-center items-center h-full bg-black bg-opacity-50">
+            <h1 class="text-5xl font-extrabold text-white">Nos lives</h1>
+        </div>
+    </header>
+
+    <!-- Liste des lives -->
+    <div class="container mx-auto mt-8">
+        <h2 class="text-3xl font-bold mb-6">Suivez nos missions en direct !</h2>
+
+        <!-- Cartes des lives -->
+        <div class="grid grid-cols-3 gap-8">
+            <!-- Live 1 -->
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <img src="{{ asset('images/watch_lives.jpg') }}" alt="Live image" class="w-full h-48 object-cover rounded-lg">
+                <h3 class="text-xl font-semibold mt-4">Live de la mission Mars</h3>
+                <p class="mt-2 text-gray-700">Description de la mission et de l'événement en direct.</p>
+                <a href="#" class="inline-block mt-4 bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">Voir le live</a>
+            </div>
+
+            <!-- Live 2 -->
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <img src="{{ asset('images/watch_lives.jpg') }}" alt="Live image" class="w-full h-48 object-cover rounded-lg">
+                <h3 class="text-xl font-semibold mt-4">Live de la mission Lune</h3>
+                <p class="mt-2 text-gray-700">Description de la mission et de l'événement en direct.</p>
+                <a href="#" class="inline-block mt-4 bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">Voir le live</a>
+            </div>
+
+            <!-- Live 3 -->
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <img src="{{ asset('images/watch_lives.jpg') }}" alt="Live image" class="w-full h-48 object-cover rounded-lg">
+                <h3 class="text-xl font-semibold mt-4">Live du lancement Starlink</h3>
+                <p class="mt-2 text-gray-700">Description de la mission et de l'événement en direct.</p>
+                <a href="#" class="inline-block mt-4 bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">Voir le live</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}
