@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Mission;
+namespace App\Controller\Other;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-class MissionController extends AbstractController
+class LivesController extends AbstractController
 {
-    #[Route(path: '/mission', name: 'page_mission')]
+    #[Route(path: '/lives', name: 'page_lives')]
     public function index(): Response
     {
-        return $this->render('parts/missions/mission.html.twig');
+        return $this->render('other/lives.html.twig');
     }
 }

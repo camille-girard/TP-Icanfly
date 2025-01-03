@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nom de la mission{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto mt-8">
+        <section class="bg-cover bg-center h-96" style="background-image: url('{{ asset('images/' ~ mission.image) }}');">
+            <div class="flex justify-center items-center h-full bg-black bg-opacity-50">
+                <h1 class="text-5xl font-extrabold text-white">nom de la mission</h1>
+            </div>
+        </section>
+
+        <!-- Section des détails -->
+        <section class="bg-white shadow-md rounded-lg p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-4">Détails de la mission</h2>
+            <p><strong>Description :</strong> description de la mission</p>
+            <p><strong>Statut :</strong>
+                <span class="text-yellow-500">Programmé</span>
+                <span class="text-green-500">Complété</span>
+            </p>
+            <p><strong>Vaisseau spatial :</strong> nom du vaisseau</p>
+        </section>
+
+        <!-- Compte à rebours avant le lancement -->
+        <section class="bg-[#1E2A38] text-white p-6 rounded-lg mb-8">
+            <h2 class="text-2xl font-bold">Compte à rebours avant le lancement</h2>
+            <p id="countdown" class="text-3xl font-semibold">00:00:00</p>
+        </section>
+
+        <!-- Section de réservation -->
+        <section class="mb-8">
+            <a href="" class="bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">Réserver une place</a>
+        </section>
+
+        <!-- Section de streaming -->
+        <section class="mb-8">
+            <h2 class="text-3xl font-bold mb-4">Streaming en direct</h2>
+            <p>Rejoignez notre vidéo en direct pour suivre la mission !</p>
+            <a href="" class="bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">Voir en direct</a>
+        </section>
+    </div>
+{% endblock %}
