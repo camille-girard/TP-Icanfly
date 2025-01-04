@@ -2,11 +2,9 @@
 
 namespace App\Entity;
 
-use App\Enum\RoleUserType;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -38,9 +36,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $loyaltyPoints = null;
 
     /**
-     * @var RoleUserType[]
+     * @var array<string>
      */
-    #[ORM\Column(type: Types::SIMPLE_ARRAY, enumType: RoleUserType::class)]
+    #[ORM\Column]
     private array $roles = [];
 
     /**
@@ -230,19 +228,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        return $this->roles;
     }
 
-    public function setRoles(array $roles): self
+    /**
+     * @param array<string> $roles
+     *
+     * @return $this
+     */
+    public function setRoles(?array $roles): static
     {
         $this->roles = $roles;
 

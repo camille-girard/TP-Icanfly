@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Enum\RoleUserType;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,7 +36,8 @@ class RegistrationController extends AbstractController
 
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
-
+            $user->setCreatedAt(new \DateTimeImmutable());
+            $user->setRoles([RoleUserType::CLIENT->value]);
             $entityManager->persist($user);
             $entityManager->flush();
 

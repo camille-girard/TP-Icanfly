@@ -1,22 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Reset your password{% endblock %}
+{% block title %}Réinitialiser votre mot de passe{% endblock %}
 
 {% block body %}
-    {% for flash_error in app.flashes('reset_password_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
-    <h1>Reset your password</h1>
-
-    {{ form_start(requestForm) }}
-        {{ form_row(requestForm.email) }}
-        <div>
-            <small>
-                Enter your email address, and we will send you a
-                link to reset your password.
-            </small>
+    <div class="relative min-h-screen overflow-hidden p-4 w-full">
+        <div class="absolute inset-0 z-0"
+             style="background-image: url('https://images4.alphacoders.com/106/thumb-1920-106826.jpg');
+                    background-size: cover;
+                    background-position: center;
+                    filter: blur(8px);
+                    transform: scale(1.1);">
         </div>
+        <div class="absolute inset-0 bg-black opacity-30 z-1"></div>
+        <div class="relative min-h-screen flex items-center justify-center p-4 z-10">
+            <div class="w-full max-w-md space-y-8 bg-white p-8 rounded-lg shadow-xl">
+                {% for flash_error in app.flashes('reset_password_error') %}
+                    <div class="flex items-center p-4 mb-4 text-red-800 bg-red-50 rounded-lg">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="text-sm">{{ flash_error }}</span>
+                    </div>
+                {% endfor %}
+                <h1 class="text-2xl font-bold text-center text-gray-900 mb-8">Réinitialiser votre mot de passe</h1>
 
-        <button class="btn btn-primary">Send password reset email</button>
-    {{ form_end(requestForm) }}
+                {{ form_start(requestForm, {'attr': {'class': 'space-y-6'}}) }}
+                    <div class="space-y-2">
+                        {{ form_label(requestForm.email, 'Email', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                        {{ form_widget(requestForm.email, {'attr': {'class': 'w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#002EFF] focus:border-transparent'}}) }}
+                    </div>
+                    <div>
+                        <small class="text-gray-600">
+                            Entrez votre adresse email, et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+                        </small>
+                    </div>
+                    <button type="submit" class="w-full py-3 px-4 bg-[#002EFF] hover:bg-blue-600 text-white font-medium rounded-md shadow-sm transition-colors duration-200">
+                        Envoyer l'email de réinitialisation
+                    </button>
+                {{ form_end(requestForm) }}
+            </div>
+        </div>
+    </div>
 {% endblock %}
