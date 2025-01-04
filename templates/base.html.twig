@@ -9,20 +9,20 @@
 <body class="bg-white text-gray-900">
 <header class="bg-[#1E2A38] text-white py-4">
     <div class="container mx-auto flex justify-between items-center">
-        <a href="/">
-            <img src="{{ asset('images/logo_ICanfLY_monochrome.svg') }}" alt="Logo I can Fly" class="h-10">
+        <a href="{{ path('app_home') }}">
+            <img src="{{ asset('images/logo_ICanFly_monochrome.svg') }}" alt="Logo I can Fly" class="h-10">
         </a>
         <div>
             <nav>
                 <a href="/" class="px-4 py-2 hover:underline text-white">Accueil</a>
                 <a href="{{ path('page_about_us') }}" class="px-4 py-2 hover:underline text-white">À propos de nous</a>
                 <a href="{{ path('page_mission') }}" class="px-4 py-2 hover:underline text-white">Les missions</a>
-                <a href="" class="px-4 py-2 hover:underline text-white">Se connecter</a>
+                <a href="{{ path('app_login') }}" class="px-4 py-2 hover:underline text-white">Se connecter</a>
             </nav>
         </div>
     </div>
 </header>
-<main class="container mx-auto mt-8">
+<main class="container mx-auto my-8">
     {% block body %}{% endblock %}
 </main>
 <footer class="bg-[#1E2A38] text-white py-4 mt-8">
