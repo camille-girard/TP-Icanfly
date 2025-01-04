@@ -1,0 +1,17 @@
+<aside class="w-64 bg-[#1E2A38] text-white h-screen flex flex-col">
+    <div class="p-4">
+        <a href="{{ path('app_dashboard') }}">
+            <img src="{{ asset('images/logo_ICanfLY_monochrome.svg') }}" alt="Logo I can Fly" class="w-24 mx-auto">
+        </a>
+    </div>
+    <nav class="flex-1">
+        <ul class="space-y-4 p-4">
+            <li><a href="{{ path('app_dashboard') }}" class="block py-2 px-4 rounded hover:bg-gray-700">Dashboard</a></li>
+            <li><a href="#" class="block py-2 px-4 rounded hover:bg-gray-700">Profil</a></li>
+            <li><a href="{{ path('dashboard_reservations') }}" class="block py-2 px-4 rounded hover:bg-gray-700">Réservations</a></li>
+            <li><a href="{{ path('dashboard_mission') }}" class="block py-2 px-4 rounded hover:bg-gray-700">Missions</a></li>
+            <li><a href="#" class="block py-2 px-4 rounded hover:bg-gray-700">Gestion Utilisateurs</a></li>
+            <li><a href="#" class="block py-2 px-4 rounded hover:bg-gray-700">Déconnexion</a></li>
+        </ul>
+    </nav>
+</aside>

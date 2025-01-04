@@ -15,4 +15,10 @@ class MissionController extends AbstractController
     {
         return $this->render('parts/missions/mission.html.twig');
     }
+
+    #[Route(path: '/dashboard/mission', name: 'dashboard_mission')]
+    public function index_dashboard(): Response
+    {
+        return $this->render('dashboard/missions/missions.html.twig');
+    }
 }

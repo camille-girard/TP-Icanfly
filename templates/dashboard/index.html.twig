@@ -1,0 +1,38 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block content %}
+    <div>
+        <h1 class="text-2xl font-bold mb-6">Bienvenue sur votre tableau de bord</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Carte 1 : Réservations -->
+            <div class="bg-white p-6 rounded shadow">
+                <h2 class="text-lg font-semibold mb-4">Réservations</h2>
+                <p>2 réservations en cours</p>
+                <a href="/reservations" class="text-blue-500 hover:underline">Voir mes réservations</a>
+            </div>
+
+            <!-- Carte 2 : Missions à venir -->
+            <div class="bg-white p-6 rounded shadow">
+                <h2 class="text-lg font-semibold mb-4">Missions à venir</h2>
+                <ul>
+                    {% for mission in upcomingMissions %}
+                        <li class="mb-2">{{ mission.name }} - <span class="text-gray-500">{{ mission.countdown }}</span></li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Carte 3 : Actions rapides -->
+            <div class="bg-white p-6 rounded shadow">
+                <h2 class="text-lg font-semibold mb-4">Actions rapides</h2>
+                <ul>
+                    {% for action in quickActions %}
+                        <li class="mb-2"><a href="{{ action.link }}" class="text-blue-500 hover:underline">{{ action.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
