@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Se connecter{% endblock %}
-
+{% block header %}{% endblock %}
 {% block body %}
     <div class="relative min-h-screen overflow-hidden p-4 w-full">
         <div class="absolute inset-0 z-0"
@@ -61,11 +61,13 @@
                         Se connecter
                     </button>
                 </form>
-                <div>
+                <div class="flex gap-3 justify-center">
                     <a href="{{ path('app_forgot_password_request') }}" class="text-blue-600 hover:underline">Mot de passe oublié ?</a>
-                    <a href="{{ path('app_register') }}" class="text-blue-600 hover:underline ml-4">S'inscrire</a>
+                    <a href="{{ path('app_register') }}" class="text-blue-600 hover:underline">S'inscrire</a>
+                    <a href="{{ path('app_home') }}" class="text-blue-600 hover:underline">Retour à l'accueil</a>
                 </div>
             </div>
         </div>
     </div>
 {% endblock %}
+{% block footer %}{% endblock %}
