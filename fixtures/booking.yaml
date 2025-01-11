@@ -1,24 +1,32 @@
 App\Entity\Booking:
     booking_1:
-        user: '@user_john'
+        passenger: '@user_john'
         mission: '@mission_mars'
-        seatNumber: 1
-        status: 'Confirmé'
+        seats: [ '@seat_1' ]
+        status: !php/const \App\Enum\BookingStatusType::CONFIRMED
+        bookingDate: <dateTimeBetween('-1 week', 'now')>
+        totalPrice: 150.0
 
     booking_2:
-        user: '@user_jane'
+        passenger: '@user_jane'
         mission: '@mission_mars'
-        seatNumber: 2
-        status: 'En attente'
+        seats: [ '@seat_2' ]
+        status: !php/const \App\Enum\BookingStatusType::PENDING
+        bookingDate: <dateTimeBetween('-1 week', 'now')>
+        totalPrice: 200.0
 
     booking_3:
-        user: '@user_john'
+        passenger: '@user_john'
         mission: '@mission_starlink'
-        seatNumber: 1
-        status: 'Annulé'
+        seats: [ '@seat_3' ]
+        status: !php/const \App\Enum\BookingStatusType::CANCELLED
+        bookingDate: <dateTimeBetween('-1 week', 'now')>
+        totalPrice: 100.0
 
     booking_4:
-        user: '@user_jane'
+        passenger: '@user_jane'
         mission: '@mission_iss'
-        seatNumber: 1
-        status: 'Confirmé'
+        seats: [ '@seat_4' ]
+        status: !php/const \App\Enum\BookingStatusType::CONFIRMED
+        bookingDate: <dateTimeBetween('-1 week', 'now')>
+        totalPrice: 250.0

@@ -1,15 +1,30 @@
 App\Entity\SpaceShip:
-    spaceship_falcon9:
-        name: 'Falcon 9'
-        type: !php/const \App\Enum\SpaceShipType::FALCON9
-        capacity: 7
-    
-    spaceship_starship:
-        name: 'Starship'
-        type: !php/const \App\Enum\SpaceShipType::STARSHIP
-        capacity: 100
-
-    spaceship_dragon:
-        name: 'Dragon'
+    spaceship (template): # Si vous voulez des vaisseaux génériques
+        name: 'Spaceship <word()>'
+        capacity: <numberBetween(10, 200)>
+        manufacturer: '<company()>'
         type: !php/const \App\Enum\SpaceShipType::DRAGON
+
+App\Entity\Falcon9:
+    spaceship_falcon9 (extends spaceship): # Si vous voulez des vaisseaux Falcon 9
+        name: 'Falcon 9'
         capacity: 7
+        manufacturer: '<company()>'
+        stageCount: <numberBetween(1, 3)>
+        reusable: <boolean()>
+
+App\Entity\Dragon:
+    spaceship_dragon (extends spaceship): # Si vous voulez des vaisseaux Dragon
+        name: 'Dragon'
+        capacity: 7
+        manufacturer: '<company()>'
+        crewCapacity: <numberBetween(1, 10)>
+        lifeSupport: <boolean()>
+
+App\Entity\Starship:
+    spaceship_starship (extends spaceship): # Si vous voulez des vaisseaux Starship
+        name: 'Starship'
+        capacity: 100
+        manufacturer: '<company()>'
+        autonomy: <numberBetween(1000, 5000)>
+        cargoCapacity: <randomFloat(2, 50, 500)> # 2 décimales

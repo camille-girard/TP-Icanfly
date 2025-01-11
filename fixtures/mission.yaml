@@ -1,18 +1,52 @@
 App\Entity\Mission:
+    mission (template):  # Modèle générique
+        name: 'Mission de test'
+        description: 'Description de la mission de test'
+        status: !php/const App\Enum\MissionStatusType::ON_GOING
+        spaceship: '@spaceship_starship'
+        destination: 'Lune'
+        launchDate: <dateTimeBetween("-1 year", "now")>
+        seatPrice: 5000.0
+        duration: 30
+        createdAt: <dateTimeBetween("-1 year", "now")>
+
+App\Entity\ScientificMission:
     mission_mars:
         name: 'Mission sur Mars'
         description: 'Une mission révolutionnaire pour établir une colonie humaine sur Mars.'
-        status: '@mission_status_scheduled'
+        status: !php/const App\Enum\MissionStatusType::ON_GOING
         spaceship: '@spaceship_starship'
+        destination: 'Mars'
+        launchDate: <dateTimeBetween("+1 year", "+2 years")>
+        seatPrice: 10000.0
+        duration: 365
+        createdAt: <dateTimeBetween("-1 year", "now")>
+        objectives: 'Explorer la surface de Mars et établir une base'
+        specialEquipment: 'Système de survie martien'
 
+App\Entity\TouristMission:
     mission_starlink:
         name: 'Déploiement Starlink'
         description: 'Déploiement de satellites Starlink pour fournir une couverture Internet mondiale.'
-        status: '@mission_status_completed'
+        status: !php/const App\Enum\MissionStatusType::COMPLETED
         spaceship: '@spaceship_falcon9'
+        destination: 'Orbite basse terrestre'
+        launchDate: <dateTimeBetween("-1 year", "now")>
+        seatPrice: 1500.0
+        duration: 30
+        createdAt: <dateTimeBetween("-1 year", "now")>
+        activities: 'Observer la Terre depuis l’espace, assister au lancement'
+        hasGuide: true
 
     mission_iss:
         name: 'Mission vers l''ISS'
         description: 'Transport d''astronautes et de fournitures vers la Station Spatiale Internationale.'
-        status: '@mission_status_scheduled'
+        status: !php/const App\Enum\MissionStatusType::ON_GOING
         spaceship: '@spaceship_dragon'
+        destination: 'Station Spatiale Internationale'
+        launchDate: <dateTimeBetween("-1 year", "now")>
+        seatPrice: 8000.0
+        duration: 180
+        createdAt: <dateTimeBetween("-1 year", "now")>
+        activities: 'Séjour en microgravité, recherche scientifique'
+        hasGuide: true

@@ -1,14 +1,20 @@
 App\Entity\Payment:
     payment_1:
-        user: '@user_john'
-        booking: '@booking_1'
         amount: 1000
-        method: '@payment_method_credit_card'
-        status: '@payment_status_validated'
+        paymentMethod: !php/const \App\Enum\PaymentMethodType::CARD
+        status: !php/const \App\Enum\PaymentStatusType::PAID
     
     payment_2:
-        user: '@user_jane'
-        booking: '@booking_2'
         amount: 2000
-        method: '@payment_method_paypal'
-        status: '@payment_status_pending'
+        paymentMethod: !php/const \App\Enum\PaymentMethodType::PAYPAL
+        status: !php/const \App\Enum\PaymentStatusType::PENDING
+        
+    payment_3:
+        amount: 2000
+        paymentMethod: !php/const \App\Enum\PaymentMethodType::PAYPAL
+        status: !php/const \App\Enum\PaymentStatusType::PENDING
+    
+    payment_4:
+        amount: 2000
+        paymentMethod: !php/const \App\Enum\PaymentMethodType::PAYPAL
+        status: !php/const \App\Enum\PaymentStatusType::PENDING

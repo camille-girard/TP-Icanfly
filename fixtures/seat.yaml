@@ -1,15 +1,14 @@
 App\Entity\Seat:
-    seat_1:
-        number: 1
-        type: '@seat_type_economy'
-        spaceship: '@spaceship_falcon9'
+    seat_{1..5}:
+        number: <current()>
+        price: 500
+        isReserved: "1" 
+        class: !php/const \App\Enum\SeatType::ECONOMY
+        mission: '@mission_mars'
 
-    seat_2:
-        number: 2
-        type: '@seat_type_premium'
-        spaceship: '@spaceship_starship'
-
-    seat_3:
-        number: 3
-        type: '@seat_type_business'
-        spaceship: '@spaceship_dragon'
+    seat_{6..10}:
+        number: <current()>
+        price: 1000
+        isReserved: "1" 
+        class: !php/const \App\Enum\SeatType::PREMIUM
+        mission: '@mission_iss'
