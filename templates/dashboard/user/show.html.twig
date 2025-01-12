@@ -1,0 +1,58 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Utilisateur{% endblock %}
+
+{% block content %}
+    <div class="px-6 py-8 bg-[#F5F7FA] min-h-screen">
+        <h1 class="text-3xl font-bold text-[#1E2A38] mb-8">Détails de l'utilisateur</h1>
+
+        <div class="bg-white rounded-lg shadow-md overflow-hidden max-w-3xl">
+            <table class="w-full">
+                <tbody class="divide-y divide-gray-200">
+                    <tr>
+                        <th class="px-6 py-4 bg-[#1E2A38] text-white text-left font-semibold">Name</th>
+                        <td class="px-6 py-4">{{ user.name }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-[#1E2A38] text-white text-left font-semibold">Email</th>
+                        <td class="px-6 py-4">{{ user.email }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-[#1E2A38] text-white text-left font-semibold">Password</th>
+                        <td class="px-6 py-4">{{ user.password }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-[#1E2A38] text-white text-left font-semibold">CreatedAt</th>
+                        <td class="px-6 py-4">{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-[#1E2A38] text-white text-left font-semibold">LoyaltyPoints</th>
+                        <td class="px-6 py-4">{{ user.loyaltyPoints }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-[#1E2A38] text-white text-left font-semibold">Roles</th>
+                        <td class="px-6 py-4">{{ user.roles ? user.roles|json_encode : '' }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-[#1E2A38] text-white text-left font-semibold">IsVerified</th>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 rounded-full text-sm {% if user.isVerified %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                {{ user.isVerified ? 'Yes' : 'No' }}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-6 flex gap-4">
+            <a href="{{ path('app_user_index') }}" class="inline-flex items-center px-4 py-2 bg-[#1E2A38] text-white rounded-md hover:bg-gray-700 transition-colors">
+                Retour à la liste
+            </a>
+            <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="inline-flex items-center px-4 py-2 bg-[#0022FF] text-white rounded-md hover:bg-blue-600 transition-colors">
+                Modifier
+            </a>
+            {{ include('dashboard/user/_delete_form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}

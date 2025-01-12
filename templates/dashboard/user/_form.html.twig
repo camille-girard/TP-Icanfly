@@ -1,0 +1,21 @@
+{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+    <div class="space-y-4">
+        {% for field in form %}
+            {% if field.vars.name != '_token' %}
+                <div class="form-group">
+                    {{ form_label(field, null, {'label_attr': {'class': 'block text-sm font-medium text-[#1E2A38] mb-2'}}) }}
+                    {{ form_widget(field, {'attr': {
+                        'class': 'w-full rounded-md border-gray-300 shadow-sm focus:border-[#0022FF] focus:ring focus:ring-[#0022FF] focus:ring-opacity-20 transition-colors'
+                    }}) }}
+                    {{ form_errors(field, {'attr': {'class': 'mt-1 text-sm text-red-600'}}) }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="mt-6">
+        <button type="submit" class="px-4 py-2 bg-[#0022FF] text-white rounded-md hover:bg-blue-600 transition-colors">
+            {{ button_label|default('Enregistrer') }}
+        </button>
+    </div>
+{{ form_end(form) }}
