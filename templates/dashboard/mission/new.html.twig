@@ -1,0 +1,20 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Nouvelle Mission{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-6 min-h-screen">
+        <h1 class="text-3xl font-bold text-[#1E2A38] mb-6">Créer une Nouvelle Mission</h1>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            {{ include('dashboard/mission/_form.html.twig') }}
+        </div>
+
+        <div class="mt-6 text-right">
+            <a href="{{ path('dashboard_mission_index') }}"
+               class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-800">
+                Retour à la liste
+            </a>
+        </div>
+    </div>
+{% endblock %}
