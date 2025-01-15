@@ -1,28 +1,7 @@
 App\Entity\User:
-    user_admin:
-        email: 'admin@spaceflights.com'
-        password: '$argon2id$v=19$m=65536,t=4,p=1$hashed_password'
-        roles: ['ROLE_ADMIN']
-        firstName: 'Admin'
-        lastName: 'Space'
-
-    user_john:
-        email: 'john.doe@spaceflights.com'
-        password: '$argon2id$v=19$m=65536,t=4,p=1$hashed_password'
-        roles: ['ROLE_CLIENT']
-        firstName: 'John'
-        lastName: 'Doe'
-
-    user_jane:
-        email: 'jane.doe@spaceflights.com'
-        password: '$argon2id$v=19$m=65536,t=4,p=1$hashed_password'
-        roles: ['ROLE_CLIENT']
-        firstName: 'Jane'
-        lastName: 'Doe'
-
-    user_operator:
-        email: 'operator@spaceflights.com'
-        password: '$argon2id$v=19$m=65536,t=4,p=1$hashed_password'
-        roles: ['ROLE_OPERATOR']
-        firstName: 'Operator'
-        lastName: 'SpaceOperator'
+    email: 'test@gmail.com'
+    password: 'password'
+    firstName: 'John'
+    lastName: 'Doe'
+    createdAt: <dateTime()>
+    

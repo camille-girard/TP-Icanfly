@@ -6,34 +6,29 @@ use App\Repository\Falcon9Repository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: Falcon9Repository::class)]
-class Falcon9 extends SpaceShip
+class Falcon9
 {
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $stageCount = null;
+    private ?int $id = null;
 
     #[ORM\Column]
-    private ?bool $reusable = null;
+    private ?int $crewCapacity = null;
 
-    public function getStageCount(): ?int
+    public function getId(): ?int
     {
-        return $this->stageCount;
+        return $this->id;
     }
 
-    public function setStageCount(int $stageCount): static
+    public function getCrewCapacity(): ?int
     {
-        $this->stageCount = $stageCount;
-
-        return $this;
+        return $this->crewCapacity;
     }
 
-    public function isReusable(): ?bool
+    public function setCrewCapacity(int $crewCapacity): static
     {
-        return $this->reusable;
-    }
-
-    public function setReusable(bool $reusable): static
-    {
-        $this->reusable = $reusable;
+        $this->crewCapacity = $crewCapacity;
 
         return $this;
     }

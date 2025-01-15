@@ -2,22 +2,13 @@
 
 namespace App\Entity;
 
-use App\Enum\MissionStatusType;
 use App\Repository\MissionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\DiscriminatorColumn;
-use Doctrine\ORM\Mapping\DiscriminatorMap;
-use Doctrine\ORM\Mapping\InheritanceType;
 
 #[ORM\Entity(repositoryClass: MissionRepository::class)]
-#[InheritanceType('JOINED')]
-#[DiscriminatorColumn(name: 'mission_type', type: 'string')]
-#[DiscriminatorMap([
-    'tourist' => TouristMission::class,
-    'scientific' => ScientificMission::class,
-])]
 class Mission
 {
     #[ORM\Id]
@@ -26,72 +17,44 @@ class Mission
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $description = null;
-
-    #[ORM\Column(length: 255)]
     private ?string $destination = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $launchDate = null;
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $description = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $date = null;
 
     #[ORM\Column]
-    private ?float $seatPrice = null;
+    private ?int $seatPrice = null;
 
-    #[ORM\Column]
-    private ?int $duration = null;
+    #[ORM\Column(length: 2500)]
+    private ?string $image = null;
+
+    #[ORM\Column(type: Types::TIME_MUTABLE)]
+    private ?\DateTimeInterface $duration = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(enumType: MissionStatusType::class)]
-    private ?MissionStatusType $status = null;
-
-    /**
-     * @var Collection<int, Seat>
-     */
-    #[ORM\OneToMany(targetEntity: Seat::class, mappedBy: 'mission')]
-    private Collection $seats;
-
     /**
      * @var Collection<int, Booking>
      */
-    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'mission')]
+    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'Mission')]
     private Collection $bookings;
 
     /**
-     * @var Collection<int, Notification>
+     * @var Collection<int, Spaceship>
      */
-    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'mission')]
-    private Collection $notifications;
-
-    /**
-     * @var Collection<int, Statistic>
-     */
-    #[ORM\OneToMany(targetEntity: Statistic::class, mappedBy: 'mission')]
-    private Collection $statistics;
-
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'missions')]
-    private Collection $participants;
-
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?VideoStreaming $videoStreaming = null;
-
-    #[ORM\ManyToOne(inversedBy: 'missions')]
-    private ?SpaceShip $spaceship = null;
+    #[ORM\ManyToMany(targetEntity: Spaceship::class, inversedBy: 'missions')]
+    #[ORM\JoinTable(name: 'mission_spaceship')]
+    private Collection $spaceships;
 
     public function __construct()
     {
-        $this->seats = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
         $this->bookings = new ArrayCollection();
-        $this->notifications = new ArrayCollection();
-        $this->statistics = new ArrayCollection();
-        $this->participants = new ArrayCollection();
+        $this->spaceships = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -99,14 +62,14 @@ class Mission
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getDestination(): ?string
     {
-        return $this->name;
+        return $this->destination;
     }
 
-    public function setName(string $name): static
+    public function setDestination(string $destination): static
     {
-        $this->name = $name;
+        $this->destination = $destination;
 
         return $this;
     }
@@ -123,48 +86,48 @@ class Mission
         return $this;
     }
 
-    public function getDestination(): ?string
+    public function getDate(): ?\DateTimeInterface
     {
-        return $this->destination;
+        return $this->date;
     }
 
-    public function setDestination(string $destination): static
+    public function setDate(\DateTimeInterface $date): static
     {
-        $this->destination = $destination;
+        $this->date = $date;
 
         return $this;
     }
 
-    public function getLaunchDate(): ?\DateTimeImmutable
-    {
-        return $this->launchDate;
-    }
-
-    public function setLaunchDate(\DateTimeImmutable $launchDate): static
-    {
-        $this->launchDate = $launchDate;
-
-        return $this;
-    }
-
-    public function getSeatPrice(): ?float
+    public function getSeatPrice(): ?int
     {
         return $this->seatPrice;
     }
 
-    public function setSeatPrice(float $seatPrice): static
+    public function setSeatPrice(int $seatPrice): static
     {
         $this->seatPrice = $seatPrice;
 
         return $this;
     }
 
-    public function getDuration(): ?int
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getDuration(): ?\DateTimeInterface
     {
         return $this->duration;
     }
 
-    public function setDuration(int $duration): static
+    public function setDuration(\DateTimeInterface $duration): static
     {
         $this->duration = $duration;
 
@@ -179,48 +142,6 @@ class Mission
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getStatus(): ?MissionStatusType
-    {
-        return $this->status;
-    }
-
-    public function setStatus(MissionStatusType $status): static
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Seat>
-     */
-    public function getSeats(): Collection
-    {
-        return $this->seats;
-    }
-
-    public function addSeat(Seat $seat): static
-    {
-        if (!$this->seats->contains($seat)) {
-            $this->seats->add($seat);
-            $seat->setMission($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSeat(Seat $seat): static
-    {
-        if ($this->seats->removeElement($seat)) {
-            // set the owning side to null (unless already changed)
-            if ($seat->getMission() === $this) {
-                $seat->setMission(null);
-            }
-        }
 
         return $this;
     }
@@ -246,7 +167,6 @@ class Mission
     public function removeBooking(Booking $booking): static
     {
         if ($this->bookings->removeElement($booking)) {
-            // set the owning side to null (unless already changed)
             if ($booking->getMission() === $this) {
                 $booking->setMission(null);
             }
@@ -256,112 +176,25 @@ class Mission
     }
 
     /**
-     * @return Collection<int, Notification>
+     * @return Collection<int, Spaceship>
      */
-    public function getNotifications(): Collection
+    public function getSpaceships(): Collection
     {
-        return $this->notifications;
+        return $this->spaceships;
     }
 
-    public function addNotification(Notification $notification): static
+    public function addSpaceship(Spaceship $spaceship): static
     {
-        if (!$this->notifications->contains($notification)) {
-            $this->notifications->add($notification);
-            $notification->setMission($this);
+        if (!$this->spaceships->contains($spaceship)) {
+            $this->spaceships->add($spaceship);
         }
 
         return $this;
     }
 
-    public function removeNotification(Notification $notification): static
+    public function removeSpaceship(Spaceship $spaceship): static
     {
-        if ($this->notifications->removeElement($notification)) {
-            // set the owning side to null (unless already changed)
-            if ($notification->getMission() === $this) {
-                $notification->setMission(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Statistic>
-     */
-    public function getStatistics(): Collection
-    {
-        return $this->statistics;
-    }
-
-    public function addStatistic(Statistic $statistic): static
-    {
-        if (!$this->statistics->contains($statistic)) {
-            $this->statistics->add($statistic);
-            $statistic->setMission($this);
-        }
-
-        return $this;
-    }
-
-    public function removeStatistic(Statistic $statistic): static
-    {
-        if ($this->statistics->removeElement($statistic)) {
-            // set the owning side to null (unless already changed)
-            if ($statistic->getMission() === $this) {
-                $statistic->setMission(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, User>
-     */
-    public function getParticipants(): Collection
-    {
-        return $this->participants;
-    }
-
-    public function addParticipant(User $participant): static
-    {
-        if (!$this->participants->contains($participant)) {
-            $this->participants->add($participant);
-            $participant->addMission($this);
-        }
-
-        return $this;
-    }
-
-    public function removeParticipant(User $participant): static
-    {
-        if ($this->participants->removeElement($participant)) {
-            $participant->removeMission($this);
-        }
-
-        return $this;
-    }
-
-    public function getVideoStreaming(): ?VideoStreaming
-    {
-        return $this->videoStreaming;
-    }
-
-    public function setVideoStreaming(?VideoStreaming $videoStreaming): static
-    {
-        $this->videoStreaming = $videoStreaming;
-
-        return $this;
-    }
-
-    public function getSpaceship(): ?SpaceShip
-    {
-        return $this->spaceship;
-    }
-
-    public function setSpaceship(?SpaceShip $spaceship): static
-    {
-        $this->spaceship = $spaceship;
+        $this->spaceships->removeElement($spaceship);
 
         return $this;
     }

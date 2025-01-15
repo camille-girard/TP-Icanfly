@@ -1,14 +1,18 @@
 App\Entity\Payment:
-    payment_1:
-        user: '@user_john'
-        booking: '@booking_1'
-        amount: 1000
-        method: '@payment_method_credit_card'
-        status: '@payment_status_validated'
-    
-    payment_2:
-        user: '@user_jane'
-        booking: '@booking_2'
-        amount: 2000
-        method: '@payment_method_paypal'
-        status: '@payment_status_pending'
+    payment1:
+        totalPrice: 10000
+        paymentDate: <dateTime()>
+        status: 'pending'
+        paymentType: 'card'
+        
+    payment2:
+        totalPrice: 2500
+        paymentDate: <dateTime()>
+        status: 'pending'
+        paymentType: 'Paypal'
+        
+    payment3:
+        totalPrice: 100
+        paymentDate: <dateTime()>
+        status: 'pending'
+        paymentType: 'crypto'

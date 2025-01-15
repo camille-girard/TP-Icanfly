@@ -5,15 +5,12 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,7 +18,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private ?string $lastName = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
     private ?string $email = null;
@@ -29,44 +29,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $loyaltyPoints = null;
-
-    /**
-     * @var array<string>
-     */
-    #[ORM\Column]
-    private array $roles = [];
 
     /**
      * @var Collection<int, Booking>
      */
-    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'passenger')]
+    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'Customer')]
     private Collection $bookings;
 
     /**
-     * @var Collection<int, Mission>
+     * @var Collection<int, self>
      */
-    #[ORM\ManyToMany(targetEntity: Mission::class, inversedBy: 'participants')]
-    private Collection $missions;
+    #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'users')]
+    private Collection $Mission;
 
     /**
-     * @var Collection<int, Notification>
+     * @var Collection<int, self>
      */
-    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'passenger')]
-    private Collection $notifications;
-
-    #[ORM\Column]
-    private bool $isVerified = false;
+    #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'Mission')]
+    private Collection $users;
 
     public function __construct()
     {
+        $this->createdAt = new \DateTimeImmutable();
         $this->bookings = new ArrayCollection();
-        $this->missions = new ArrayCollection();
-        $this->notifications = new ArrayCollection();
+        $this->Mission = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -74,14 +63,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getLastName(): ?string
     {
-        return $this->name;
+        return $this->lastName;
     }
 
-    public function setName(string $name): static
+    public function setLastName(string $lastName): static
     {
-        $this->name = $name;
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): static
+    {
+        $this->firstName = $firstName;
 
         return $this;
     }
@@ -122,18 +123,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getLoyaltyPoints(): ?int
-    {
-        return $this->loyaltyPoints;
-    }
-
-    public function setLoyaltyPoints(?int $loyaltyPoints): static
-    {
-        $this->loyaltyPoints = $loyaltyPoints;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Booking>
      */
@@ -146,7 +135,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->bookings->contains($booking)) {
             $this->bookings->add($booking);
-            $booking->setPassenger($this);
+            $booking->setCustomer($this);
         }
 
         return $this;
@@ -156,8 +145,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->bookings->removeElement($booking)) {
             // set the owning side to null (unless already changed)
-            if ($booking->getPassenger() === $this) {
-                $booking->setPassenger(null);
+            if ($booking->getCustomer() === $this) {
+                $booking->setCustomer(null);
             }
         }
 
@@ -165,103 +154,52 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Mission>
+     * @return Collection<int, self>
      */
-    public function getMissions(): Collection
+    public function getMission(): Collection
     {
-        return $this->missions;
+        return $this->Mission;
     }
 
-    public function addMission(Mission $mission): static
+    public function addMission(self $mission): static
     {
-        if (!$this->missions->contains($mission)) {
-            $this->missions->add($mission);
+        if (!$this->Mission->contains($mission)) {
+            $this->Mission->add($mission);
         }
 
         return $this;
     }
 
-    public function removeMission(Mission $mission): static
+    public function removeMission(self $mission): static
     {
-        $this->missions->removeElement($mission);
+        $this->Mission->removeElement($mission);
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Notification>
+     * @return Collection<int, self>
      */
-    public function getNotifications(): Collection
+    public function getUsers(): Collection
     {
-        return $this->notifications;
+        return $this->users;
     }
 
-    public function addNotification(Notification $notification): static
+    public function addUser(self $user): static
     {
-        if (!$this->notifications->contains($notification)) {
-            $this->notifications->add($notification);
-            $notification->setPassenger($this);
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addMission($this);
         }
 
         return $this;
     }
 
-    public function removeNotification(Notification $notification): static
+    public function removeUser(self $user): static
     {
-        if ($this->notifications->removeElement($notification)) {
-            // set the owning side to null (unless already changed)
-            if ($notification->getPassenger() === $this) {
-                $notification->setPassenger(null);
-            }
+        if ($this->users->removeElement($user)) {
+            $user->removeMission($this);
         }
-
-        return $this;
-    }
-
-    /**
-     * The public representation of the user (e.g. a username, an email address, etc.).
-     *
-     * @see UserInterface
-     */
-    public function getUserIdentifier(): string
-    {
-        return (string) $this->email;
-    }
-
-    public function getRoles(): array
-    {
-        return $this->roles;
-    }
-
-    /**
-     * @param array<string> $roles
-     *
-     * @return $this
-     */
-    public function setRoles(?array $roles): static
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials(): void
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
-
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
-    public function setVerified(bool $isVerified): static
-    {
-        $this->isVerified = $isVerified;
 
         return $this;
     }

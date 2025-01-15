@@ -1,9 +1,0 @@
-App\Enum\SpaceShipType:
-    spaceship_type_starship:
-        name: 'starship'
-
-    spaceship_type_falcon9:
-        name: 'falcon9'
-
-    spaceship_type_dragon:
-        name: 'dragon'

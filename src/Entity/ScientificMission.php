@@ -6,34 +6,44 @@ use App\Repository\ScientificMissionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ScientificMissionRepository::class)]
-class ScientificMission extends Mission
+class ScientificMission
 {
-    #[ORM\Column(length: 255)]
-    private ?string $objectives = null;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $specialEquipment = null;
+    private ?string $specialEquipement = null;
 
-    public function getObjectives(): ?string
+    #[ORM\Column(length: 255)]
+    private ?string $objective = null;
+
+    public function getId(): ?int
     {
-        return $this->objectives;
+        return $this->id;
     }
 
-    public function setObjectives(string $objectives): static
+    public function getSpecialEquipement(): ?string
     {
-        $this->objectives = $objectives;
+        return $this->specialEquipement;
+    }
+
+    public function setSpecialEquipement(string $specialEquipement): static
+    {
+        $this->specialEquipement = $specialEquipement;
 
         return $this;
     }
 
-    public function getSpecialEquipment(): ?string
+    public function getObjective(): ?string
     {
-        return $this->specialEquipment;
+        return $this->objective;
     }
 
-    public function setSpecialEquipment(string $specialEquipment): static
+    public function setObjective(string $objective): static
     {
-        $this->specialEquipment = $specialEquipment;
+        $this->objective = $objective;
 
         return $this;
     }

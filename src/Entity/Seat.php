@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Enum\SeatType;
 use App\Repository\SeatRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SeatRepository::class)]
@@ -21,16 +22,21 @@ class Seat
     private ?bool $isReserved = null;
 
     #[ORM\Column]
-    private ?float $price = null;
+    private ?int $price = null;
 
-    #[ORM\Column(enumType: SeatType::class)]
-    private ?SeatType $class = null;
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'seats')]
+    private ?self $Spaceship = null;
 
-    #[ORM\ManyToOne(inversedBy: 'seats')]
-    private ?Booking $booking = null;
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'Spaceship')]
+    private Collection $seats;
 
-    #[ORM\ManyToOne(inversedBy: 'seats')]
-    private ?Mission $mission = null;
+    public function __construct()
+    {
+        $this->seats = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -61,50 +67,56 @@ class Seat
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): ?int
     {
         return $this->price;
     }
 
-    public function setPrice(float $price): static
+    public function setPrice(int $price): static
     {
         $this->price = $price;
 
         return $this;
     }
 
-    public function getClass(): ?SeatType
+    public function getSpaceship(): ?self
     {
-        return $this->class;
+        return $this->Spaceship;
     }
 
-    public function setClass(SeatType $class): static
+    public function setSpaceship(?self $Spaceship): static
     {
-        $this->class = $class;
+        $this->Spaceship = $Spaceship;
 
         return $this;
     }
 
-    public function getBooking(): ?Booking
+    /**
+     * @return Collection<int, self>
+     */
+    public function getSeats(): Collection
     {
-        return $this->booking;
+        return $this->seats;
     }
 
-    public function setBooking(?Booking $booking): static
+    public function addSeat(self $seat): static
     {
-        $this->booking = $booking;
+        if (!$this->seats->contains($seat)) {
+            $this->seats->add($seat);
+            $seat->setSpaceship($this);
+        }
 
         return $this;
     }
 
-    public function getMission(): ?Mission
+    public function removeSeat(self $seat): static
     {
-        return $this->mission;
-    }
-
-    public function setMission(?Mission $mission): static
-    {
-        $this->mission = $mission;
+        if ($this->seats->removeElement($seat)) {
+            // set the owning side to null (unless already changed)
+            if ($seat->getSpaceship() === $this) {
+                $seat->setSpaceship(null);
+            }
+        }
 
         return $this;
     }

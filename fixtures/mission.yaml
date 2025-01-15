@@ -1,18 +1,27 @@
-App\Entity\Mission:
-    mission_mars:
-        name: 'Mission sur Mars'
-        description: 'Une mission révolutionnaire pour établir une colonie humaine sur Mars.'
-        status: '@mission_status_scheduled'
-        spaceship: '@spaceship_starship'
-
-    mission_starlink:
-        name: 'Déploiement Starlink'
-        description: 'Déploiement de satellites Starlink pour fournir une couverture Internet mondiale.'
-        status: '@mission_status_completed'
-        spaceship: '@spaceship_falcon9'
-
-    mission_iss:
-        name: 'Mission vers l\'ISS'
-        description: 'Transport d\'astronautes et de fournitures vers la Station Spatiale Internationale.'
-        status: '@mission_status_scheduled'
-        spaceship: '@spaceship_dragon'
+App\Entity\Mission :
+    mission1:
+        destination: 'Lune'
+        description: 'Contemplation des étoiles et notre planète Terre depuis la lune'
+        date: '2025-06-02'
+        seatPrice: 100
+        image: 'lune.jpg'
+        duration: <time()>
+        createdAt: <dateTime()>
+        
+    mission2:
+        destination: 'Venus'
+        description: 'Explorez Venus et ses mystères'
+        date: '2025-08-05'
+        seatPrice: 2500
+        image: 'venus.jpg'
+        duration: <time()>
+        createdAt: <dateTime()>
+        
+    mission3:
+        destination: 'ISS'
+        description: 'Participer à la vie à bord de la station spatiale internationale'
+        date: '2025-07-07'
+        seatPrice: 350
+        image: 'lune.jpg'
+        duration: <time()>
+        createdAt: <dateTime()>
