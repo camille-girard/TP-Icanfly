@@ -1,18 +1,95 @@
-App\Entity\Mission:
-    mission_mars:
-        name: 'Mission sur Mars'
-        description: 'Une mission révolutionnaire pour établir une colonie humaine sur Mars.'
-        status: '@mission_status_scheduled'
-        spaceship: '@spaceship_starship'
+App\Entity\ScientificMission:
+    scientific_mission1:
+        destination: 'Lune'
+        description: 'Contemplation des étoiles et recherche scientifique sur la surface lunaire'
+        date: <(new \DateTime('2025-06-02'))>
+        seatPrice: 5000
+        image: 'lune.jpg'
+        duration: <(new \DateTime('1970-01-01 02:00:00'))> # Durée de 2 heures
+        specialEquipement: 'Télescope lunaire'
+        objective: 'Observation de la voûte céleste depuis la Lune'
+        bookings:
+            - '@booking2'
+        spaceships:
+            - '@falcon9'
+    
+    scientific_mission2:
+        destination: 'Venus'
+        description: "Exploration scientifique de l'atmosphère vénusienne"
+        date: <(new \DateTime('2025-08-05'))>
+        seatPrice: 2500
+        image: 'venus.jpg'
+        duration: <(new \DateTime('1970-01-01 03:30:00'))> # Durée de 3h30
+        specialEquipement: 'Capteur de gaz'
+        objective: 'Analyse des gaz atmosphériques de Vénus'
+        bookings:
+            - '@booking1'
+        spaceships:
+            - '@starship'
+    
+    scientific_mission3:
+        destination: 'ISS'
+        description: 'Participation à des expériences scientifiques à bord de l’ISS'
+        date: <(new \DateTime('2025-07-07'))>
+        seatPrice: 350
+        image: 'iss.jpg'
+        duration: <(new \DateTime('1970-01-01 06:00:00'))> # Durée de 6 heures
+        specialEquipement: 'Matériel de laboratoire'
+        objective: 'Expériences en microgravité'
+        bookings:
+            - '@booking3'
+        spaceships:
+            - '@falcon9'
+    
+    scientific_mission4:
+        destination: 'Mars'
+        description: 'Recherche de traces de vie sur Mars'
+        date: <(new \DateTime('2025-09-15'))>
+        seatPrice: 6000
+        image: 'mars.jpg'
+        duration: <(new \DateTime('1970-01-01 12:00:00'))> # Durée de 12 heures
+        specialEquipement: 'Analyseur de sol'
+        objective: 'Étudier la composition du sol martien'
+        bookings: [ ]
+        spaceships:
+            - '@dragon'
+    
+    scientific_mission5:
+        destination: 'Titan'
+        description: 'Analyse de l’atmosphère de Titan'
+        date: <(new \DateTime('2025-10-10'))>
+        seatPrice: 7000
+        image: 'titan.jpg'
+        duration: <(new \DateTime('1970-01-01 08:45:00'))> # Durée de 8h45
+        specialEquipement: 'Capteurs atmosphériques'
+        objective: 'Comprendre les phénomènes météorologiques'
+        bookings: [ ]
+        spaceships:
+            - '@starship'
 
-    mission_starlink:
-        name: 'Déploiement Starlink'
-        description: 'Déploiement de satellites Starlink pour fournir une couverture Internet mondiale.'
-        status: '@mission_status_completed'
-        spaceship: '@spaceship_falcon9'
-
-    mission_iss:
-        name: 'Mission vers l\'ISS'
-        description: 'Transport d\'astronautes et de fournitures vers la Station Spatiale Internationale.'
-        status: '@mission_status_scheduled'
-        spaceship: '@spaceship_dragon'
+App\Entity\TouristMission:
+    tourist_mission1:
+        destination: 'Orbital Resort'
+        description: 'Séjour de luxe en orbite terrestre'
+        date: <(new \DateTime('2025-11-20'))>
+        seatPrice: 4000
+        image: 'orbital_resort.jpg'
+        duration: <(new \DateTime('1970-01-01 04:00:00'))> # Durée de 4 heures
+        hasGuide: true
+        activities: 'Spa zéro gravité, observation des étoiles'
+        bookings: [ ]
+        spaceships:
+            - '@falcon9'
+    
+    tourist_mission2:
+        destination: 'Station Lunaire'
+        description: 'Vacances sur la base lunaire'
+        date: <(new \DateTime('2025-12-25'))>
+        seatPrice: 5500
+        image: 'station_lunaire.jpg'
+        duration: <(new \DateTime('1970-01-01 10:00:00'))> # Durée de 10 heures
+        hasGuide: false
+        activities: 'Randonnée lunaire, photographie spatiale'
+        bookings: [ ]
+        spaceships:
+            - '@dragon'

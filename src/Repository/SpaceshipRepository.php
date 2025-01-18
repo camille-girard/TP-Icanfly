@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\SpaceShip;
+use App\Entity\Spaceship;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<SpaceShip>
+ * @extends ServiceEntityRepository<Spaceship>
  */
-class SpaceShipRepository extends ServiceEntityRepository
+class SpaceshipRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, SpaceShip::class);
+        parent::__construct($registry, Spaceship::class);
     }
 
     //    /**
-    //     * @return SpaceShip[] Returns an array of SpaceShip objects
+    //     * @return Spaceship[] Returns an array of Spaceship objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -31,7 +31,7 @@ class SpaceShipRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?SpaceShip
+    //    public function findOneBySomeField($value): ?Spaceship
     //    {
     //        return $this->createQueryBuilder('s')
     //            ->andWhere('s.exampleField = :val')

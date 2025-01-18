@@ -1,6 +1,0 @@
-App\Enum\PaymentStatusType:
-    payment_status_validated:
-        name: 'Validé'
-
-    payment_status_pending:
-        name: 'En attente'

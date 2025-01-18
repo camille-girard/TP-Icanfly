@@ -2,10 +2,8 @@
 
 namespace App\Entity;
 
-use App\Enum\BookingStatusType;
+use App\Enum\BookingStatus;
 use App\Repository\BookingRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
@@ -16,33 +14,32 @@ class Booking
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $bookingDate = null;
+    #[ORM\Column(length: 255)]
+    private ?string $destination = null;
 
     #[ORM\Column]
-    private ?float $totalPrice = null;
+    private ?int $seatCount = null;
 
-    #[ORM\Column(enumType: BookingStatusType::class)]
-    private ?BookingStatusType $status = null;
+    #[ORM\Column]
+    private ?int $totalPrice = null;
 
-    #[ORM\ManyToOne(inversedBy: 'bookings')]
-    private ?User $passenger = null;
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
 
-    /**
-     * @var Collection<int, Seat>
-     */
-    #[ORM\OneToMany(targetEntity: Seat::class, mappedBy: 'booking')]
-    private Collection $seats;
+    #[ORM\Column(enumType: BookingStatus::class)]
+    private ?BookingStatus $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
-    private ?Mission $mission = null;
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $Customer = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?Payment $payment = null;
+    #[ORM\ManyToOne(inversedBy: 'bookings')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Mission $Mission = null;
 
     public function __construct()
     {
-        $this->seats = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -50,104 +47,86 @@ class Booking
         return $this->id;
     }
 
-    public function getBookingDate(): ?\DateTimeImmutable
+    public function getDestination(): ?string
     {
-        return $this->bookingDate;
+        return $this->destination;
     }
 
-    public function setBookingDate(\DateTimeImmutable $bookingDate): static
+    public function setDestination(string $destination): static
     {
-        $this->bookingDate = $bookingDate;
+        $this->destination = $destination;
 
         return $this;
     }
 
-    public function getTotalPrice(): ?float
+    public function getSeatCount(): ?int
+    {
+        return $this->seatCount;
+    }
+
+    public function setSeatCount(int $seatCount): static
+    {
+        $this->seatCount = $seatCount;
+
+        return $this;
+    }
+
+    public function getTotalPrice(): ?int
     {
         return $this->totalPrice;
     }
 
-    public function setTotalPrice(float $totalPrice): static
+    public function setTotalPrice(int $totalPrice): static
     {
         $this->totalPrice = $totalPrice;
 
         return $this;
     }
 
-    public function getStatus(): ?BookingStatusType
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getStatus(): ?BookingStatus
     {
         return $this->status;
     }
 
-    public function setStatus(BookingStatusType $status): static
+    public function setStatus(BookingStatus $status): static
     {
         $this->status = $status;
 
         return $this;
     }
 
-    public function getPassenger(): ?User
+    public function getCustomer(): ?User
     {
-        return $this->passenger;
+        return $this->Customer;
     }
 
-    public function setPassenger(?User $passenger): static
+    public function setCustomer(?User $Customer): static
     {
-        $this->passenger = $passenger;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Seat>
-     */
-    public function getSeats(): Collection
-    {
-        return $this->seats;
-    }
-
-    public function addSeat(Seat $seat): static
-    {
-        if (!$this->seats->contains($seat)) {
-            $this->seats->add($seat);
-            $seat->setBooking($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSeat(Seat $seat): static
-    {
-        if ($this->seats->removeElement($seat)) {
-            // set the owning side to null (unless already changed)
-            if ($seat->getBooking() === $this) {
-                $seat->setBooking(null);
-            }
-        }
+        $this->Customer = $Customer;
 
         return $this;
     }
 
     public function getMission(): ?Mission
     {
-        return $this->mission;
+        return $this->Mission;
     }
 
-    public function setMission(?Mission $mission): static
+    public function setMission(?Mission $Mission): static
     {
-        $this->mission = $mission;
-
-        return $this;
-    }
-
-    public function getPayment(): ?Payment
-    {
-        return $this->payment;
-    }
-
-    public function setPayment(?Payment $payment): static
-    {
-        $this->payment = $payment;
+        $this->Mission = $Mission;
 
         return $this;
     }

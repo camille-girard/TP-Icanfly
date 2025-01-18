@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
-use App\Enum\NotificationType;
 use App\Repository\NotificationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: NotificationRepository::class)]
@@ -17,17 +19,11 @@ class Notification
     #[ORM\Column(length: 255)]
     private ?string $content = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $sentDate = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $sentDate = null;
 
-    #[ORM\Column(enumType: NotificationType::class)]
-    private ?NotificationType $type = null;
-
-    #[ORM\ManyToOne(inversedBy: 'notifications')]
-    private ?Mission $mission = null;
-
-    #[ORM\ManyToOne(inversedBy: 'notifications')]
-    private ?User $passenger = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'notifications')]
+    private ?User $Customer = null;
 
     public function getId(): ?int
     {
@@ -46,50 +42,26 @@ class Notification
         return $this;
     }
 
-    public function getSentDate(): ?\DateTimeImmutable
+    public function getSentDate(): ?\DateTimeInterface
     {
         return $this->sentDate;
     }
 
-    public function setSentDate(\DateTimeImmutable $sentDate): static
+    public function setSentDate(\DateTimeInterface $sentDate): static
     {
         $this->sentDate = $sentDate;
 
         return $this;
     }
 
-    public function getType(): ?NotificationType
+    public function getCustomer(): ?User
     {
-        return $this->type;
+        return $this->Customer;
     }
 
-    public function setType(NotificationType $type): static
+    public function setCustomer(?User $Customer): static
     {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    public function getMission(): ?Mission
-    {
-        return $this->mission;
-    }
-
-    public function setMission(?Mission $mission): static
-    {
-        $this->mission = $mission;
-
-        return $this;
-    }
-
-    public function getPassenger(): ?User
-    {
-        return $this->passenger;
-    }
-
-    public function setPassenger(?User $passenger): static
-    {
-        $this->passenger = $passenger;
+        $this->Customer = $Customer;
 
         return $this;
     }

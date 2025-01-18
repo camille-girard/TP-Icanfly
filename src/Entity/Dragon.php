@@ -6,34 +6,20 @@ use App\Repository\DragonRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DragonRepository::class)]
-class Dragon extends SpaceShip
+class Dragon extends Spaceship
 {
-    #[ORM\Column]
-    private ?int $crewCapacity = null;
 
     #[ORM\Column]
-    private ?bool $lifeSupport = null;
+    private ?int $seatCapacity = null;
 
-    public function getCrewCapacity(): ?int
+    public function getSeatCapacity(): ?int
     {
-        return $this->crewCapacity;
+        return $this->seatCapacity;
     }
 
-    public function setCrewCapacity(int $crewCapacity): static
+    public function setSeatCapacity(int $seatCapacity): static
     {
-        $this->crewCapacity = $crewCapacity;
-
-        return $this;
-    }
-
-    public function isLifeSupport(): ?bool
-    {
-        return $this->lifeSupport;
-    }
-
-    public function setLifeSupport(bool $lifeSupport): static
-    {
-        $this->lifeSupport = $lifeSupport;
+        $this->seatCapacity = $seatCapacity;
 
         return $this;
     }

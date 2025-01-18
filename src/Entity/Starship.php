@@ -6,32 +6,19 @@ use App\Repository\StarshipRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: StarshipRepository::class)]
-class Starship extends SpaceShip
+class Starship extends Spaceship
 {
-    #[ORM\Column]
-    private ?int $autonomy = null;
 
     #[ORM\Column]
-    private ?float $cargoCapacity = null;
+    private ?int $cargoCapacity = null;
 
-    public function getAutonomy(): ?int
-    {
-        return $this->autonomy;
-    }
 
-    public function setAutonomy(int $autonomy): static
-    {
-        $this->autonomy = $autonomy;
-
-        return $this;
-    }
-
-    public function getCargoCapacity(): ?float
+    public function getCargoCapacity(): ?int
     {
         return $this->cargoCapacity;
     }
 
-    public function setCargoCapacity(float $cargoCapacity): static
+    public function setCargoCapacity(int $cargoCapacity): static
     {
         $this->cargoCapacity = $cargoCapacity;
 

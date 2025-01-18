@@ -2,11 +2,9 @@
 
 namespace App\Enum;
 
-enum BookingStatusType: string
+enum PaymentStatus : string
 {
     case PENDING = 'pending';
-
     case CONFIRMED = 'confirmed';
-
     case CANCELLED = 'cancelled';
 }

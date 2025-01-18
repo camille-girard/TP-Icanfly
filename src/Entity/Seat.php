@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Enum\SeatType;
 use App\Repository\SeatRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SeatRepository::class)]
@@ -18,19 +19,18 @@ class Seat
     private ?int $number = null;
 
     #[ORM\Column]
-    private ?bool $isReserved = null;
+    private ?bool $reserved = null;
 
     #[ORM\Column]
-    private ?float $price = null;
+    private ?int $price = null;
 
-    #[ORM\Column(enumType: SeatType::class)]
-    private ?SeatType $class = null;
+    #[ORM\ManyToOne(targetEntity: Spaceship::class, inversedBy: 'seats')]
+    private ?Spaceship $Spaceship = null;
 
-    #[ORM\ManyToOne(inversedBy: 'seats')]
-    private ?Booking $booking = null;
-
-    #[ORM\ManyToOne(inversedBy: 'seats')]
-    private ?Mission $mission = null;
+    public function __construct()
+    {
+        $this->seats = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -51,61 +51,38 @@ class Seat
 
     public function isReserved(): ?bool
     {
-        return $this->isReserved;
+        return $this->reserved;
     }
 
-    public function setReserved(bool $isReserved): static
+    public function setReserved(bool $reserved): static
     {
-        $this->isReserved = $isReserved;
+        $this->reserved = $reserved;
 
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): ?int
     {
         return $this->price;
     }
 
-    public function setPrice(float $price): static
+    public function setPrice(int $price): static
     {
         $this->price = $price;
 
         return $this;
     }
 
-    public function getClass(): ?SeatType
+    public function getSpaceship(): ?Spaceship
     {
-        return $this->class;
+        return $this->Spaceship;
     }
 
-    public function setClass(SeatType $class): static
+    public function setSpaceship(?Spaceship $Spaceship): static
     {
-        $this->class = $class;
+        $this->Spaceship = $Spaceship;
 
         return $this;
     }
 
-    public function getBooking(): ?Booking
-    {
-        return $this->booking;
-    }
-
-    public function setBooking(?Booking $booking): static
-    {
-        $this->booking = $booking;
-
-        return $this;
-    }
-
-    public function getMission(): ?Mission
-    {
-        return $this->mission;
-    }
-
-    public function setMission(?Mission $mission): static
-    {
-        $this->mission = $mission;
-
-        return $this;
-    }
 }

@@ -1,24 +1,24 @@
 App\Entity\Booking:
-    booking_1:
-        user: '@user_john'
-        mission: '@mission_mars'
-        seatNumber: 1
-        status: 'Confirmé'
-
-    booking_2:
-        user: '@user_jane'
-        mission: '@mission_mars'
-        seatNumber: 2
-        status: 'En attente'
-
-    booking_3:
-        user: '@user_john'
-        mission: '@mission_starlink'
-        seatNumber: 1
-        status: 'Annulé'
-
-    booking_4:
-        user: '@user_jane'
-        mission: '@mission_iss'
-        seatNumber: 1
-        status: 'Confirmé'
+    booking1:
+        destination: 'Venus'
+        seatCount: 3
+        totalPrice: 15000
+        status: <(App\Enum\BookingStatus::from('confirmed'))>
+        Customer: '@user1'
+        Mission: '@scientific_mission2'
+    
+    booking2:
+        destination: 'Lune'
+        seatCount: 2
+        totalPrice: 10000
+        status: <(App\Enum\BookingStatus::from('pending'))>
+        Customer: '@user2'
+        Mission: '@scientific_mission1'
+    
+    booking3:
+        destination: 'ISS'
+        seatCount: 4
+        totalPrice: 20000
+        status: <(App\Enum\BookingStatus::from('cancelled'))>
+        Customer: '@user3'
+        Mission: '@scientific_mission3'

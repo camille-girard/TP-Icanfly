@@ -2,9 +2,11 @@
 
 namespace App\Enum;
 
-enum PaymentMethodType: string
+enum PaymentType : string
 {
     case CARD = 'card';
+    case CRYPTO = 'crypto';
     case PAYPAL = 'paypal';
-    case OTHER = 'other';
 }
+
+

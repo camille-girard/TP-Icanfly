@@ -9,31 +9,32 @@ use Doctrine\ORM\Mapping as ORM;
 class ScientificMission extends Mission
 {
     #[ORM\Column(length: 255)]
-    private ?string $objectives = null;
+    private ?string $specialEquipement = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $specialEquipment = null;
+    private ?string $objective = null;
 
-    public function getObjectives(): ?string
+
+    public function getSpecialEquipement(): ?string
     {
-        return $this->objectives;
+        return $this->specialEquipement;
     }
 
-    public function setObjectives(string $objectives): static
+    public function setSpecialEquipement(string $specialEquipement): static
     {
-        $this->objectives = $objectives;
+        $this->specialEquipement = $specialEquipement;
 
         return $this;
     }
 
-    public function getSpecialEquipment(): ?string
+    public function getObjective(): ?string
     {
-        return $this->specialEquipment;
+        return $this->objective;
     }
 
-    public function setSpecialEquipment(string $specialEquipment): static
+    public function setObjective(string $objective): static
     {
-        $this->specialEquipment = $specialEquipment;
+        $this->objective = $objective;
 
         return $this;
     }

@@ -1,15 +1,15 @@
 App\Entity\Notification:
-    notification_1:
-        user: '@user_john'
-        type: '@notification_type_booking_confirmation'
-        message: 'Votre réservation pour Mission to Mars a été confirmée.'
-
-    notification_2:
-        user: '@user_jane'
-        type: '@notification_type_payment_pending'
-        message: 'Votre paiement pour Mission to Mars est en attente.'
-
-    notification_3:
-        user: '@user_john'
-        type: '@notification_type_mission_update'
-        message: 'La mission sur Mars a été mise à jour.'
+    notification1:
+        content: 'Vos données ont été mises à jour'
+        sentDate: <dateTime()>
+        Customer: '@user1'
+    
+    notification2:
+        content: 'Votre réservation est confirmée'
+        sentDate: <dateTime()>
+        Customer: '@user2'
+    
+    notification3:
+        content: 'Votre réservation a été annulée'
+        sentDate: <dateTime()>
+        Customer: '@user3'

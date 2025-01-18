@@ -1,9 +1,0 @@
-App\Enum\SeatType:
-    seat_type_economy:
-        name: 'Economie'
-    
-    seat_type_premium:
-        name: 'Premium'
-    
-    seat_type_business:
-        name: 'Business'

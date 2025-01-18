@@ -1,14 +1,21 @@
 App\Entity\Payment:
-    payment_1:
-        user: '@user_john'
-        booking: '@booking_1'
-        amount: 1000
-        method: '@payment_method_credit_card'
-        status: '@payment_status_validated'
+    payment1:
+        totalPrice: 15000
+        paymentDate: <(new \DateTimeImmutable())>
+        status: <(App\Enum\PaymentStatus::from('confirmed'))>
+        paymentType: <(App\Enum\PaymentType::from('card'))> 
+        Mission: '@scientific_mission2'
     
-    payment_2:
-        user: '@user_jane'
-        booking: '@booking_2'
-        amount: 2000
-        method: '@payment_method_paypal'
-        status: '@payment_status_pending'
+    payment2:
+        totalPrice: 10000
+        paymentDate: <(new \DateTimeImmutable())>
+        status: <(App\Enum\PaymentStatus::from('pending'))>
+        paymentType: <(App\Enum\PaymentType::from('paypal'))>
+        Mission: '@scientific_mission1'
+    
+    payment3:
+        totalPrice: 20000
+        paymentDate: <(new \DateTimeImmutable())>
+        status: <(App\Enum\PaymentStatus::from('cancelled'))>
+        paymentType: <(App\Enum\PaymentType::from('crypto'))>
+        Mission: '@scientific_mission3'

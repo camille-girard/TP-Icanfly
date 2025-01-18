@@ -1,28 +1,30 @@
 App\Entity\User:
-    user_admin:
-        email: 'admin@spaceflights.com'
-        password: '$argon2id$v=19$m=65536,t=4,p=1$hashed_password'
-        roles: ['ROLE_ADMIN']
-        firstName: 'Admin'
-        lastName: 'Space'
+    user1:
+        firstName: 'Alice'
+        lastName: 'Durand'
+        email: 'alice.durand@example.com'
+        password: 'password123'
+        createdAt: <(new \DateTimeImmutable('2023-01-01'))>
+        bookings:
+            - '@booking1'
+        missions: []
 
-    user_john:
-        email: 'john.doe@spaceflights.com'
-        password: '$argon2id$v=19$m=65536,t=4,p=1$hashed_password'
-        roles: ['ROLE_CLIENT']
-        firstName: 'John'
-        lastName: 'Doe'
+    user2:
+        firstName: 'Bob'
+        lastName: 'Martin'
+        email: 'bob.martin@example.com'
+        password: 'password123'
+        createdAt: <(new \DateTimeImmutable('2023-02-01'))>
+        bookings:
+            - '@booking2'
+        missions: []
 
-    user_jane:
-        email: 'jane.doe@spaceflights.com'
-        password: '$argon2id$v=19$m=65536,t=4,p=1$hashed_password'
-        roles: ['ROLE_CLIENT']
-        firstName: 'Jane'
-        lastName: 'Doe'
-
-    user_operator:
-        email: 'operator@spaceflights.com'
-        password: '$argon2id$v=19$m=65536,t=4,p=1$hashed_password'
-        roles: ['ROLE_OPERATOR']
-        firstName: 'Operator'
-        lastName: 'SpaceOperator'
+    user3:
+        firstName: 'Charlie'
+        lastName: 'Lemoine'
+        email: 'charlie.lemoine@example.com'
+        password: 'password123'
+        createdAt: <(new \DateTimeImmutable('2023-03-01'))>
+        bookings:
+            - '@booking3'
+        missions: []

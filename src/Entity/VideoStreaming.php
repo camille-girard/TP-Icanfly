@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\VideoStreamingRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VideoStreamingRepository::class)]
@@ -16,11 +17,15 @@ class VideoStreaming
     #[ORM\Column(length: 2500)]
     private ?string $url = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $startDate = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $startDate = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $endDate = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $endDate = null;
+
+    #[ORM\ManyToOne(targetEntity: Mission::class, inversedBy: 'videoStreamings')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Mission $Mission = null;
 
     public function getId(): ?int
     {
@@ -39,26 +44,38 @@ class VideoStreaming
         return $this;
     }
 
-    public function getStartDate(): ?\DateTimeImmutable
+    public function getStartDate(): ?\DateTimeInterface
     {
         return $this->startDate;
     }
 
-    public function setStartDate(\DateTimeImmutable $startDate): static
+    public function setStartDate(\DateTimeInterface $startDate): static
     {
         $this->startDate = $startDate;
 
         return $this;
     }
 
-    public function getEndDate(): ?\DateTimeImmutable
+    public function getEndDate(): ?\DateTimeInterface
     {
         return $this->endDate;
     }
 
-    public function setEndDate(?\DateTimeImmutable $endDate): static
+    public function setEndDate(\DateTimeInterface $endDate): static
     {
         $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    public function getMission(): ?Mission
+    {
+        return $this->Mission;
+    }
+
+    public function setMission(?Mission $Mission): static
+    {
+        $this->Mission = $Mission;
 
         return $this;
     }

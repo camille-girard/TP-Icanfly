@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use App\Enum\PaymentMethodType;
-use App\Enum\PaymentStatusType;
+use App\Enum\PaymentStatus;
+use App\Enum\PaymentType;
 use App\Repository\PaymentRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,30 +16,38 @@ class Payment
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?float $amount = null;
+    private ?int $totalPrice = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $paymentDate = null;
 
-    #[ORM\Column(enumType: PaymentStatusType::class)]
-    private ?PaymentStatusType $status = null;
+    #[ORM\Column(enumType: PaymentStatus::class)]
+    private ?PaymentStatus $status = null;
 
-    #[ORM\Column(enumType: PaymentMethodType::class)]
-    private ?PaymentMethodType $paymentMethod = null;
+    #[ORM\Column(enumType: PaymentType::class)]
+    private ?PaymentType $paymentType = null;
+
+    #[ORM\ManyToOne(targetEntity: Mission::class, inversedBy: 'payments')]
+    private ?Mission $mission = null;
+
+    public function __construct()
+    {
+        $this->paymentDate = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getAmount(): ?float
+    public function getTotalPrice(): ?int
     {
-        return $this->amount;
+        return $this->totalPrice;
     }
 
-    public function setAmount(float $amount): static
+    public function setTotalPrice(int $totalPrice): static
     {
-        $this->amount = $amount;
+        $this->totalPrice = $totalPrice;
 
         return $this;
     }
@@ -56,26 +64,38 @@ class Payment
         return $this;
     }
 
-    public function getStatus(): ?PaymentStatusType
+    public function getStatus(): ?PaymentStatus
     {
         return $this->status;
     }
 
-    public function setStatus(PaymentStatusType $status): static
+    public function setStatus(PaymentStatus $status): static
     {
         $this->status = $status;
 
         return $this;
     }
 
-    public function getPaymentMethod(): ?PaymentMethodType
+    public function getPaymentType(): ?PaymentType
     {
-        return $this->paymentMethod;
+        return $this->paymentType;
     }
 
-    public function setPaymentMethod(PaymentMethodType $paymentMethod): static
+    public function setPaymentType(PaymentType $paymentType): static
     {
-        $this->paymentMethod = $paymentMethod;
+        $this->paymentType = $paymentType;
+
+        return $this;
+    }
+
+    public function getMission(): ?Mission
+    {
+        return $this->mission;
+    }
+
+    public function setMission(?Mission $mission): static
+    {
+        $this->mission = $mission;
 
         return $this;
     }

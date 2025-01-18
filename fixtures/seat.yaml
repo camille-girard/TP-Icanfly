@@ -1,15 +1,36 @@
 App\Entity\Seat:
-    seat_1:
+    seat1:
         number: 1
-        type: '@seat_type_economy'
-        spaceship: '@spaceship_falcon9'
+        reserved: false
+        price: 5000
+        Spaceship: '@falcon9'
 
-    seat_2:
+    seat2:
         number: 2
-        type: '@seat_type_premium'
-        spaceship: '@spaceship_starship'
+        reserved: true
+        price: 5000
+        Spaceship: '@falcon9'
 
-    seat_3:
-        number: 3
-        type: '@seat_type_business'
-        spaceship: '@spaceship_dragon'
+    seat3:
+        number: 1
+        reserved: false
+        price: 2500
+        Spaceship: '@starship'
+
+    seat4:
+        number: 2
+        reserved: true
+        price: 2500
+        Spaceship: '@starship'
+
+    seat5:
+        number: 1
+        reserved: false
+        price: 350
+        Spaceship: '@dragon'
+
+    seat6:
+        number: 2
+        reserved: true
+        price: 350
+        Spaceship: '@dragon'
