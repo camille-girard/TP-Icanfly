@@ -22,19 +22,8 @@ class Notification
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $sentDate = null;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'notifications')]
-    private ?self $Customer = null;
-
-    /**
-     * @var Collection<int, self>
-     */
-    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'Customer')]
-    private Collection $notifications;
-
-    public function __construct()
-    {
-        $this->notifications = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'notifications')]
+    private ?User $Customer = null;
 
     public function getId(): ?int
     {
@@ -65,44 +54,14 @@ class Notification
         return $this;
     }
 
-    public function getCustomer(): ?self
+    public function getCustomer(): ?User
     {
         return $this->Customer;
     }
 
-    public function setCustomer(?self $Customer): static
+    public function setCustomer(?User $Customer): static
     {
         $this->Customer = $Customer;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, self>
-     */
-    public function getNotifications(): Collection
-    {
-        return $this->notifications;
-    }
-
-    public function addNotification(self $notification): static
-    {
-        if (!$this->notifications->contains($notification)) {
-            $this->notifications->add($notification);
-            $notification->setCustomer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeNotification(self $notification): static
-    {
-        if ($this->notifications->removeElement($notification)) {
-            // set the owning side to null (unless already changed)
-            if ($notification->getCustomer() === $this) {
-                $notification->setCustomer(null);
-            }
-        }
 
         return $this;
     }

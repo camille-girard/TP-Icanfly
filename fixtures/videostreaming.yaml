@@ -1,18 +1,18 @@
-# App\Entity\VideoStreaming:
-# video_streaming1:
-#     url: 'https://streaming.lune.com/mission1'
-#     startDate: <(new \DateTime('2025-06-02 18:00:00'))>
-#     endDate: <(new \DateTime('2025-06-02 22:00:00'))>
-#     Mission: '@scientific_mission1'
-# 
-# video_streaming2:
-#     url: 'https://streaming.venus.com/mission2'
-#     startDate: <(new \DateTime('2025-08-05 14:00:00'))>
-#     endDate: <(new \DateTime('2025-08-05 18:00:00'))>
-#     Mission: '@scientific_mission2'
-# 
-# video_streaming3:
-#     url: 'https://streaming.iss.com/mission3'
-#     startDate: <(new \DateTime('2025-07-07 10:00:00'))>
-#     endDate: <(new \DateTime('2025-07-07 16:00:00'))>
-#     Mission: '@scientific_mission3'
+App\Entity\VideoStreaming:
+    video_streaming1:
+        url: 'https://streaming.lune.com/mission1'
+        startDate: <dateTime('2025-06-02 18:00:00')>
+        endDate: <dateTime('2025-06-02 22:00:00')>
+        Mission: '@scientific_mission1'
+
+    video_streaming2:
+        url: 'https://streaming.venus.com/mission2'
+        startDate: <dateTime('2025-08-05 14:00:00')>
+        endDate: <dateTime('2025-08-05 18:00:00')>
+        Mission: '@scientific_mission2'
+
+    video_streaming3:
+        url: 'https://streaming.iss.com/mission3'
+        startDate: <dateTime('2025-07-07 10:00:00')>
+        endDate: <dateTime('2025-07-07 16:00:00')>
+        Mission: '@scientific_mission3'

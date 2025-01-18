@@ -40,38 +40,26 @@ class Mission
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    /**
-     * @var Collection<int, Booking>
-     */
-    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'Mission')]
+    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'mission')]
     private Collection $bookings;
 
-    /**
-     * @var Collection<int, Spaceship>
-     */
     #[ORM\ManyToMany(targetEntity: Spaceship::class, inversedBy: 'missions')]
     #[ORM\JoinTable(name: 'mission_spaceship')]
     private Collection $spaceships;
 
-    /**
-     * @var Collection<int, VideoStreaming>
-     */
-    #[ORM\OneToMany(targetEntity: VideoStreaming::class, mappedBy: 'Mission')]
+    #[ORM\OneToMany(targetEntity: VideoStreaming::class, mappedBy: 'mission')]
     private Collection $videoStreamings;
 
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'missions')]
-    private Collection $users;
-
+    #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'mission')]
+    private Collection $payments;
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->bookings = new ArrayCollection();
         $this->spaceships = new ArrayCollection();
-        $this->users = new ArrayCollection();
+        $this->videoStreamings = new ArrayCollection();
+        $this->payments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -163,9 +151,6 @@ class Mission
         return $this;
     }
 
-    /**
-     * @return Collection<int, Booking>
-     */
     public function getBookings(): Collection
     {
         return $this->bookings;
@@ -192,9 +177,6 @@ class Mission
         return $this;
     }
 
-    /**
-     * @return Collection<int, Spaceship>
-     */
     public function getSpaceships(): Collection
     {
         return $this->spaceships;
@@ -216,25 +198,53 @@ class Mission
         return $this;
     }
 
-    public function getUsers(): Collection
+    public function getVideoStreamings(): Collection
     {
-        return $this->users;
+        return $this->videoStreamings;
     }
 
-    public function addUser(User $user): static
+    public function addVideoStreaming(VideoStreaming $videoStreaming): static
     {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->addMission($this);
+        if (!$this->videoStreamings->contains($videoStreaming)) {
+            $this->videoStreamings->add($videoStreaming);
+            $videoStreaming->setMission($this);
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): static
+    public function removeVideoStreaming(VideoStreaming $videoStreaming): static
     {
-        if ($this->users->removeElement($user)) {
-            $user->removeMission($this);
+        if ($this->videoStreamings->removeElement($videoStreaming)) {
+            if ($videoStreaming->getMission() === $this) {
+                $videoStreaming->setMission(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPayments(): Collection
+    {
+        return $this->payments;
+    }
+
+    public function addPayment(Payment $payment): static
+    {
+        if (!$this->payments->contains($payment)) {
+            $this->payments->add($payment);
+            $payment->setMission($this);
+        }
+
+        return $this;
+    }
+
+    public function removePayment(Payment $payment): static
+    {
+        if ($this->payments->removeElement($payment)) {
+            if ($payment->getMission() === $this) {
+                $payment->setMission(null);
+            }
         }
 
         return $this;

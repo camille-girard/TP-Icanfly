@@ -50,11 +50,19 @@ class User
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'missions')]
     private Collection $users;
 
+    /**
+     * @var Collection<int, Notification>
+     */
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'Customer')]
+    private Collection $notifications;
+
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->bookings = new ArrayCollection();
         $this->missions = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -169,6 +177,33 @@ class User
     public function removeMission(Mission $mission): static
     {
         $this->missions->removeElement($mission);
+
+        return $this;
+    }
+
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // Set the owning side to null (unless already changed)
+            if ($notification->getCustomer() === $this) {
+                $notification->setCustomer(null);
+            }
+        }
 
         return $this;
     }
