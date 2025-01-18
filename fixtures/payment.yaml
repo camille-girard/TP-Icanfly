@@ -1,20 +1,20 @@
 App\Entity\Payment:
     payment1:
-        totalPrice: 15
+        totalPrice: 15000
         paymentDate: <(new \DateTimeImmutable())>
         status: <(App\Enum\PaymentStatus::from('confirmed'))>
         paymentType: <(App\Enum\PaymentType::from('card'))> 
         Mission: '@scientific_mission2'
     
     payment2:
-        totalPrice: 10
+        totalPrice: 10000
         paymentDate: <(new \DateTimeImmutable())>
         status: <(App\Enum\PaymentStatus::from('pending'))>
         paymentType: <(App\Enum\PaymentType::from('paypal'))>
         Mission: '@scientific_mission1'
     
     payment3:
-        totalPrice: 20
+        totalPrice: 20000
         paymentDate: <(new \DateTimeImmutable())>
         status: <(App\Enum\PaymentStatus::from('cancelled'))>
         paymentType: <(App\Enum\PaymentType::from('crypto'))>

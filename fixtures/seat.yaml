@@ -14,23 +14,23 @@ App\Entity\Seat:
     seat3:
         number: 1
         reserved: false
-        price: 25
+        price: 2500
         Spaceship: '@starship'
 
     seat4:
         number: 2
         reserved: true
-        price: 25
+        price: 2500
         Spaceship: '@starship'
 
     seat5:
         number: 1
         reserved: false
-        price: 35
+        price: 350
         Spaceship: '@dragon'
 
     seat6:
         number: 2
         reserved: true
-        price: 35
+        price: 350
         Spaceship: '@dragon'
