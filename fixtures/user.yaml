@@ -3,25 +3,28 @@ App\Entity\User:
         firstName: 'Alice'
         lastName: 'Durand'
         email: 'alice.durand@example.com'
-        password: '<password>'
-        createdAt: <dateTimeBetween('-1 year', 'now')>
+        password: 'password123'
+        createdAt: <(new \DateTimeImmutable('2023-01-01'))>
         bookings:
             - '@booking1'
-    
+        missions: []
+
     user2:
         firstName: 'Bob'
         lastName: 'Martin'
         email: 'bob.martin@example.com'
-        password: '<password>'
-        createdAt: <dateTimeBetween('-1 year', 'now')>
+        password: 'password123'
+        createdAt: <(new \DateTimeImmutable('2023-02-01'))>
         bookings:
             - '@booking2'
-    
+        missions: []
+
     user3:
         firstName: 'Charlie'
         lastName: 'Lemoine'
         email: 'charlie.lemoine@example.com'
-        password: '<password>'
-        createdAt: <dateTimeBetween('-1 year', 'now')>
+        password: 'password123'
+        createdAt: <(new \DateTimeImmutable('2023-03-01'))>
         bookings:
             - '@booking3'
+        missions: []

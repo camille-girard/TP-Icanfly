@@ -4,7 +4,7 @@ namespace App\Enum;
 
 enum BookingStatus : string
 {
-    public const PENDING = 'pending';
-    public const CONFIRMED = 'confirmed';
-    public const CANCELLED = 'cancelled';
+    case PENDING = 'pending';
+    case CONFIRMED = 'confirmed';
+    case CANCELLED = 'cancelled';
 }

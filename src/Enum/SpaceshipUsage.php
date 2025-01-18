@@ -5,7 +5,7 @@ namespace App\Enum;
 enum SpaceshipUsage : string
 {
 
-    public const CARGO = 'cargo';
-    public const TRAVEL = 'travel';
-    public const SCIENTIFIC = 'scientific';
+    case CARGO = 'cargo';
+    case TRAVEL = 'travel';
+    case SCIENTIFIC = 'scientific';
 }

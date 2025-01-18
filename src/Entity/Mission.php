@@ -53,11 +53,25 @@ class Mission
     #[ORM\JoinTable(name: 'mission_spaceship')]
     private Collection $spaceships;
 
+    /**
+     * @var Collection<int, VideoStreaming>
+     */
+    #[ORM\OneToMany(targetEntity: VideoStreaming::class, mappedBy: 'Mission')]
+    private Collection $videoStreamings;
+
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'missions')]
+    private Collection $users;
+
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->bookings = new ArrayCollection();
         $this->spaceships = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -198,6 +212,30 @@ class Mission
     public function removeSpaceship(Spaceship $spaceship): static
     {
         $this->spaceships->removeElement($spaceship);
+
+        return $this;
+    }
+
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addMission($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeMission($this);
+        }
 
         return $this;
     }

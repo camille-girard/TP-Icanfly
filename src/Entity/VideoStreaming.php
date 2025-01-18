@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\VideoStreamingRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,19 +23,9 @@ class VideoStreaming
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $endDate = null;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'videoStreamings')]
-    private ?self $Mission = null;
-
-    /**
-     * @var Collection<int, self>
-     */
-    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'Mission')]
-    private Collection $videoStreamings;
-
-    public function __construct()
-    {
-        $this->videoStreamings = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(targetEntity: Mission::class, inversedBy: 'videoStreamings')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Mission $Mission = null;
 
     public function getId(): ?int
     {
@@ -80,44 +68,14 @@ class VideoStreaming
         return $this;
     }
 
-    public function getMission(): ?self
+    public function getMission(): ?Mission
     {
         return $this->Mission;
     }
 
-    public function setMission(?self $Mission): static
+    public function setMission(?Mission $Mission): static
     {
         $this->Mission = $Mission;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, self>
-     */
-    public function getVideoStreamings(): Collection
-    {
-        return $this->videoStreamings;
-    }
-
-    public function addVideoStreaming(self $videoStreaming): static
-    {
-        if (!$this->videoStreamings->contains($videoStreaming)) {
-            $this->videoStreamings->add($videoStreaming);
-            $videoStreaming->setMission($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVideoStreaming(self $videoStreaming): static
-    {
-        if ($this->videoStreamings->removeElement($videoStreaming)) {
-            // set the owning side to null (unless already changed)
-            if ($videoStreaming->getMission() === $this) {
-                $videoStreaming->setMission(null);
-            }
-        }
 
         return $this;
     }

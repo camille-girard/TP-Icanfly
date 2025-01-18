@@ -41,16 +41,20 @@ class User
     /**
      * @var Collection<int, self>
      */
-    #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'users')]
-    private Collection $Mission;
+    #[ORM\ManyToMany(targetEntity: Mission::class, inversedBy: 'users')]
+    private Collection $missions;
 
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'missions')]
+    private Collection $users;
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->bookings = new ArrayCollection();
-        $this->Mission = new ArrayCollection();
-        $this->users = new ArrayCollection();
+        $this->missions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -148,53 +152,23 @@ class User
         return $this;
     }
 
-    /**
-     * @return Collection<int, self>
-     */
-    public function getMission(): Collection
+    public function getMissions(): Collection
     {
-        return $this->Mission;
+        return $this->missions;
     }
 
-    public function addMission(self $mission): static
+    public function addMission(Mission $mission): static
     {
-        if (!$this->Mission->contains($mission)) {
-            $this->Mission->add($mission);
+        if (!$this->missions->contains($mission)) {
+            $this->missions->add($mission);
         }
 
         return $this;
     }
 
-    public function removeMission(self $mission): static
+    public function removeMission(Mission $mission): static
     {
-        $this->Mission->removeElement($mission);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, self>
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUser(self $user): static
-    {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->addMission($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(self $user): static
-    {
-        if ($this->users->removeElement($user)) {
-            $user->removeMission($this);
-        }
+        $this->missions->removeElement($mission);
 
         return $this;
     }

@@ -1,4 +1,4 @@
-pp\Entity\Notification:
+App\Entity\Notification:
     notification1:
         content: 'Vos données ont été mises à jour'
         sentDate: <dateTime()>

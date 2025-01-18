@@ -40,9 +40,16 @@ class Spaceship
     #[ORM\ManyToMany(targetEntity: Mission::class, mappedBy: 'spaceships')]
     private Collection $missions;
 
+    /**
+     * @var Collection<int, Seat>
+     */
+    #[ORM\OneToMany(targetEntity: Seat::class, mappedBy: 'Spaceship')]
+    private Collection $seats;
+
     public function __construct()
     {
         $this->missions = new ArrayCollection();
+        $this->seats = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -108,6 +115,32 @@ class Spaceship
     {
         if ($this->missions->removeElement($mission)) {
             $mission->removeSpaceship($this);
+        }
+
+        return $this;
+    }
+
+    public function getSeats(): Collection
+    {
+        return $this->seats;
+    }
+
+    public function addSeat(Seat $seat): static
+    {
+        if (!$this->seats->contains($seat)) {
+            $this->seats->add($seat);
+            $seat->setSpaceship($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSeat(Seat $seat): static
+    {
+        if ($this->seats->removeElement($seat)) {
+            if ($seat->getSpaceship() === $this) {
+                $seat->setSpaceship(null);
+            }
         }
 
         return $this;

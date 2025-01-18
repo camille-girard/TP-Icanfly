@@ -4,9 +4,9 @@ namespace App\Enum;
 
 enum PaymentType : string
 {
-    public const CARD = 'card';
-    public const CRYPTO = 'crypto';
-    public const PAYPAL = 'paypal';
+    case CARD = 'card';
+    case CRYPTO = 'crypto';
+    case PAYPAL = 'paypal';
 }
 
 

@@ -1,8 +1,8 @@
 App\Entity\Starship:
     starship:
         name: 'Starship Cargo'
-        autonomy: 500
-        usage: 'cargo'
+        autonomy: 50
+        usage: <(App\Enum\SpaceshipUsage::from('cargo'))>
         cargoCapacity: 800
         missions:
             - '@scientific_mission2'
@@ -11,8 +11,8 @@ App\Entity\Starship:
 App\Entity\Falcon9:
     falcon9:
         name: 'Falcon9 Explorer'
-        autonomy: 400
-        usage: 'scientific'
+        autonomy: 40
+        usage: <(App\Enum\SpaceshipUsage::from('scientific'))>
         crewCapacity: 6
         missions:
             - '@scientific_mission1'
@@ -22,8 +22,8 @@ App\Entity\Falcon9:
 App\Entity\Dragon:
     dragon:
         name: 'Dragon Voyager'
-        autonomy: 700
-        usage: 'travel'
+        autonomy: 70
+        usage: <(App\Enum\SpaceshipUsage::from('travel'))>
         seatCapacity: 12
         missions:
             - '@scientific_mission4'

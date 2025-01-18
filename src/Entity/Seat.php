@@ -19,19 +19,13 @@ class Seat
     private ?int $number = null;
 
     #[ORM\Column]
-    private ?bool $isReserved = null;
+    private ?bool $reserved = null;
 
     #[ORM\Column]
     private ?int $price = null;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'seats')]
-    private ?self $Spaceship = null;
-
-    /**
-     * @var Collection<int, self>
-     */
-    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'Spaceship')]
-    private Collection $seats;
+    #[ORM\ManyToOne(targetEntity: Spaceship::class, inversedBy: 'seats')]
+    private ?Spaceship $Spaceship = null;
 
     public function __construct()
     {
@@ -57,12 +51,12 @@ class Seat
 
     public function isReserved(): ?bool
     {
-        return $this->isReserved;
+        return $this->reserved;
     }
 
-    public function setReserved(bool $isReserved): static
+    public function setReserved(bool $reserved): static
     {
-        $this->isReserved = $isReserved;
+        $this->reserved = $reserved;
 
         return $this;
     }
@@ -79,45 +73,16 @@ class Seat
         return $this;
     }
 
-    public function getSpaceship(): ?self
+    public function getSpaceship(): ?Spaceship
     {
         return $this->Spaceship;
     }
 
-    public function setSpaceship(?self $Spaceship): static
+    public function setSpaceship(?Spaceship $Spaceship): static
     {
         $this->Spaceship = $Spaceship;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, self>
-     */
-    public function getSeats(): Collection
-    {
-        return $this->seats;
-    }
-
-    public function addSeat(self $seat): static
-    {
-        if (!$this->seats->contains($seat)) {
-            $this->seats->add($seat);
-            $seat->setSpaceship($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSeat(self $seat): static
-    {
-        if ($this->seats->removeElement($seat)) {
-            // set the owning side to null (unless already changed)
-            if ($seat->getSpaceship() === $this) {
-                $seat->setSpaceship(null);
-            }
-        }
-
-        return $this;
-    }
 }
