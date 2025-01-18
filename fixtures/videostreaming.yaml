@@ -1,0 +1,21 @@
+App\Entity\VideoStreaming:
+    video_streaming1:
+        url: 'https://streaming.lune.com/mission1'
+        startDate: '2025-06-02 18:00:00'
+        endDate: '2025-06-02 22:00:00'
+        Mission: '@scientific_mission1'
+        videoStreamings: []
+    
+    video_streaming2:
+        url: 'https://streaming.venus.com/mission2'
+        startDate: '2025-08-05 14:00:00'
+        endDate: '2025-08-05 18:00:00'
+        Mission: '@scientific_mission2'
+        videoStreamings: [ ]
+    
+    video_streaming3:
+        url: 'https://streaming.iss.com/mission3'
+        startDate: '2025-07-07 10:00:00'
+        endDate: '2025-07-07 16:00:00'
+        Mission: '@scientific_mission3'
+        videoStreamings: [ ]

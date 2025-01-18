@@ -44,11 +44,6 @@ class User
     #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'users')]
     private Collection $Mission;
 
-    /**
-     * @var Collection<int, self>
-     */
-    #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'Mission')]
-    private Collection $users;
 
     public function __construct()
     {

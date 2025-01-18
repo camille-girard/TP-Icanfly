@@ -3,14 +3,19 @@ App\Entity\Spaceship:
         name: 'Falcon9'
         autonomy: 100
         usage: 'scientific'
-        mission: '@mission1'
+        missions:
+            - '@scientific_mission1'
+    
     spaceship2:
         name: 'Starship'
         autonomy: 350
         usage: 'travel'
-        mission: '@mission2'
+        missions:
+            - '@scientific_mission2'
+    
     spaceship3:
         name: 'Dragon'
         autonomy: 560
         usage: 'cargo'
-        mission: 'mission3'
+        missions:
+            - '@scientific_mission3'

@@ -1,8 +1,15 @@
-App\Entity\Notification:
+pp\Entity\Notification:
     notification1:
         content: 'Vos données ont été mises à jour'
-        sentDate: <datetime()>
-        
+        sentDate: <dateTime()>
+        Customer: '@user1'
+    
     notification2:
-        content: 'Vos réservation est confirmée'
-        sentDate: <datetime()>
+        content: 'Votre réservation est confirmée'
+        sentDate: <dateTime()>
+        Customer: '@user2'
+    
+    notification3:
+        content: 'Votre réservation a été annulée'
+        sentDate: <dateTime()>
+        Customer: '@user3'

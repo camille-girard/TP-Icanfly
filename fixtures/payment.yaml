@@ -1,18 +1,21 @@
 App\Entity\Payment:
     payment1:
-        totalPrice: 10000
-        paymentDate: <dateTime()>
-        status: 'pending'
-        paymentType: 'card'
-        
+        totalPrice: 15000
+        paymentDate: <dateTimeImmutable()>
+        status: <(App\Enum\PaymentStatus::CONFIRMED)>
+        paymentType: <(App\Enum\PaymentType::CARD)>
+        Mission: '@scientific_mission2'
+    
     payment2:
-        totalPrice: 2500
-        paymentDate: <dateTime()>
-        status: 'pending'
-        paymentType: 'Paypal'
-        
+        totalPrice: 10000
+        paymentDate: <dateTimeImmutable()>
+        status: <(App\Enum\PaymentStatus::PENDING)>
+        paymentType: <(App\Enum\PaymentType::PAYPAL)>
+        Mission: '@scientific_mission1'
+    
     payment3:
-        totalPrice: 100
-        paymentDate: <dateTime()>
-        status: 'pending'
-        paymentType: 'crypto'
+        totalPrice: 20000
+        paymentDate: <dateTimeImmutable()>
+        status: <(App\Enum\PaymentStatus::CANCELLED)>
+        paymentType: <(App\Enum\PaymentType::CRYPTO)>
+        Mission: '@scientific_mission3'

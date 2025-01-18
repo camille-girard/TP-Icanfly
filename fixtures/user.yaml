@@ -1,7 +1,27 @@
 App\Entity\User:
-    email: 'test@gmail.com'
-    password: 'password'
-    firstName: 'John'
-    lastName: 'Doe'
-    createdAt: <dateTime()>
+    user1:
+        firstName: 'Alice'
+        lastName: 'Durand'
+        email: 'alice.durand@example.com'
+        password: '<password>'
+        createdAt: <dateTimeImmutable()>
+        bookings:
+            - '@booking1'
     
+    user2:
+        firstName: 'Bob'
+        lastName: 'Martin'
+        email: 'bob.martin@example.com'
+        password: '<password>'
+        createdAt: <dateTimeImmutable()>
+        bookings:
+            - '@booking2'
+    
+    user3:
+        firstName: 'Charlie'
+        lastName: 'Lemoine'
+        email: 'charlie.lemoine@example.com'
+        password: '<password>'
+        createdAt: <dateTimeImmutable()>
+        bookings:
+            - '@booking3'

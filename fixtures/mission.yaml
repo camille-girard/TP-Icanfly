@@ -1,27 +1,102 @@
-App\Entity\Mission :
-    mission1:
+App\Entity\ScientificMission:
+    scientific_mission1:
         destination: 'Lune'
-        description: 'Contemplation des étoiles et notre planète Terre depuis la lune'
+        description: 'Contemplation des étoiles et recherche scientifique sur la surface lunaire'
         date: '2025-06-02'
-        seatPrice: 100
+        seatPrice: 5000
         image: 'lune.jpg'
         duration: <time()>
         createdAt: <dateTime()>
-        
-    mission2:
+        specialEquipement: 'Télescope lunaire'
+        objective: 'Observation de la voûte céleste depuis la Lune'
+        bookings:
+            - '@booking2'
+        spaceships:
+            - '@spaceship1'
+    
+    scientific_mission2:
         destination: 'Venus'
-        description: 'Explorez Venus et ses mystères'
+        description: "Exploration scientifique de l'atmosphère vénusienne"
         date: '2025-08-05'
         seatPrice: 2500
         image: 'venus.jpg'
         duration: <time()>
         createdAt: <dateTime()>
-        
-    mission3:
+        specialEquipement: 'Capteur de gaz'
+        objective: 'Analyse des gaz atmosphériques de Vénus'
+        bookings:
+            - '@booking1'
+        spaceships:
+            - '@spaceship2'
+    
+    scientific_mission3:
         destination: 'ISS'
-        description: 'Participer à la vie à bord de la station spatiale internationale'
+        description: 'Participation à des expériences scientifiques à bord de l’ISS'
         date: '2025-07-07'
         seatPrice: 350
-        image: 'lune.jpg'
+        image: 'iss.jpg'
         duration: <time()>
         createdAt: <dateTime()>
+        specialEquipement: 'Matériel de laboratoire'
+        objective: 'Expériences en microgravité'
+        bookings:
+            - '@booking3'
+        spaceships:
+            - '@spaceship3'
+    
+    scientific_mission4:
+        destination: 'Mars'
+        description: 'Recherche de traces de vie sur Mars'
+        date: '2025-09-15'
+        seatPrice: 6000
+        image: 'mars.jpg'
+        duration: <time()>
+        createdAt: <dateTime()>
+        specialEquipement: 'Analyseur de sol'
+        objective: 'Étudier la composition du sol martien'
+        bookings: [ ]
+        spaceships:
+            - '@spaceship2'
+    
+    scientific_mission5:
+        destination: 'Titan'
+        description: 'Analyse de l’atmosphère de Titan'
+        date: '2025-10-10'
+        seatPrice: 7000
+        image: 'titan.jpg'
+        duration: <time()>
+        createdAt: <dateTime()>
+        specialEquipement: 'Capteurs atmosphériques'
+        objective: 'Comprendre les phénomènes météorologiques'
+        bookings: [ ]
+        spaceships:
+            - '@spaceship3'
+
+App\Entity\TouristMission:
+    tourist_mission1:
+        destination: 'Orbital Resort'
+        description: 'Séjour de luxe en orbite terrestre'
+        date: '2025-11-20'
+        seatPrice: 4000
+        image: 'orbital_resort.jpg'
+        duration: <time()>
+        createdAt: <dateTime()>
+        hasGuide: true
+        activities: 'Spa zéro gravité, observation des étoiles'
+        bookings: [ ]
+        spaceships:
+            - '@spaceship1'
+    
+    tourist_mission2:
+        destination: 'Station Lunaire'
+        description: 'Vacances sur la base lunaire'
+        date: '2025-12-25'
+        seatPrice: 5500
+        image: 'station_lunaire.jpg'
+        duration: <time()>
+        createdAt: <dateTime()>
+        hasGuide: false
+        activities: 'Randonnée lunaire, photographie spatiale'
+        bookings: [ ]
+        spaceships:
+            - '@spaceship1'
