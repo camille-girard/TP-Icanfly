@@ -9,6 +9,15 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SpaceshipRepository::class)]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap([
+    'spaceship' => Spaceship::class,
+    'starship' => Starship::class,
+    'falcon9' => Falcon9::class,
+    'dragon' => Dragon::class
+])]
+
 class Spaceship
 {
     #[ORM\Id]

@@ -1,6 +1,0 @@
-App\Entity\Starship:
-    starship1:
-        cargoCapacity: 800
-    
-    starship2:
-        cargoCapacity: 1200

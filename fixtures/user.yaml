@@ -4,7 +4,7 @@ App\Entity\User:
         lastName: 'Durand'
         email: 'alice.durand@example.com'
         password: '<password>'
-        createdAt: <dateTimeImmutable()>
+        createdAt: <dateTimeBetween('-1 year', 'now')>
         bookings:
             - '@booking1'
     
@@ -13,7 +13,7 @@ App\Entity\User:
         lastName: 'Martin'
         email: 'bob.martin@example.com'
         password: '<password>'
-        createdAt: <dateTimeImmutable()>
+        createdAt: <dateTimeBetween('-1 year', 'now')>
         bookings:
             - '@booking2'
     
@@ -22,6 +22,6 @@ App\Entity\User:
         lastName: 'Lemoine'
         email: 'charlie.lemoine@example.com'
         password: '<password>'
-        createdAt: <dateTimeImmutable()>
+        createdAt: <dateTimeBetween('-1 year', 'now')>
         bookings:
             - '@booking3'

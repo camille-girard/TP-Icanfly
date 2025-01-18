@@ -6,13 +6,13 @@ App\Entity\ScientificMission:
         seatPrice: 5000
         image: 'lune.jpg'
         duration: <time()>
-        createdAt: <dateTime()>
+        createdAt: <dateTimeBetween('-1 year', 'now')>
         specialEquipement: 'Télescope lunaire'
         objective: 'Observation de la voûte céleste depuis la Lune'
         bookings:
             - '@booking2'
         spaceships:
-            - '@spaceship1'
+            - '@falcon9'
     
     scientific_mission2:
         destination: 'Venus'
@@ -21,13 +21,13 @@ App\Entity\ScientificMission:
         seatPrice: 2500
         image: 'venus.jpg'
         duration: <time()>
-        createdAt: <dateTime()>
+        createdAt: <dateTimeBetween('-1 year', 'now')>
         specialEquipement: 'Capteur de gaz'
         objective: 'Analyse des gaz atmosphériques de Vénus'
         bookings:
             - '@booking1'
         spaceships:
-            - '@spaceship2'
+            - '@starship'
     
     scientific_mission3:
         destination: 'ISS'
@@ -36,13 +36,13 @@ App\Entity\ScientificMission:
         seatPrice: 350
         image: 'iss.jpg'
         duration: <time()>
-        createdAt: <dateTime()>
+        createdAt: <dateTimeBetween('-1 year', 'now')>
         specialEquipement: 'Matériel de laboratoire'
         objective: 'Expériences en microgravité'
         bookings:
             - '@booking3'
         spaceships:
-            - '@spaceship3'
+            - '@falcon9'
     
     scientific_mission4:
         destination: 'Mars'
@@ -51,12 +51,12 @@ App\Entity\ScientificMission:
         seatPrice: 6000
         image: 'mars.jpg'
         duration: <time()>
-        createdAt: <dateTime()>
+        createdAt: <dateTimeBetween('-1 year', 'now')>
         specialEquipement: 'Analyseur de sol'
         objective: 'Étudier la composition du sol martien'
         bookings: [ ]
         spaceships:
-            - '@spaceship2'
+            - '@dragon'
     
     scientific_mission5:
         destination: 'Titan'
@@ -65,12 +65,12 @@ App\Entity\ScientificMission:
         seatPrice: 7000
         image: 'titan.jpg'
         duration: <time()>
-        createdAt: <dateTime()>
+        createdAt: <dateTimeBetween('-1 year', 'now')>
         specialEquipement: 'Capteurs atmosphériques'
         objective: 'Comprendre les phénomènes météorologiques'
         bookings: [ ]
         spaceships:
-            - '@spaceship3'
+            - '@starship'
 
 App\Entity\TouristMission:
     tourist_mission1:
@@ -80,12 +80,12 @@ App\Entity\TouristMission:
         seatPrice: 4000
         image: 'orbital_resort.jpg'
         duration: <time()>
-        createdAt: <dateTime()>
+        createdAt: <dateTimeBetween('-1 year', 'now')>
         hasGuide: true
         activities: 'Spa zéro gravité, observation des étoiles'
         bookings: [ ]
         spaceships:
-            - '@spaceship1'
+            - '@falcon9'
     
     tourist_mission2:
         destination: 'Station Lunaire'
@@ -94,9 +94,9 @@ App\Entity\TouristMission:
         seatPrice: 5500
         image: 'station_lunaire.jpg'
         duration: <time()>
-        createdAt: <dateTime()>
+        createdAt: <dateTimeBetween('-1 year', 'now')>
         hasGuide: false
         activities: 'Randonnée lunaire, photographie spatiale'
         bookings: [ ]
         spaceships:
-            - '@spaceship1'
+            - '@dragon'

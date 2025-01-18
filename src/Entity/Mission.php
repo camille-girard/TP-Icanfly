@@ -9,6 +9,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MissionRepository::class)]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
+#[ORM\DiscriminatorMap(['mission' => Mission::class, 'scientific_mission' => ScientificMission::class, 'tourist_mission' => TouristMission::class])]
 class Mission
 {
     #[ORM\Id]

@@ -6,23 +6,14 @@ use App\Repository\ScientificMissionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ScientificMissionRepository::class)]
-class ScientificMission
+class ScientificMission extends Mission
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
-
     #[ORM\Column(length: 255)]
     private ?string $specialEquipement = null;
 
     #[ORM\Column(length: 255)]
     private ?string $objective = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getSpecialEquipement(): ?string
     {

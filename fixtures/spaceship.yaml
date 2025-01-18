@@ -1,21 +1,30 @@
-App\Entity\Spaceship:
-    spaceship1:
-        name: 'Falcon9'
-        autonomy: 100
-        usage: 'scientific'
-        missions:
-            - '@scientific_mission1'
-    
-    spaceship2:
-        name: 'Starship'
-        autonomy: 350
-        usage: 'travel'
+App\Entity\Starship:
+    starship:
+        name: 'Starship Cargo'
+        autonomy: 500
+        usage: 'cargo'
+        cargoCapacity: 800
         missions:
             - '@scientific_mission2'
-    
-    spaceship3:
-        name: 'Dragon'
-        autonomy: 560
-        usage: 'cargo'
+            - '@scientific_mission5'
+
+App\Entity\Falcon9:
+    falcon9:
+        name: 'Falcon9 Explorer'
+        autonomy: 400
+        usage: 'scientific'
+        crewCapacity: 6
         missions:
+            - '@scientific_mission1'
             - '@scientific_mission3'
+            - '@tourist_mission1'
+
+App\Entity\Dragon:
+    dragon:
+        name: 'Dragon Voyager'
+        autonomy: 700
+        usage: 'travel'
+        seatCapacity: 12
+        missions:
+            - '@scientific_mission4'
+            - '@tourist_mission2'
