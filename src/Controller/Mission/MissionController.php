@@ -3,6 +3,8 @@
 namespace App\Controller\Mission;
 
 use App\Entity\Mission;
+use App\Entity\ScientificMission;
+use App\Entity\TouristMission;
 use App\Form\MissionType;
 use App\Repository\MissionRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+
 
 class MissionController extends AbstractController
 {
@@ -30,22 +33,43 @@ class MissionController extends AbstractController
     #[Route('/dashboard/mission/new', name: 'dashboard_mission_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $mission = new Mission();
-        $form = $this->createForm(MissionType::class, $mission);
+        $form = $this->createForm(MissionType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $type = $form->get('type')->getData();
+
+            // Create the appropriate mission type
+            if ($type === 'scientific') {
+                $mission = new ScientificMission();
+                $mission->setSpecialEquipement($data['specialEquipement']);
+                $mission->setObjective($data['objective']);
+            } elseif ($type === 'travel') {
+                $mission = new TouristMission();
+                $mission->setHasGuide($data['hasGuide']);
+                $mission->setActivities($data['activities']);
+            }
+
+            // Set common fields
+            $mission->setDestination($data['destination']);
+            $mission->setDescription($data['description']);
+            $mission->setDate($data['date']);
+            $mission->setSeatPrice($data['seatPrice']);
+            $mission->setImage($data['image']);
+            $mission->setDuration($data['duration']);
+
             $entityManager->persist($mission);
             $entityManager->flush();
 
-            return $this->redirectToRoute('dashboard_mission_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('dashboard_mission_index');
         }
 
         return $this->render('dashboard/mission/new.html.twig', [
-            'mission' => $mission,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
+
 
     #[Route('/dashboard/mission/{id}', name: 'dashboard_mission_show', methods: ['GET'])]
     public function show(Mission $mission): Response
@@ -58,20 +82,33 @@ class MissionController extends AbstractController
     #[Route('/dashboard/mission/{id}/edit', name: 'dashboard_mission_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Mission $mission, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(MissionType::class, $mission);
+        $type = $mission instanceof ScientificMission ? 'scientific' : 'travel';
+        $form = $this->createForm(MissionType::class, $mission, [
+            'current_type' => $type,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($mission instanceof ScientificMission) {
+                $mission->setSpecialEquipement($form->get('specialEquipement')->getData());
+                $mission->setObjective($form->get('objective')->getData());
+            } elseif ($mission instanceof TouristMission) {
+                $mission->setHasGuide($form->get('hasGuide')->getData());
+                $mission->setActivities($form->get('activities')->getData());
+            }
+
             $entityManager->flush();
 
-            return $this->redirectToRoute('dashboard_mission_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('dashboard_mission_index');
         }
 
         return $this->render('dashboard/mission/edit.html.twig', [
+            'form' => $form->createView(),
             'mission' => $mission,
-            'form' => $form,
         ]);
     }
+
+
 
     #[Route('/dashboard/mission/{id}', name: 'dashboard_mission_delete', methods: ['POST'])]
     public function delete(Request $request, Mission $mission, EntityManagerInterface $entityManager): Response

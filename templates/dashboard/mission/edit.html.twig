@@ -24,6 +24,7 @@
                 {% endfor %}
             </div>
 
+
             <div class="flex justify-end mt-6">
                 <button type="submit"
                         class="bg-[#002EFF] text-white px-4 py-2 rounded hover:bg-[#001FCC]">
@@ -43,4 +44,22 @@
             {{ include('dashboard/mission/_delete_form.html.twig') }}
         </div>
     </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const typeField = document.querySelector('select[name="type"]');
+            const scientificFields = document.querySelectorAll('.scientific-fields');
+            const travelFields = document.querySelectorAll('.travel-fields');
+
+            function toggleFields() {
+                const type = typeField.value;
+                scientificFields.forEach(field => field.style.display = (type === 'scientific') ? 'block' : 'none');
+                travelFields.forEach(field => field.style.display = (type === 'travel') ? 'block' : 'none');
+            }
+
+            typeField.addEventListener('change', toggleFields);
+            toggleFields(); // Call on initial load
+        });
+    </script>
 {% endblock %}

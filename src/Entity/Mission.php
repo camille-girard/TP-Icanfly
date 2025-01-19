@@ -249,4 +249,10 @@ class Mission
 
         return $this;
     }
+
+    public function getType(): string
+    {
+        return $this instanceof ScientificMission ? 'scientific' : ($this instanceof TouristMission ? 'travel' : 'other');
+    }
+
 }
