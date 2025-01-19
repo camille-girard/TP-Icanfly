@@ -82,20 +82,31 @@ class MissionController extends AbstractController
     #[Route('/dashboard/mission/{id}/edit', name: 'dashboard_mission_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Mission $mission, EntityManagerInterface $entityManager): Response
     {
-        // Determine the current type of mission (scientific or travel)
-        $type = $mission instanceof ScientificMission ? 'scientific' : 'travel';
+        // Determine the type of mission
+        $currentType = $mission instanceof ScientificMission ? 'scientific' : 'travel';
 
+        // Create the form with current type
         $form = $this->createForm(MissionType::class, $mission, [
-            'current_type' => $type,
+            'current_type' => $currentType,
         ]);
+
+        // Set default values for non-mapped fields
+        if ($currentType === 'scientific') {
+            $form->get('specialEquipement')->setData($mission->getSpecialEquipement());
+            $form->get('objective')->setData($mission->getObjective());
+        } elseif ($currentType === 'travel') {
+            $form->get('hasGuide')->setData($mission->hasGuide());
+            $form->get('activities')->setData($mission->getActivities());
+        }
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Update child-specific fields based on the type
-            if ($mission instanceof ScientificMission) {
+            // Update special fields
+            if ($currentType === 'scientific') {
                 $mission->setSpecialEquipement($form->get('specialEquipement')->getData());
                 $mission->setObjective($form->get('objective')->getData());
-            } elseif ($mission instanceof TouristMission) {
+            } elseif ($currentType === 'travel') {
                 $mission->setHasGuide($form->get('hasGuide')->getData());
                 $mission->setActivities($form->get('activities')->getData());
             }

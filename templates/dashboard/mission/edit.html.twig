@@ -24,14 +24,40 @@
                 {% endfor %}
 
                 <div class="scientific-fields" style="display: none;">
-                    {{ form_row(form.specialEquipement) }}
-                    {{ form_row(form.objective) }}
+                    <div>
+                        {{ form_label(form.specialEquipement, null, { 'label_attr': { 'class': 'block text-sm font-medium text-[#1E2A38]' } }) }}
+                        {{ form_widget(form.specialEquipement) }}
+                        {% if form.specialEquipement.vars.errors|length > 0 %}
+                            <p class="text-red-600 text-sm mt-1">{{ form.specialEquipement.vars.errors|first.message }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        {{ form_label(form.objective, null, { 'label_attr': { 'class': 'block text-sm font-medium text-[#1E2A38]' } }) }}
+                        {{ form_widget(form.objective) }}
+                        {% if form.objective.vars.errors|length > 0 %}
+                            <p class="text-red-600 text-sm mt-1">{{ form.objective.vars.errors|first.message }}</p>
+                        {% endif %}
+                    </div>
                 </div>
 
                 <div class="travel-fields" style="display: none;">
-                    {{ form_row(form.hasGuide) }}
-                    {{ form_row(form.activities) }}
+                    <div>
+                        {{ form_label(form.hasGuide, null, { 'label_attr': { 'class': 'block text-sm font-medium text-[#1E2A38]' } }) }}
+                        {{ form_widget(form.hasGuide) }}
+                        {% if form.hasGuide.vars.errors|length > 0 %}
+                            <p class="text-red-600 text-sm mt-1">{{ form.hasGuide.vars.errors|first.message }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        {{ form_label(form.activities, null, { 'label_attr': { 'class': 'block text-sm font-medium text-[#1E2A38]' } }) }}
+                        {{ form_widget(form.activities) }}
+                        {% if form.activities.vars.errors|length > 0 %}
+                            <p class="text-red-600 text-sm mt-1">{{ form.activities.vars.errors|first.message }}</p>
+                        {% endif %}
+                    </div>
                 </div>
+
+
             </div>
 
 
@@ -60,9 +86,6 @@
         document.addEventListener('DOMContentLoaded', function () {
             const typeField = document.querySelector('.type-selector');
             const form = typeField.closest('form');
-            console.log(typeField.value); // Log the selected value on change
-            console.log(document.querySelectorAll('.scientific-fields')); // Check if scientific-fields exist
-            console.log(document.querySelectorAll('.travel-fields')); // Check if travel-fields exist
 
             function toggleFields() {
                 const type = typeField.value;
@@ -85,6 +108,7 @@
             typeField.addEventListener('change', toggleFields);
             toggleFields(); // Initialize fields visibility on page load
         });
+
     </script>
 {% endblock %}
 
