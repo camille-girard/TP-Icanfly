@@ -11,10 +11,10 @@
 
             <div class="grid grid-cols-2 gap-6">
                 {% for field in form %}
-                    {% if field.vars.name != '_token' %}
+                    {% if field.vars.name not in ['_token', 'specialEquipement', 'objective', 'hasGuide', 'activities'] %}
                         <div>
                             {{ form_label(field, null, { 'label_attr': { 'class': 'block text-sm font-medium text-[#1E2A38]' } }) }}
-                            {{ form_widget(field, { 'attr': { 'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]' } }) }}
+                            {{ form_widget(field) }}
 
                             {% if field.vars.errors|length > 0 %}
                                 <p class="text-red-600 text-sm mt-1">{{ field.vars.errors|first.message }}</p>
@@ -23,11 +23,19 @@
                     {% endif %}
                 {% endfor %}
 
+                <div class="scientific-fields" style="display: none;">
+                    {{ form_row(form.specialEquipement) }}
+                    {{ form_row(form.objective) }}
+                </div>
+
+                <div class="travel-fields" style="display: none;">
+                    {{ form_row(form.hasGuide) }}
+                    {{ form_row(form.activities) }}
+                </div>
             </div>
 
             <div class="flex justify-start mt-6">
-                <button type="submit"
-                        class="bg-[#002EFF] text-white px-4 py-2 rounded hover:bg-[#001FCC]">
+                <button type="submit" class="bg-[#002EFF] text-white px-4 py-2 rounded hover:bg-[#001FCC]">
                     {{ button_label|default('Créer') }}
                 </button>
             </div>
@@ -36,26 +44,40 @@
         </div>
 
         <div class="mt-6">
-            <a href="{{ path('dashboard_mission_index') }}"
-               class="text-[#002EFF] hover:underline">&larr; Retour à la liste</a>
+            <a href="{{ path('dashboard_mission_index') }}" class="text-[#002EFF] hover:underline">&larr; Retour à la liste</a>
         </div>
     </div>
 {% endblock %}
+
 {% block javascripts %}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const typeField = document.querySelector('select[name="type"]');
-            const scientificFields = document.querySelectorAll('.scientific-fields');
-            const travelFields = document.querySelectorAll('.travel-fields');
+            const typeField = document.querySelector('.type-selector');
+            const form = typeField.closest('form');
+            console.log(typeField.value); // Log the selected value on change
+            console.log(document.querySelectorAll('.scientific-fields')); // Check if scientific-fields exist
+            console.log(document.querySelectorAll('.travel-fields')); // Check if travel-fields exist
 
             function toggleFields() {
                 const type = typeField.value;
-                scientificFields.forEach(field => field.style.display = (type === 'scientific') ? 'block' : 'none');
-                travelFields.forEach(field => field.style.display = (type === 'travel') ? 'block' : 'none');
+
+                form.querySelectorAll('.scientific-fields, .travel-fields').forEach(field => {
+                    field.style.display = 'none';
+                });
+
+                if (type === 'scientific') {
+                    form.querySelectorAll('.scientific-fields').forEach(field => {
+                        field.style.display = 'block';
+                    });
+                } else if (type === 'travel') {
+                    form.querySelectorAll('.travel-fields').forEach(field => {
+                        field.style.display = 'block';
+                    });
+                }
             }
 
             typeField.addEventListener('change', toggleFields);
-            toggleFields(); // Call on initial load
+            toggleFields(); // Initialize fields visibility on page load
         });
     </script>
 {% endblock %}

@@ -37,27 +37,27 @@ class MissionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $type = $form->get('type')->getData();
+            $type = $form->get('type')->getData(); // Get the selected type
+            $mission = null;
 
-            // Create the appropriate mission type
+            // Create the appropriate child entity
             if ($type === 'scientific') {
                 $mission = new ScientificMission();
-                $mission->setSpecialEquipement($data['specialEquipement']);
-                $mission->setObjective($data['objective']);
+                $mission->setSpecialEquipement($form->get('specialEquipement')->getData());
+                $mission->setObjective($form->get('objective')->getData());
             } elseif ($type === 'travel') {
                 $mission = new TouristMission();
-                $mission->setHasGuide($data['hasGuide']);
-                $mission->setActivities($data['activities']);
+                $mission->setHasGuide($form->get('hasGuide')->getData());
+                $mission->setActivities($form->get('activities')->getData());
             }
 
             // Set common fields
-            $mission->setDestination($data['destination']);
-            $mission->setDescription($data['description']);
-            $mission->setDate($data['date']);
-            $mission->setSeatPrice($data['seatPrice']);
-            $mission->setImage($data['image']);
-            $mission->setDuration($data['duration']);
+            $mission->setDestination($form->get('destination')->getData());
+            $mission->setDescription($form->get('description')->getData());
+            $mission->setDate($form->get('date')->getData());
+            $mission->setSeatPrice($form->get('seatPrice')->getData());
+            $mission->setImage($form->get('image')->getData());
+            $mission->setDuration($form->get('duration')->getData());
 
             $entityManager->persist($mission);
             $entityManager->flush();
@@ -82,13 +82,16 @@ class MissionController extends AbstractController
     #[Route('/dashboard/mission/{id}/edit', name: 'dashboard_mission_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Mission $mission, EntityManagerInterface $entityManager): Response
     {
+        // Determine the current type of mission (scientific or travel)
         $type = $mission instanceof ScientificMission ? 'scientific' : 'travel';
+
         $form = $this->createForm(MissionType::class, $mission, [
             'current_type' => $type,
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Update child-specific fields based on the type
             if ($mission instanceof ScientificMission) {
                 $mission->setSpecialEquipement($form->get('specialEquipement')->getData());
                 $mission->setObjective($form->get('objective')->getData());
@@ -107,8 +110,6 @@ class MissionController extends AbstractController
             'mission' => $mission,
         ]);
     }
-
-
 
     #[Route('/dashboard/mission/{id}', name: 'dashboard_mission_delete', methods: ['POST'])]
     public function delete(Request $request, Mission $mission, EntityManagerInterface $entityManager): Response
