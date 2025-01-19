@@ -42,6 +42,38 @@
                             <h2 class="text-lg font-medium text-[#1E2A38]">Créé le</h2>
                             <p class="text-gray-600">{{ mission.createdAt ? mission.createdAt|date('Y-m-d H:i:s') : 'N/A' }}</p>
                         </div>
+                        <div>
+                            <h2 class="text-lg font-medium text-[#1E2A38]">Type de Mission</h2>
+                            <p class="text-gray-600">
+                                {% if mission.type == 'scientific' %}
+                                    Scientifique
+                                {% elseif mission.type == 'travel' %}
+                                    Touristique
+                                {% else %}
+                                    Autre
+                                {% endif %}
+                            </p>
+                        </div>
+
+                        {% if mission.type == 'scientific' %}
+                            <div>
+                                <h2 class="text-lg font-medium text-[#1E2A38]">Équipement Spécial</h2>
+                                <p class="text-gray-600">{{ mission.specialEquipement }}</p>
+                            </div>
+                            <div>
+                                <h2 class="text-lg font-medium text-[#1E2A38]">Objectif</h2>
+                                <p class="text-gray-600">{{ mission.objective }}</p>
+                            </div>
+                        {% elseif mission.type == 'travel' %}
+                            <div>
+                                <h2 class="text-lg font-medium text-[#1E2A38]">Guide Inclus</h2>
+                                <p class="text-gray-600">{{ mission.hasGuide ? 'Oui' : 'Non' }}</p>
+                            </div>
+                            <div>
+                                <h2 class="text-lg font-medium text-[#1E2A38]">Activités</h2>
+                                <p class="text-gray-600">{{ mission.activities }}</p>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
