@@ -22,6 +22,7 @@ class ChangePasswordFormType extends AbstractType
                 'options' => [
                     'attr' => [
                         'autocomplete' => 'new-password',
+                        'class' => 'w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-blue-400',
                     ],
                 ],
                 'first_options' => [
@@ -44,8 +45,6 @@ class ChangePasswordFormType extends AbstractType
                     'label' => 'Repeat Password',
                 ],
                 'invalid_message' => 'The password fields must match.',
-                // Instead of being set onto the object directly,
-                // this is read and encoded in the controller
                 'mapped' => false,
             ])
         ;
