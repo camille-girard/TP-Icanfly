@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Controller\Mission;
 
 use App\Entity\Mission;

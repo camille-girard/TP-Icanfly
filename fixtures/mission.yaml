@@ -4,7 +4,7 @@ App\Entity\ScientificMission:
         description: 'Contemplation des étoiles et recherche scientifique sur la surface lunaire'
         date: <(new \DateTime('2025-06-02'))>
         seatPrice: 5000
-        image: 'lune.jpg'
+        image: 'https://picsum.photos/400/300?random=1'
         duration: <(new \DateTime('1970-01-01 02:00:00'))> # Durée de 2 heures
         specialEquipement: 'Télescope lunaire'
         objective: 'Observation de la voûte céleste depuis la Lune'
@@ -18,7 +18,7 @@ App\Entity\ScientificMission:
         description: "Exploration scientifique de l'atmosphère vénusienne"
         date: <(new \DateTime('2025-08-05'))>
         seatPrice: 2500
-        image: 'venus.jpg'
+        image: 'https://picsum.photos/400/300?random=2'
         duration: <(new \DateTime('1970-01-01 03:30:00'))> # Durée de 3h30
         specialEquipement: 'Capteur de gaz'
         objective: 'Analyse des gaz atmosphériques de Vénus'
@@ -32,7 +32,7 @@ App\Entity\ScientificMission:
         description: 'Participation à des expériences scientifiques à bord de l’ISS'
         date: <(new \DateTime('2025-07-07'))>
         seatPrice: 350
-        image: 'iss.jpg'
+        image: 'https://picsum.photos/400/300?random=3'
         duration: <(new \DateTime('1970-01-01 06:00:00'))> # Durée de 6 heures
         specialEquipement: 'Matériel de laboratoire'
         objective: 'Expériences en microgravité'
@@ -46,7 +46,7 @@ App\Entity\ScientificMission:
         description: 'Recherche de traces de vie sur Mars'
         date: <(new \DateTime('2025-09-15'))>
         seatPrice: 6000
-        image: 'mars.jpg'
+        image: 'https://picsum.photos/400/300?random=4'
         duration: <(new \DateTime('1970-01-01 12:00:00'))> # Durée de 12 heures
         specialEquipement: 'Analyseur de sol'
         objective: 'Étudier la composition du sol martien'
@@ -59,7 +59,7 @@ App\Entity\ScientificMission:
         description: 'Analyse de l’atmosphère de Titan'
         date: <(new \DateTime('2025-10-10'))>
         seatPrice: 7000
-        image: 'titan.jpg'
+        image: 'https://picsum.photos/400/300?random=5'
         duration: <(new \DateTime('1970-01-01 08:45:00'))> # Durée de 8h45
         specialEquipement: 'Capteurs atmosphériques'
         objective: 'Comprendre les phénomènes météorologiques'
@@ -73,7 +73,7 @@ App\Entity\TouristMission:
         description: 'Séjour de luxe en orbite terrestre'
         date: <(new \DateTime('2025-11-20'))>
         seatPrice: 4000
-        image: 'orbital_resort.jpg'
+        image: 'https://picsum.photos/400/300?random=6'
         duration: <(new \DateTime('1970-01-01 04:00:00'))> # Durée de 4 heures
         hasGuide: true
         activities: 'Spa zéro gravité, observation des étoiles'
@@ -86,7 +86,7 @@ App\Entity\TouristMission:
         description: 'Vacances sur la base lunaire'
         date: <(new \DateTime('2025-12-25'))>
         seatPrice: 5500
-        image: 'station_lunaire.jpg'
+        image: 'https://picsum.photos/400/300?random=7'
         duration: <(new \DateTime('1970-01-01 10:00:00'))> # Durée de 10 heures
         hasGuide: false
         activities: 'Randonnée lunaire, photographie spatiale'
