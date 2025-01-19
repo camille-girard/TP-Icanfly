@@ -15,13 +15,13 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
+            ->add('firstName')
+            ->add('lastName')
             ->add('email')
             ->add('password')
             ->add('createdAt', null, [
                 'widget' => 'single_text',
             ])
-            ->add('loyaltyPoints')
             ->add('roles', ChoiceType::class, [
                 'choices' => [
                     'Admin' => 'ROLE_ADMIN',
@@ -31,13 +31,13 @@ class UserType extends AbstractType
                 'expanded' => true,
             ])
             ->add('isVerified');
-            /*
-            ->add('missions', EntityType::class, [
-                'class' => Mission::class,
-                'choice_label' => 'id',
-                'multiple' => true,
-            ]);
-            */
+        /*
+        ->add('missions', EntityType::class, [
+            'class' => Mission::class,
+            'choice_label' => 'id',
+            'multiple' => true,
+        ]);
+        */
     }
 
     public function configureOptions(OptionsResolver $resolver): void

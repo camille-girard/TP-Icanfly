@@ -14,7 +14,6 @@ class TouristMission extends Mission
     #[ORM\Column(length: 255)]
     private ?string $activities = null;
 
-
     public function hasGuide(): ?bool
     {
         return $this->hasGuide;

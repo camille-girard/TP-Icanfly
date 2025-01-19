@@ -19,11 +19,11 @@
                     <thead class="bg-[#1E2A38] text-white">
                     <tr>
                         <th class="px-4 py-2 text-left font-semibold">Id</th>
-                        <th class="px-4 py-2 text-left font-semibold">Name</th>
+                        <th class="px-4 py-2 text-left font-semibold">FirstName</th>
+                        <th class="px-4 py-2 text-left font-semibold">LastName</th>
                         <th class="px-4 py-2 text-left font-semibold">Email</th>
                         <th class="px-4 py-2 text-left font-semibold">Password</th>
                         <th class="px-4 py-2 text-left font-semibold">CreatedAt</th>
-                        <th class="px-4 py-2 text-left font-semibold">LoyaltyPoints</th>
                         <th class="px-4 py-2 text-left font-semibold">Roles</th>
                         <th class="px-4 py-2 text-left font-semibold">IsVerified</th>
                         <th class="px-4 py-2 text-left font-semibold">Actions</th>
@@ -33,11 +33,11 @@
                     {% for user in users %}
                         <tr class="hover:bg-[#F5F7FA] transition-colors">
                             <td class="px-4 py-2">{{ user.id }}</td>
-                            <td class="px-4 py-2">{{ user.name }}</td>
+                            <td class="px-4 py-2">{{ user.firstName }}</td>
+                            <td class="px-4 py-2">{{ user.lastName }}</td>
                             <td class="px-4 py-2 truncate">{{ user.email }}</td>
                             <td class="px-4 py-2 truncate">{{ user.password|u.truncate(8) }}</td>
                             <td class="px-4 py-2">{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                            <td class="px-4 py-2">{{ user.loyaltyPoints }}</td>
                             <td class="px-4 py-2">{{ user.roles ? user.roles|json_encode : '' }}</td>
                             <td class="px-4 py-2">
                                     <span

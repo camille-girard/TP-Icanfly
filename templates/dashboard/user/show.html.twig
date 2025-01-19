@@ -10,8 +10,12 @@
             <table class="w-full">
                 <tbody class="divide-y divide-gray-200">
                     <tr>
-                        <th class="px-6 py-4 bg-[#1E2A38] text-white text-left font-semibold">Name</th>
-                        <td class="px-6 py-4">{{ user.name }}</td>
+                        <th class="px-6 py-4 bg-[#1E2A38] text-white text-left font-semibold">FirstName</th>
+                        <td class="px-6 py-4">{{ user.firstName }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-[#1E2A38] text-white text-left font-semibold">LastName</th>
+                        <td class="px-6 py-4">{{ user.lastName }}</td>
                     </tr>
                     <tr>
                         <th class="px-6 py-4 bg-[#1E2A38] text-white text-left font-semibold">Email</th>
@@ -24,10 +28,6 @@
                     <tr>
                         <th class="px-6 py-4 bg-[#1E2A38] text-white text-left font-semibold">CreatedAt</th>
                         <td class="px-6 py-4">{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                    </tr>
-                    <tr>
-                        <th class="px-6 py-4 bg-[#1E2A38] text-white text-left font-semibold">LoyaltyPoints</th>
-                        <td class="px-6 py-4">{{ user.loyaltyPoints }}</td>
                     </tr>
                     <tr>
                         <th class="px-6 py-4 bg-[#1E2A38] text-white text-left font-semibold">Roles</th>

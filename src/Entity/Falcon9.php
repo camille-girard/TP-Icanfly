@@ -11,7 +11,6 @@ class Falcon9 extends Spaceship
     #[ORM\Column]
     private ?int $crewCapacity = null;
 
-
     public function getCrewCapacity(): ?int
     {
         return $this->crewCapacity;

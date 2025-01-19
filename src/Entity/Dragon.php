@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: DragonRepository::class)]
 class Dragon extends Spaceship
 {
-
     #[ORM\Column]
     private ?int $seatCapacity = null;
 
