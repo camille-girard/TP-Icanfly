@@ -1,10 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Controller\Mission;
 
 use App\Entity\Mission;
+use App\Entity\ScientificMission;
+use App\Entity\TouristMission;
 use App\Form\MissionType;
 use App\Repository\MissionRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+
 
 class MissionController extends AbstractController
 {
@@ -32,22 +33,43 @@ class MissionController extends AbstractController
     #[Route('/dashboard/mission/new', name: 'dashboard_mission_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $mission = new Mission();
-        $form = $this->createForm(MissionType::class, $mission);
+        $form = $this->createForm(MissionType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $type = $form->get('type')->getData(); // Get the selected type
+            $mission = null;
+
+            // Create the appropriate child entity
+            if ($type === 'scientific') {
+                $mission = new ScientificMission();
+                $mission->setSpecialEquipement($form->get('specialEquipement')->getData());
+                $mission->setObjective($form->get('objective')->getData());
+            } elseif ($type === 'travel') {
+                $mission = new TouristMission();
+                $mission->setHasGuide($form->get('hasGuide')->getData());
+                $mission->setActivities($form->get('activities')->getData());
+            }
+
+            // Set common fields
+            $mission->setDestination($form->get('destination')->getData());
+            $mission->setDescription($form->get('description')->getData());
+            $mission->setDate($form->get('date')->getData());
+            $mission->setSeatPrice($form->get('seatPrice')->getData());
+            $mission->setImage($form->get('image')->getData());
+            $mission->setDuration($form->get('duration')->getData());
+
             $entityManager->persist($mission);
             $entityManager->flush();
 
-            return $this->redirectToRoute('dashboard_mission_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('dashboard_mission_index');
         }
 
         return $this->render('dashboard/mission/new.html.twig', [
-            'mission' => $mission,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
+
 
     #[Route('/dashboard/mission/{id}', name: 'dashboard_mission_show', methods: ['GET'])]
     public function show(Mission $mission): Response
@@ -60,18 +82,43 @@ class MissionController extends AbstractController
     #[Route('/dashboard/mission/{id}/edit', name: 'dashboard_mission_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Mission $mission, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(MissionType::class, $mission);
+        // Determine the type of mission
+        $currentType = $mission instanceof ScientificMission ? 'scientific' : 'travel';
+
+        // Create the form with current type
+        $form = $this->createForm(MissionType::class, $mission, [
+            'current_type' => $currentType,
+        ]);
+
+        // Set default values for non-mapped fields
+        if ($currentType === 'scientific') {
+            $form->get('specialEquipement')->setData($mission->getSpecialEquipement());
+            $form->get('objective')->setData($mission->getObjective());
+        } elseif ($currentType === 'travel') {
+            $form->get('hasGuide')->setData($mission->hasGuide());
+            $form->get('activities')->setData($mission->getActivities());
+        }
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Update special fields
+            if ($currentType === 'scientific') {
+                $mission->setSpecialEquipement($form->get('specialEquipement')->getData());
+                $mission->setObjective($form->get('objective')->getData());
+            } elseif ($currentType === 'travel') {
+                $mission->setHasGuide($form->get('hasGuide')->getData());
+                $mission->setActivities($form->get('activities')->getData());
+            }
+
             $entityManager->flush();
 
-            return $this->redirectToRoute('dashboard_mission_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('dashboard_mission_index');
         }
 
         return $this->render('dashboard/mission/edit.html.twig', [
+            'form' => $form->createView(),
             'mission' => $mission,
-            'form' => $form,
         ]);
     }
 

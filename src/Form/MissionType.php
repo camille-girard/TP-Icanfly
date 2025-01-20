@@ -1,14 +1,18 @@
 <?php
-
 namespace App\Form;
 
 use App\Entity\Mission;
-use App\Entity\SpaceShip;
-use App\Entity\User;
-use App\Entity\VideoStreaming;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\ScientificMission;
+use App\Entity\TouristMission;
+use App\Entity\Spaceship;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MissionType extends AbstractType
@@ -16,71 +20,95 @@ class MissionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', null, [
-                'attr' => [
-                    'class' => 'form-input block w-full rounded-lg border-2 border-gray-400 bg-gray-50 px-4 py-3 focus:ring-4 focus:ring-[#002EFF] focus:border-[#002EFF]',
-                    'placeholder' => 'Nom de la mission',
+            ->add('type', ChoiceType::class, [
+                'label' => 'Type de Mission',
+                'choices' => [
+                    'Scientifique' => 'scientific',
+                    'Touristique' => 'travel',
                 ],
-            ])
-            ->add('description', null, [
+                'mapped' => false,
+                'data' => $options['current_type'] ?? null,
                 'attr' => [
-                    'class' => 'form-input block w-full rounded-lg border-2 border-gray-400 bg-gray-50 px-4 py-3 focus:ring-4 focus:ring-[#002EFF] focus:border-[#002EFF]',
-                    'placeholder' => 'Description détaillée',
+                    'class' => 'type-selector mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
                 ],
             ])
             ->add('destination', null, [
+                'label' => 'Destination',
                 'attr' => [
-                    'class' => 'form-input block w-full rounded-lg border-2 border-gray-400 bg-gray-50 px-4 py-3 focus:ring-4 focus:ring-[#002EFF] focus:border-[#002EFF]',
-                    'placeholder' => 'Destination',
+                    'class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
                 ],
             ])
-            ->add('launchDate', null, [
+            ->add('description', null, [
+                'label' => 'Description',
+                'attr' => [
+                    'class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
+                ],
+            ])
+            ->add('date', null, [
+                'label' => 'Date',
                 'widget' => 'single_text',
                 'attr' => [
-                    'class' => 'form-input block w-full rounded-lg border-2 border-gray-400 bg-gray-50 px-4 py-3 focus:ring-4 focus:ring-[#002EFF] focus:border-[#002EFF]',
+                    'class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
                 ],
             ])
             ->add('seatPrice', null, [
+                'label' => 'Prix par place (€)',
                 'attr' => [
-                    'class' => 'form-input block w-full rounded-lg border-2 border-gray-400 bg-gray-50 px-4 py-3 focus:ring-4 focus:ring-[#002EFF] focus:border-[#002EFF]',
+                    'class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
+                ],
+            ])
+            ->add('image', null, [
+                'label' => 'Image',
+                'attr' => [
+                    'class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
                 ],
             ])
             ->add('duration', null, [
-                'attr' => [
-                    'class' => 'form-input block w-full rounded-lg border-2 border-gray-400 bg-gray-50 px-4 py-3 focus:ring-4 focus:ring-[#002EFF] focus:border-[#002EFF]',
-                ],
-            ])
-            ->add('createdAt', null, [
+                'label' => 'Durée',
                 'widget' => 'single_text',
                 'attr' => [
-                    'class' => 'form-input block w-full rounded-lg border-2 border-gray-400 bg-gray-50 px-4 py-3 focus:ring-4 focus:ring-[#002EFF] focus:border-[#002EFF]',
+                    'class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
                 ],
             ])
-            ->add('status', null, [
-                'attr' => [
-                    'class' => 'form-input block w-full rounded-lg border-2 border-gray-400 bg-gray-50 px-4 py-3 focus:ring-4 focus:ring-[#002EFF] focus:border-[#002EFF]',
-                ],
-            ])
-            ->add('participants', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
+            ->add('spaceships', EntityType::class, [
+                'class' => Spaceship::class,
+                'choice_label' => 'name',
                 'multiple' => true,
+                'label' => 'Vaisseaux',
                 'attr' => [
-                    'class' => 'form-multiselect block w-full rounded-lg border-2 border-gray-400 bg-gray-50 px-4 py-3 focus:ring-4 focus:ring-[#002EFF] focus:border-[#002EFF]',
+                    'class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
                 ],
             ])
-            ->add('videoStreaming', EntityType::class, [
-                'class' => VideoStreaming::class,
-                'choice_label' => 'id',
+            ->add('specialEquipement', TextType::class, [
+                'label' => 'Équipement Spécial',
+                'required' => false,
+                'mapped' => false,
                 'attr' => [
-                    'class' => 'form-select block w-full rounded-lg border-2 border-gray-400 bg-gray-50 px-4 py-3 focus:ring-4 focus:ring-[#002EFF] focus:border-[#002EFF]',
+                    'class' => 'scientific-fields mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
                 ],
             ])
-            ->add('spaceship', EntityType::class, [
-                'class' => SpaceShip::class,
-                'choice_label' => 'id',
+            ->add('objective', TextType::class, [
+                'label' => 'Objectif',
+                'required' => false,
+                'mapped' => false,
                 'attr' => [
-                    'class' => 'form-select block w-full rounded-lg border-2 border-gray-400 bg-gray-50 px-4 py-3 focus:ring-4 focus:ring-[#002EFF] focus:border-[#002EFF]',
+                    'class' => 'scientific-fields mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
+                ],
+            ])
+            ->add('hasGuide', CheckboxType::class, [
+                'label' => 'Guide inclus ?',
+                'required' => false,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'travel-fields mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
+                ],
+            ])
+            ->add('activities', TextType::class, [
+                'label' => 'Activités',
+                'required' => false,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'travel-fields mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
                 ],
             ]);
     }
@@ -89,6 +117,7 @@ class MissionType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Mission::class,
+            'current_type' => null, // Used to determine the mission type for existing entities
         ]);
     }
 }

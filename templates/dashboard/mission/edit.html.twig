@@ -1,13 +1,114 @@
 {% extends 'dashboard.html.twig' %}
 
-{% block title %}Edit Mission{% endblock %}
+{% block title %}Modifier la Mission{% endblock %}
 
 {% block content %}
-    <h1>Edit Mission</h1>
+    <div class="container mx-auto px-4 py-6 min-h-screen">
+        <h1 class="text-3xl font-bold text-[#1E2A38] mb-6">Modifier la Mission</h1>
 
-    {{ include('dashboard/mission/_form.html.twig', {'button_label': 'Update'}) }}
+        <div class="bg-white shadow-md rounded-lg p-6">
+            {{ form_start(form, { 'attr': { 'class': 'space-y-4' } }) }}
 
-    <a href="{{ path('dashboard_mission_index') }}">back to list</a>
+            <div class="grid grid-cols-2 gap-6">
+                {% for field in form %}
+                    {% if field.vars.name not in ['_token', 'specialEquipement', 'objective', 'hasGuide', 'activities'] %}
+                        <div>
+                            {{ form_label(field, null, { 'label_attr': { 'class': 'block text-sm font-medium text-[#1E2A38]' } }) }}
+                            {{ form_widget(field) }}
 
-    {{ include('dashboard/mission/_delete_form.html.twig') }}
+                            {% if field.vars.errors|length > 0 %}
+                                <p class="text-red-600 text-sm mt-1">{{ field.vars.errors|first.message }}</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <div class="scientific-fields" style="display: none;">
+                    <div>
+                        {{ form_label(form.specialEquipement, null, { 'label_attr': { 'class': 'block text-sm font-medium text-[#1E2A38]' } }) }}
+                        {{ form_widget(form.specialEquipement) }}
+                        {% if form.specialEquipement.vars.errors|length > 0 %}
+                            <p class="text-red-600 text-sm mt-1">{{ form.specialEquipement.vars.errors|first.message }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        {{ form_label(form.objective, null, { 'label_attr': { 'class': 'block text-sm font-medium text-[#1E2A38]' } }) }}
+                        {{ form_widget(form.objective) }}
+                        {% if form.objective.vars.errors|length > 0 %}
+                            <p class="text-red-600 text-sm mt-1">{{ form.objective.vars.errors|first.message }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="travel-fields" style="display: none;">
+                    <div>
+                        {{ form_label(form.hasGuide, null, { 'label_attr': { 'class': 'block text-sm font-medium text-[#1E2A38]' } }) }}
+                        {{ form_widget(form.hasGuide) }}
+                        {% if form.hasGuide.vars.errors|length > 0 %}
+                            <p class="text-red-600 text-sm mt-1">{{ form.hasGuide.vars.errors|first.message }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        {{ form_label(form.activities, null, { 'label_attr': { 'class': 'block text-sm font-medium text-[#1E2A38]' } }) }}
+                        {{ form_widget(form.activities) }}
+                        {% if form.activities.vars.errors|length > 0 %}
+                            <p class="text-red-600 text-sm mt-1">{{ form.activities.vars.errors|first.message }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <div class="flex justify-end mt-6">
+                <button type="submit"
+                        class="bg-[#002EFF] text-white px-4 py-2 rounded hover:bg-[#001FCC]">
+                    {{ button_label|default('Enregistrer') }}
+                </button>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+
+        <div class="mt-6">
+            <a href="{{ path('dashboard_mission_index') }}"
+               class="text-[#002EFF] hover:underline">&larr; Retour à la liste</a>
+        </div>
+
+        <div class="flex justify-start mt-6">
+            {{ include('dashboard/mission/_delete_form.html.twig') }}
+        </div>
+    </div>
 {% endblock %}
+{% block javascripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const typeField = document.querySelector('.type-selector');
+            const form = typeField.closest('form');
+
+            function toggleFields() {
+                const type = typeField.value;
+
+                form.querySelectorAll('.scientific-fields, .travel-fields').forEach(field => {
+                    field.style.display = 'none';
+                });
+
+                if (type === 'scientific') {
+                    form.querySelectorAll('.scientific-fields').forEach(field => {
+                        field.style.display = 'block';
+                    });
+                } else if (type === 'travel') {
+                    form.querySelectorAll('.travel-fields').forEach(field => {
+                        field.style.display = 'block';
+                    });
+                }
+            }
+
+            typeField.addEventListener('change', toggleFields);
+            toggleFields(); // Initialize fields visibility on page load
+        });
+
+    </script>
+{% endblock %}
+

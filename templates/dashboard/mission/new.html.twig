@@ -1,20 +1,83 @@
 {% extends 'dashboard.html.twig' %}
 
-{% block title %}Nouvelle Mission{% endblock %}
+{% block title %}Créer une nouvelle Mission{% endblock %}
 
 {% block content %}
     <div class="container mx-auto px-4 py-6 min-h-screen">
-        <h1 class="text-3xl font-bold text-[#1E2A38] mb-6">Créer une Nouvelle Mission</h1>
+        <h1 class="text-3xl font-bold text-[#1E2A38] mb-6">Créer une nouvelle Mission</h1>
 
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            {{ include('dashboard/mission/_form.html.twig') }}
+        <div class="bg-white shadow-md rounded-lg p-6">
+            {{ form_start(form, { 'attr': { 'class': 'space-y-4' } }) }}
+
+            <div class="grid grid-cols-2 gap-6">
+                {% for field in form %}
+                    {% if field.vars.name not in ['_token', 'specialEquipement', 'objective', 'hasGuide', 'activities'] %}
+                        <div>
+                            {{ form_label(field, null, { 'label_attr': { 'class': 'block text-sm font-medium text-[#1E2A38]' } }) }}
+                            {{ form_widget(field) }}
+
+                            {% if field.vars.errors|length > 0 %}
+                                <p class="text-red-600 text-sm mt-1">{{ field.vars.errors|first.message }}</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <div class="scientific-fields" style="display: none;">
+                    {{ form_row(form.specialEquipement) }}
+                    {{ form_row(form.objective) }}
+                </div>
+
+                <div class="travel-fields" style="display: none;">
+                    {{ form_row(form.hasGuide) }}
+                    {{ form_row(form.activities) }}
+                </div>
+            </div>
+
+            <div class="flex justify-start mt-6">
+                <button type="submit" class="bg-[#002EFF] text-white px-4 py-2 rounded hover:bg-[#001FCC]">
+                    {{ button_label|default('Créer') }}
+                </button>
+            </div>
+
+            {{ form_end(form) }}
         </div>
 
-        <div class="mt-6 text-right">
-            <a href="{{ path('dashboard_mission_index') }}"
-               class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-800">
-                Retour à la liste
-            </a>
+        <div class="mt-6">
+            <a href="{{ path('dashboard_mission_index') }}" class="text-[#002EFF] hover:underline">&larr; Retour à la liste</a>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const typeField = document.querySelector('.type-selector');
+            const form = typeField.closest('form');
+            console.log(typeField.value); // Log the selected value on change
+            console.log(document.querySelectorAll('.scientific-fields')); // Check if scientific-fields exist
+            console.log(document.querySelectorAll('.travel-fields')); // Check if travel-fields exist
+
+            function toggleFields() {
+                const type = typeField.value;
+
+                form.querySelectorAll('.scientific-fields, .travel-fields').forEach(field => {
+                    field.style.display = 'none';
+                });
+
+                if (type === 'scientific') {
+                    form.querySelectorAll('.scientific-fields').forEach(field => {
+                        field.style.display = 'block';
+                    });
+                } else if (type === 'travel') {
+                    form.querySelectorAll('.travel-fields').forEach(field => {
+                        field.style.display = 'block';
+                    });
+                }
+            }
+
+            typeField.addEventListener('change', toggleFields);
+            toggleFields(); // Initialize fields visibility on page load
+        });
+    </script>
 {% endblock %}
