@@ -15,9 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
     'spaceship' => Spaceship::class,
     'starship' => Starship::class,
     'falcon9' => Falcon9::class,
-    'dragon' => Dragon::class
+    'dragon' => Dragon::class,
 ])]
-
 class Spaceship
 {
     #[ORM\Id]

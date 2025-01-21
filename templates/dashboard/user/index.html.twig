@@ -1,0 +1,67 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Liste des utilisateurs{% endblock %}
+
+{% block content %}
+    <div class="px-6 py-8 bg-[#F5F7FA] min-h-screen">
+        <div class="flex justify-between">
+            <h1 class="text-3xl font-bold text-[#1E2A38] mb-8">Liste des utilisateurs</h1>
+            <div>
+                <a href="{{ path('app_user_new') }}"
+                   class="inline-flex items-center px-4 py-2 bg-[#0022FF] text-white rounded-md hover:bg-blue-600 transition-colors">
+                    Créer un nouvel utilisateur
+                </a>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-[#1E2A38] text-white">
+                    <tr>
+                        <th class="px-4 py-2 text-left font-semibold">Id</th>
+                        <th class="px-4 py-2 text-left font-semibold">FirstName</th>
+                        <th class="px-4 py-2 text-left font-semibold">LastName</th>
+                        <th class="px-4 py-2 text-left font-semibold">Email</th>
+                        <th class="px-4 py-2 text-left font-semibold">Password</th>
+                        <th class="px-4 py-2 text-left font-semibold">CreatedAt</th>
+                        <th class="px-4 py-2 text-left font-semibold">Roles</th>
+                        <th class="px-4 py-2 text-left font-semibold">IsVerified</th>
+                        <th class="px-4 py-2 text-left font-semibold">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                    {% for user in users %}
+                        <tr class="hover:bg-[#F5F7FA] transition-colors">
+                            <td class="px-4 py-2">{{ user.id }}</td>
+                            <td class="px-4 py-2">{{ user.firstName }}</td>
+                            <td class="px-4 py-2">{{ user.lastName }}</td>
+                            <td class="px-4 py-2 truncate">{{ user.email }}</td>
+                            <td class="px-4 py-2 truncate">{{ user.password|u.truncate(8) }}</td>
+                            <td class="px-4 py-2">{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td class="px-4 py-2">{{ user.roles ? user.roles|json_encode : '' }}</td>
+                            <td class="px-4 py-2">
+                                    <span
+                                        class="px-2 py-1 rounded-full text-sm {% if user.isVerified %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                        {{ user.isVerified ? 'Yes' : 'No' }}
+                                    </span>
+                            </td>
+                            <td class="px-4 py-2">
+                                <div class="flex gap-3">
+                                    <a href="{{ path('app_user_show', {'id': user.id}) }}"
+                                       class="px-3 py-1 text-[#0022FF] border border-[#0022FF] rounded-md hover:bg-[#0022FF] hover:text-white transition-colors">Voir</a>
+                                    <a href="{{ path('app_user_edit', {'id': user.id}) }}"
+                                       class="px-3 py-1 text-[#0022FF] border border-[#0022FF] rounded-md hover:bg-[#0022FF] hover:text-white transition-colors">Éditer</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="9" class="px-4 py-2 text-center text-gray-500">Aucun enregistrement trouvé</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

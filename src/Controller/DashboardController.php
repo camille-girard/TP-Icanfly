@@ -13,13 +13,13 @@ class DashboardController extends AbstractController
     {
         // Données fictives pour l'instant
         $upcomingMissions = [
-            ["name" => "Mission to Mars", "countdown" => "3 jours"],
-            ["name" => "Lunar Orbital", "countdown" => "10 jours"],
+            ['name' => 'Mission to Mars', 'countdown' => '3 jours'],
+            ['name' => 'Lunar Orbital', 'countdown' => '10 jours'],
         ];
 
         $quickActions = [
-            ["name" => "Réserver un vol", "link" => "/reserve"],
-            ["name" => "Voir les missions", "link" => "/missions"],
+            ['name' => 'Réserver un vol', 'link' => '/reserve'],
+            ['name' => 'Voir les missions', 'link' => '/missions'],
         ];
 
         return $this->render('dashboard/index.html.twig', [

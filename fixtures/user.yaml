@@ -3,8 +3,9 @@ App\Entity\User:
         firstName: 'Alice'
         lastName: 'Durand'
         email: 'alice.durand@example.com'
-        password: 'password123'
+        hashpassword: 'password123'
         createdAt: <(new \DateTimeImmutable('2023-01-01'))>
+        roles: ['ROLE_SUPER_ADMIN']
         bookings:
             - '@booking1'
         missions: []
@@ -13,8 +14,9 @@ App\Entity\User:
         firstName: 'Bob'
         lastName: 'Martin'
         email: 'bob.martin@example.com'
-        password: 'password123'
+        hashpassword: 'password123'
         createdAt: <(new \DateTimeImmutable('2023-02-01'))>
+        roles: ['ROLE_USER']
         bookings:
             - '@booking2'
         missions: []
@@ -23,7 +25,8 @@ App\Entity\User:
         firstName: 'Charlie'
         lastName: 'Lemoine'
         email: 'charlie.lemoine@example.com'
-        password: 'password123'
+        hashpassword: 'password123'
+        roles: ['ROLE_USER']
         createdAt: <(new \DateTimeImmutable('2023-03-01'))>
         bookings:
             - '@booking3'

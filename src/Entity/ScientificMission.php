@@ -14,7 +14,6 @@ class ScientificMission extends Mission
     #[ORM\Column(length: 255)]
     private ?string $objective = null;
 
-
     public function getSpecialEquipement(): ?string
     {
         return $this->specialEquipement;
