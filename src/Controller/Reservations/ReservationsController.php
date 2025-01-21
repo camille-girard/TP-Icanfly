@@ -16,7 +16,9 @@ class ReservationsController extends AbstractController
     #[Route('/dashboard/reservations', name: 'dashboard_reservations')]
     public function index(EntityManagerInterface $em): Response
     {
-        $bookings = $em->getRepository(Booking::class)->findBy([], ['createdAt' => 'DESC']);
+        $user = $this->getUser();
+
+        $bookings = $em->getRepository(Booking::class)->findBy(['Customer' => $user], ['createdAt' => 'DESC']);
 
         return $this->render('dashboard/reservations/index.html.twig', [
             'bookings' => $bookings,
@@ -24,7 +26,7 @@ class ReservationsController extends AbstractController
     }
 
     #[Route('/dashboard/reservations/admin', name: 'dashboard_reservations_admin')]
-    //#[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminIndex(EntityManagerInterface $em): Response
     {
         $bookings = $em->getRepository(Booking::class)->findBy([], ['createdAt' => 'DESC']);
@@ -35,7 +37,7 @@ class ReservationsController extends AbstractController
     }
 
     #[Route('/dashboard/reservations/admin/new', name: 'admin_reservations_new')]
-    //#[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminNew(Request $request, EntityManagerInterface $em): Response
     {
         $booking = new Booking();
@@ -55,7 +57,7 @@ class ReservationsController extends AbstractController
     }
 
     #[Route('/dashboard/reservations/admin/{id}/edit', name: 'admin_reservations_edit')]
-    //#[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminEdit(Booking $booking, Request $request, EntityManagerInterface $em): Response
     {
         $form = $this->createForm(ReservationFormType::class, $booking);
@@ -73,8 +75,17 @@ class ReservationsController extends AbstractController
         ]);
     }
 
+    #[Route('/dashboard/reservations/admin/{id}', name: 'admin_reservations_show', methods: ['GET'])]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
+    public function adminShow(Booking $booking): Response
+    {
+        return $this->render('dashboard/reservations/show_admin.html.twig', [
+            'booking' => $booking,
+        ]);
+    }
+
     #[Route('/dashboard/reservations/admin/{id}/delete', name: 'admin_reservations_delete', methods: ['POST'])]
-    //#[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_SUPER_ADMIN')]
     public function adminDelete(Request $request, Booking $booking, EntityManagerInterface $em): Response
     {
         if ($this->isCsrfTokenValid('delete' . $booking->getId(), $request->request->get('_token'))) {

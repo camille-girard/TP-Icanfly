@@ -39,16 +39,28 @@
                         </td>
                         <td class="px-4 py-2">{{ booking.createdAt|date('d/m/Y H:i') }}</td>
                         <td class="px-4 py-2">
-                            <a href="{{ path('admin_reservations_edit', {'id': booking.id}) }}" class="text-[#002EFF] hover:underline">Modifier</a>
-                            <form method="post" action="{{ path('admin_reservations_delete', {'id': booking.id}) }}" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ booking.id) }}">
-                                <button class="ml-2 text-red-500 hover:underline">Supprimer</button>
-                            </form>
+                            <div class="flex gap-3">
+                                <a href="{{ path('admin_reservations_show', {'id': booking.id}) }}"
+                                   class="px-3 py-1 text-gray-700 border border-gray-400 rounded-md hover:bg-gray-400 hover:text-white transition-colors">
+                                    Voir
+                                </a>
+                                <a href="{{ path('admin_reservations_edit', {'id': booking.id}) }}"
+                                   class="px-3 py-1 text-[#0022FF] border border-[#0022FF] rounded-md hover:bg-[#0022FF] hover:text-white transition-colors">
+                                    Modifier
+                                </a>
+                                <form method="post" action="{{ path('admin_reservations_delete', {'id': booking.id}) }}" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ booking.id) }}">
+                                    <button type="submit"
+                                            class="px-3 py-1 text-red-500 border border-red-500 rounded-md hover:bg-red-500 hover:text-white transition-colors">
+                                        Supprimer
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="8" class="px-4 py-6 text-center text-gray-500">Aucune réservation trouvée.</td>
+                        <td colspan="9" class="px-4 py-6 text-center text-gray-500">Aucune réservation trouvée.</td>
                     </tr>
                 {% endfor %}
                 </tbody>

@@ -3,19 +3,76 @@
 {% block title %}Détail de la Réservation{% endblock %}
 
 {% block content %}
-    <div class="container mx-auto mt-8">
-        <h1 class="text-3xl font-bold mb-6">Détail de la Réservation</h1>
+    <div class="container mx-auto px-4 py-6 min-h-screen">
+        <h1 class="text-3xl font-bold text-[#1E2A38] mb-6">Détail de la Réservation</h1>
 
-        <ul class="list-disc pl-6">
-            <li><strong>ID :</strong> {{ booking.id }}</li>
-            <li><strong>Destination :</strong> {{ booking.destination }}</li>
-            <li><strong>Nombre de places :</strong> {{ booking.seatCount }}</li>
-            <li><strong>Prix total :</strong> {{ booking.totalPrice }} €</li>
-            <li><strong>Statut :</strong> {{ booking.status.value }}</li>
-            <li><strong>Client :</strong> {{ booking.customer.email }}</li>
-            <li><strong>Mission :</strong> {{ booking.mission.name }}</li>
-        </ul>
-
-        <a href="{{ path('dashboard_reservations_admin') }}" class="mt-4 inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Retour</a>
+        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+            <table class="table-auto w-full text-left border-collapse">
+                <thead class="bg-[#1E2A38] text-white">
+                <tr>
+                    <th class="px-4 py-2">Champ</th>
+                    <th class="px-4 py-2">Valeur</th>
+                </tr>
+                </thead>
+                <tbody class="text-[#1E2A38]">
+                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                    <td class="px-4 py-2 font-bold">ID</td>
+                    <td class="px-4 py-2">{{ booking.id }}</td>
+                </tr>
+                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                    <td class="px-4 py-2 font-bold">Destination</td>
+                    <td class="px-4 py-2">{{ booking.destination }}</td>
+                </tr>
+                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                    <td class="px-4 py-2 font-bold">Nombre de places</td>
+                    <td class="px-4 py-2">{{ booking.seatCount }}</td>
+                </tr>
+                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                    <td class="px-4 py-2 font-bold">Prix total (€)</td>
+                    <td class="px-4 py-2">{{ booking.totalPrice }}</td>
+                </tr>
+                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                    <td class="px-4 py-2 font-bold">Statut</td>
+                    <td class="px-4 py-2">{{ booking.status.value }}</td>
+                </tr>
+                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                    <td class="px-4 py-2 font-bold">Client</td>
+                    <td class="px-4 py-2">{{ booking.customer.email }}</td>
+                </tr>
+                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                    <td class="px-4 py-2 font-bold">Mission</td>
+                    <td class="px-4 py-2">
+                        {% if booking.mission is not null %}
+                            {{ booking.mission.destination }}
+                        {% else %}
+                            <span class="text-gray-500 italic">Non attribuée</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                    <td class="px-4 py-2 font-bold">Date de réservation</td>
+                    <td class="px-4 py-2">{{ booking.createdAt|date('d/m/Y H:i') }}</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="mt-6 mb-6 ml-4 flex justify-between">
+                <div class="flex gap-3">
+                    <a href="{{ path('admin_reservations_edit', {'id': booking.id}) }}"
+                       class="inline-flex items-center px-4 py-2 bg-[#0022FF] text-white rounded-md hover:bg-blue-600 transition-colors">
+                        Modifier
+                    </a>
+                    <form method="post" action="{{ path('admin_reservations_delete', {'id': booking.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ booking.id) }}">
+                        <button type="submit"
+                                class="inline-flex items-center px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors">
+                            Supprimer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="mt-6">
+            <a href="{{ path('dashboard_reservations_admin') }}" class="text-[#002EFF] hover:underline">&larr; Retour à la liste</a>
+        </div>
     </div>
 {% endblock %}
