@@ -59,7 +59,7 @@ class ReservationFormType extends AbstractType
             ->add('save', SubmitType::class, [
                 'label' => 'Enregistrer',
                 'attr' => [
-                    'class' => 'bg-[#002EFF] text-white px-4 py-2 rounded hover:bg-[#001FCC] mt-6'
+                    'class' => 'mt-6 px-4 py-2 bg-[#0022FF] text-white rounded-md hover:bg-blue-600 transition-colors'
                 ]
             ]);
 

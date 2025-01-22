@@ -93,6 +93,6 @@ class ReservationsController extends AbstractController
             $em->flush();
         }
 
-        return $this->redirectToRoute('dashboard_reservations_admin');
+        return $this->redirectToRoute('dashboard_reservations_admin', [], Response::HTTP_SEE_OTHER);
     }
 }

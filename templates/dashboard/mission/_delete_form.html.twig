@@ -1,4 +1,6 @@
-<form method="post" action="{{ path('dashboard_mission_delete', {'id': mission.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+<form method="post" action="{{ path('dashboard_mission_delete', {'id': mission.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette mission ?');">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ mission.id) }}">
-    <button class="btn bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded">Delete</button>
+    <button class="px-3 py-1 text-red-500 border border-red-500 rounded-md hover:bg-red-500 hover:text-white transition-colors">
+        Supprimer
+    </button>
 </form>

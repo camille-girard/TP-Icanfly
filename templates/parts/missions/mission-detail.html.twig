@@ -1,42 +1,94 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nom de la mission{% endblock %}
+{% block title %}{{ mission.destination }} - Détails de la Mission{% endblock %}
 
 {% block body %}
-    <div class="container mx-auto mt-8">
-        <section class="bg-cover bg-center h-96" style="background-image: url('{{ asset('images/' ~ mission.image) }}');">
-            <div class="flex justify-center items-center h-full bg-black bg-opacity-50">
-                <h1 class="text-5xl font-extrabold text-white">nom de la mission</h1>
+    <!-- Section d'en-tête avec image -->
+    <section class="relative bg-cover bg-center h-[500px]" style="background-image: url('{{ mission.image }}');">
+        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <h1 class="text-5xl font-extrabold text-white">{{ mission.destination }}</h1>
+        </div>
+    </section>
+
+    <!-- Contenu principal -->
+    <div class="container mx-auto mt-10 space-y-10">
+        <!-- Détails de la mission -->
+        <section class="bg-white shadow-lg rounded-lg p-8">
+            <h2 class="text-4xl font-bold mb-6 text-[#1E2A38]">Détails de la Mission</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-lg text-gray-800">
+                <div>
+                    <p><span class="font-semibold">Description :</span> {{ mission.description }}</p>
+                    <p><span class="font-semibold">Destination :</span> {{ mission.destination }}</p>
+                    <p><span class="font-semibold">Prix par place :</span> {{ mission.seatPrice }} €</p>
+                    <p><span class="font-semibold">Date :</span> {{ mission.date|date('d/m/Y') }}</p>
+                    <p><span class="font-semibold">Durée :</span> {{ mission.duration ? mission.duration|date('H:i:s') : 'N/A' }}</p>
+                </div>
+                <div>
+                    {% if mission.type == 'scientific' %}
+                        <p><span class="font-semibold">Équipement Spécial :</span> {{ mission.specialEquipement }}</p>
+                        <p><span class="font-semibold">Objectif :</span> {{ mission.objective }}</p>
+                    {% elseif mission.type == 'travel' %}
+                        <p><span class="font-semibold">Guide Inclus :</span> {{ mission.hasGuide ? 'Oui' : 'Non' }}</p>
+                        <p><span class="font-semibold">Activités :</span> {{ mission.activities }}</p>
+                    {% endif %}
+                </div>
             </div>
         </section>
 
-        <!-- Section des détails -->
-        <section class="bg-white shadow-md rounded-lg p-6 mb-8">
-            <h2 class="text-3xl font-bold mb-4">Détails de la mission</h2>
-            <p><strong>Description :</strong> description de la mission</p>
-            <p><strong>Statut :</strong>
-                <span class="text-yellow-500">Programmé</span>
-                <span class="text-green-500">Complété</span>
-            </p>
-            <p><strong>Vaisseau spatial :</strong> nom du vaisseau</p>
-        </section>
-
         <!-- Compte à rebours avant le lancement -->
-        <section class="bg-[#1E2A38] text-white p-6 rounded-lg mb-8">
-            <h2 class="text-2xl font-bold">Compte à rebours avant le lancement</h2>
-            <p id="countdown" class="text-3xl font-semibold">00:00:00</p>
+        <section class="bg-gradient-to-r from-[#1E2A38] to-[#002EFF] text-white p-8 rounded-lg">
+            <h2 class="text-3xl font-bold mb-4">Compte à rebours avant le lancement</h2>
+            <div id="countdown" class="text-4xl font-semibold text-center">00:00:00</div>
         </section>
 
-        <!-- Section de réservation -->
-        <section class="mb-8">
-            <a href="" class="bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">Réserver une place</a>
+        <!-- Actions disponibles -->
+        <section class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+            <a href="{{ path('page_mission') }}"
+               class="inline-block bg-gray-500 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-gray-600 transition">
+                Retour à la liste
+            </a>
+            <a href="#"
+               class="inline-block bg-[#002EFF] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-[#001FCC] transition">
+                Réserver une place
+            </a>
         </section>
 
-        <!-- Section de streaming -->
-        <section class="mb-8">
-            <h2 class="text-3xl font-bold mb-4">Streaming en direct</h2>
-            <p>Rejoignez notre vidéo en direct pour suivre la mission !</p>
-            <a href="" class="bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">Voir en direct</a>
+        <!-- Streaming en direct -->
+        <section class="bg-white shadow-lg rounded-lg p-8">
+            <h2 class="text-3xl font-bold mb-6 text-[#1E2A38]">Streaming en direct</h2>
+            <p class="text-gray-700 text-lg mb-4">
+                Rejoignez notre vidéo en direct pour suivre cette mission extraordinaire et vivre une expérience unique !
+            </p>
+            <a href="#"
+               class="inline-block bg-[#002EFF] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-[#001FCC] transition">
+                Voir en direct
+            </a>
         </section>
     </div>
+
+    <!-- Script pour le compte à rebours -->
+    <script>
+        const countdownElement = document.getElementById('countdown');
+        const launchDate = new Date("{{ mission.date|date('Y-m-d H:i:s') }}").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = launchDate - now;
+
+            if (distance <= 0) {
+                countdownElement.innerHTML = "Lancement en cours !";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            countdownElement.innerHTML = `${days}j ${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
 {% endblock %}

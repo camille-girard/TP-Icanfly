@@ -1,91 +1,101 @@
 {% extends 'dashboard.html.twig' %}
 
-{% block title %}Mission{% endblock %}
+{% block title %}Détails de la Mission{% endblock %}
 
 {% block content %}
     <div class="container mx-auto px-4 py-6 min-h-screen">
         <h1 class="text-3xl font-bold text-[#1E2A38] mb-6">Détails de la Mission</h1>
 
-        <div class="bg-white shadow-md rounded-lg p-6">
-            <div class="flex flex-col md:flex-row items-center">
-                <div class="md:w-1/3 mb-4 md:mb-0">
-                    <img src="{{ mission.image }}" alt="Image de la mission" class="w-full rounded-lg shadow-md">
-                </div>
-
-                <div class="md:w-2/3 md:ml-6">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <h2 class="text-lg font-medium text-[#1E2A38]">ID</h2>
-                            <p class="text-gray-600">{{ mission.id }}</p>
-                        </div>
-                        <div>
-                            <h2 class="text-lg font-medium text-[#1E2A38]">Destination</h2>
-                            <p class="text-gray-600">{{ mission.destination }}</p>
-                        </div>
-                        <div>
-                            <h2 class="text-lg font-medium text-[#1E2A38]">Description</h2>
-                            <p class="text-gray-600">{{ mission.description }}</p>
-                        </div>
-                        <div>
-                            <h2 class="text-lg font-medium text-[#1E2A38]">Date</h2>
-                            <p class="text-gray-600">{{ mission.date ? mission.date|date('Y-m-d H:i:s') : 'N/A' }}</p>
-                        </div>
-                        <div>
-                            <h2 class="text-lg font-medium text-[#1E2A38]">Prix par place (€)</h2>
-                            <p class="text-gray-600">{{ mission.seatPrice }}</p>
-                        </div>
-                        <div>
-                            <h2 class="text-lg font-medium text-[#1E2A38]">Durée</h2>
-                            <p class="text-gray-600">{{ mission.duration ? mission.duration|date('H:i:s') : 'N/A' }}</p>
-                        </div>
-                        <div>
-                            <h2 class="text-lg font-medium text-[#1E2A38]">Créé le</h2>
-                            <p class="text-gray-600">{{ mission.createdAt ? mission.createdAt|date('Y-m-d H:i:s') : 'N/A' }}</p>
-                        </div>
-                        <div>
-                            <h2 class="text-lg font-medium text-[#1E2A38]">Type de Mission</h2>
-                            <p class="text-gray-600">
-                                {% if mission.type == 'scientific' %}
-                                    Scientifique
-                                {% elseif mission.type == 'travel' %}
-                                    Touristique
-                                {% else %}
-                                    Autre
-                                {% endif %}
-                            </p>
-                        </div>
-
+        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+            <table class="table-auto w-full text-left border-collapse">
+                <thead class="bg-[#1E2A38] text-white">
+                <tr>
+                    <th class="px-4 py-2">Champ</th>
+                    <th class="px-4 py-2">Valeur</th>
+                </tr>
+                </thead>
+                <tbody class="text-[#1E2A38]">
+                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                    <td class="px-4 py-2 font-bold">Image</td>
+                    <td class="px-4 py-2">
+                        <img src="{{ mission.image }}" alt="Image de la mission" class="rounded-lg shadow-md w-48">
+                    </td>
+                </tr>
+                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                    <td class="px-4 py-2 font-bold">ID</td>
+                    <td class="px-4 py-2">{{ mission.id }}</td>
+                </tr>
+                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                    <td class="px-4 py-2 font-bold">Destination</td>
+                    <td class="px-4 py-2">{{ mission.destination }}</td>
+                </tr>
+                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                    <td class="px-4 py-2 font-bold">Description</td>
+                    <td class="px-4 py-2">{{ mission.description }}</td>
+                </tr>
+                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                    <td class="px-4 py-2 font-bold">Date</td>
+                    <td class="px-4 py-2">{{ mission.date ? mission.date|date('d/m/Y H:i') : 'N/A' }}</td>
+                </tr>
+                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                    <td class="px-4 py-2 font-bold">Prix par place (€)</td>
+                    <td class="px-4 py-2">{{ mission.seatPrice }}</td>
+                </tr>
+                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                    <td class="px-4 py-2 font-bold">Durée</td>
+                    <td class="px-4 py-2">{{ mission.duration ? mission.duration|date('H:i:s') : 'N/A' }}</td>
+                </tr>
+                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                    <td class="px-4 py-2 font-bold">Créé le</td>
+                    <td class="px-4 py-2">{{ mission.createdAt ? mission.createdAt|date('d/m/Y H:i') : 'N/A' }}</td>
+                </tr>
+                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                    <td class="px-4 py-2 font-bold">Type de Mission</td>
+                    <td class="px-4 py-2">
                         {% if mission.type == 'scientific' %}
-                            <div>
-                                <h2 class="text-lg font-medium text-[#1E2A38]">Équipement Spécial</h2>
-                                <p class="text-gray-600">{{ mission.specialEquipement }}</p>
-                            </div>
-                            <div>
-                                <h2 class="text-lg font-medium text-[#1E2A38]">Objectif</h2>
-                                <p class="text-gray-600">{{ mission.objective }}</p>
-                            </div>
+                            Scientifique
                         {% elseif mission.type == 'travel' %}
-                            <div>
-                                <h2 class="text-lg font-medium text-[#1E2A38]">Guide Inclus</h2>
-                                <p class="text-gray-600">{{ mission.hasGuide ? 'Oui' : 'Non' }}</p>
-                            </div>
-                            <div>
-                                <h2 class="text-lg font-medium text-[#1E2A38]">Activités</h2>
-                                <p class="text-gray-600">{{ mission.activities }}</p>
-                            </div>
+                            Touristique
+                        {% else %}
+                            Autre
                         {% endif %}
-                    </div>
-                </div>
+                    </td>
+                </tr>
+                {% if mission.type == 'scientific' %}
+                    <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                        <td class="px-4 py-2 font-bold">Équipement Spécial</td>
+                        <td class="px-4 py-2">{{ mission.specialEquipement }}</td>
+                    </tr>
+                    <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                        <td class="px-4 py-2 font-bold">Objectif</td>
+                        <td class="px-4 py-2">{{ mission.objective }}</td>
+                    </tr>
+                {% elseif mission.type == 'travel' %}
+                    <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                        <td class="px-4 py-2 font-bold">Guide Inclus</td>
+                        <td class="px-4 py-2">{{ mission.hasGuide ? 'Oui' : 'Non' }}</td>
+                    </tr>
+                    <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                        <td class="px-4 py-2 font-bold">Activités</td>
+                        <td class="px-4 py-2">{{ mission.activities }}</td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-6 mb-6 ml-4 flex justify-between">
+            <div class="flex gap-3">
+                <a href="{{ path('dashboard_mission_edit', {'id': mission.id}) }}"
+                   class="px-3 py-1 text-[#0022FF] border border-[#0022FF] rounded-md hover:bg-[#0022FF] hover:text-white transition-colors">
+                    Modifier
+                </a>
+                {{ include('dashboard/mission/_delete_form.html.twig') }}
             </div>
         </div>
-
-        <div class="mt-6 flex space-x-4">
-            <a href="{{ path('dashboard_mission_index') }}" class="text-[#002EFF] hover:underline">&larr; Retour à la liste</a>
-            <a href="{{ path('dashboard_mission_edit', {'id': mission.id}) }}" class="text-[#002EFF] hover:underline">Modifier</a>
-        </div>
-
-        <div class="flex justify-start mt-6">
-            {{ include('dashboard/mission/_delete_form.html.twig') }}
+        <div class="mt-6">
+            <a href="{{ path('dashboard_mission_index') }}"
+               class="text-[#002EFF] hover:underline">&larr; Retour à la liste
+            </a>
         </div>
     </div>
 {% endblock %}
