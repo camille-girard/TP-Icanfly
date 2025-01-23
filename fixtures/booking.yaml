@@ -3,7 +3,7 @@ App\Entity\Booking:
         destination: 'Venus'
         seatCount: 3
         totalPrice: 15000
-        status: <(App\Enum\BookingStatus::from('confirmed'))>
+        status: <(App\Enum\BookingStatus::from('confirmée'))>
         customer: '@user1'
         mission: '@scientific_mission2'
     
@@ -11,7 +11,7 @@ App\Entity\Booking:
         destination: 'Lune'
         seatCount: 2
         totalPrice: 10000
-        status: <(App\Enum\BookingStatus::from('pending'))>
+        status: <(App\Enum\BookingStatus::from('en attente'))>
         customer: '@user2'
         mission: '@scientific_mission1'
     
@@ -19,6 +19,6 @@ App\Entity\Booking:
         destination: 'ISS'
         seatCount: 4
         totalPrice: 20000
-        status: <(App\Enum\BookingStatus::from('cancelled'))>
+        status: <(App\Enum\BookingStatus::from('supprimée'))>
         customer: '@user3'
         mission: '@scientific_mission3'

@@ -5,6 +5,6 @@ namespace App\Enum;
 enum SpaceshipUsage: string
 {
     case CARGO = 'cargo';
-    case TRAVEL = 'travel';
-    case SCIENTIFIC = 'scientific';
+    case TRAVEL = 'touristique';
+    case SCIENTIFIC = 'scientifique';
 }

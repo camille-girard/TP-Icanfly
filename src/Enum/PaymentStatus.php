@@ -4,7 +4,7 @@ namespace App\Enum;
 
 enum PaymentStatus: string
 {
-    case PENDING = 'pending';
-    case CONFIRMED = 'confirmed';
-    case CANCELLED = 'cancelled';
+    case PENDING = 'en attente';
+    case CONFIRMED = 'confirmée';
+    case CANCELLED = 'supprimée';
 }

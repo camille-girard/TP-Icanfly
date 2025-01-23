@@ -3,80 +3,96 @@
 namespace App\Form;
 
 use App\Entity\Booking;
-use App\Entity\User;
 use App\Entity\Mission;
-use App\Enum\BookingStatus;
+use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\CallbackTransformer;
 
 class ReservationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('destination', TextType::class, [
-                'label' => 'Destination',
-                'attr' => ['class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]']
-            ])
             ->add('seatCount', IntegerType::class, [
                 'label' => 'Nombre de places',
-                'attr' => ['class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]']
+                'attr' => [
+                    'class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
+                    'oninput' => 'updateTotalPrice()',
+                ],
             ])
             ->add('totalPrice', IntegerType::class, [
                 'label' => 'Prix total (€)',
-                'attr' => ['class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]']
-            ])
-            ->add('status', ChoiceType::class, [
-                'choices' => [
-                    'Confirmé' => BookingStatus::CONFIRMED->value,
-                    'En attente' => BookingStatus::PENDING->value,
-                    'Annulé' => BookingStatus::CANCELLED->value,
+                'disabled' => true,
+                'attr' => [
+                    'class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
                 ],
-                'label' => 'Statut',
-                'attr' => ['class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]']
-            ])
-            ->add('customer', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'email',
-                'label' => 'Client',
-                'attr' => ['class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]']
             ])
             ->add('mission', EntityType::class, [
                 'class' => Mission::class,
-                'choice_label' => function (Mission $mission) {
-                    return $mission->getDestination();
-                },
+                'choice_label' => 'destination',
                 'label' => 'Mission',
-                'attr' => ['class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]']
-            ])
-            ->add('save', SubmitType::class, [
-                'label' => 'Enregistrer',
+                'placeholder' => 'Choisissez une mission',
                 'attr' => [
-                    'class' => 'bg-[#002EFF] text-white px-4 py-2 rounded hover:bg-[#001FCC] mt-6'
-                ]
+                    'class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
+                    'onchange' => 'updateTotalPrice()',
+                ],
             ]);
 
-        $builder->get('status')->addModelTransformer(new CallbackTransformer(
-            function ($status) {
-                return $status instanceof BookingStatus ? $status->value : null;
-            },
-            function ($status) {
-                return BookingStatus::from($status);
-            }
-        ));
+        if ($options['is_admin']) {
+            $builder->add('customer', EntityType::class, [
+                'class' => User::class,
+                'choice_label' => 'email',
+                'label' => 'Client',
+                'placeholder' => 'Choisissez un client',
+                'attr' => [
+                    'class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
+                ],
+            ]);
+        } else {
+            $builder->add('email', EmailType::class, [
+                'label' => 'Adresse e-mail',
+                'mapped' => false,
+                'data' => $options['email'],
+                'disabled' => true,
+                'attr' => [
+                    'class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
+                ],
+            ]);
+        }
+
+        $builder->add('save', SubmitType::class, [
+            'label' => 'Enregistrer',
+            'attr' => [
+                'class' => 'mt-6 px-4 py-2 bg-[#0022FF] text-white rounded-md hover:bg-blue-600 transition-colors',
+            ],
+        ]);
+
+        if ($options['created_at']) {
+            $builder->add('createdAt', TextType::class, [
+                'label' => 'Date de création',
+                'mapped' => false,
+                'disabled' => true,
+                'data' => $options['created_at'],
+                'attr' => [
+                    'class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
+                ],
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Booking::class,
+            'created_at' => null,
+            'email' => null,
+            'is_admin' => false,
         ]);
     }
 }

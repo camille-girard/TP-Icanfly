@@ -12,7 +12,7 @@ App\Entity\Falcon9:
     falcon9:
         name: 'Falcon9 Explorer'
         autonomy: 400
-        usage: <(App\Enum\SpaceshipUsage::from('scientific'))>
+        usage: <(App\Enum\SpaceshipUsage::from('scientifique'))>
         crewCapacity: 6
         missions:
             - '@scientific_mission1'
@@ -23,7 +23,7 @@ App\Entity\Dragon:
     dragon:
         name: 'Dragon Voyager'
         autonomy: 700
-        usage: <(App\Enum\SpaceshipUsage::from('travel'))>
+        usage: <(App\Enum\SpaceshipUsage::from('touristique'))>
         seatCapacity: 12
         missions:
             - '@scientific_mission4'

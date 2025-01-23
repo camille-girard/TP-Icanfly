@@ -1,0 +1,63 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}{{ admin_mode ? 'Ajouter une Réservation' : 'Nouvelle Réservation' }}{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-6 min-h-screen">
+        <h1 class="text-3xl font-bold text-[#1E2A38] mb-6">
+            {{ admin_mode ? 'Ajouter une Réservation' : 'Créer une Nouvelle Réservation' }}
+        </h1>
+
+        <div class="bg-white shadow-md rounded-lg p-6">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'reservation-form'}}) }}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    {{ form_label(form.seatCount, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {{ form_widget(form.seatCount, {'attr': {'oninput': 'updateTotalPrice()'}}) }}
+                </div>
+                <div>
+                    {{ form_label(form.totalPrice, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {{ form_widget(form.totalPrice) }}
+                </div>
+                <div>
+                    {{ form_label(form.mission, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {{ form_widget(form.mission, {'attr': {'onchange': 'updateTotalPrice()'}}) }}
+                </div>
+                {% if form.email is defined %}
+                    <div>
+                        {{ form_label(form.email, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                        {{ form_widget(form.email) }}
+                    </div>
+                {% endif %}
+            </div>
+            {{ form_rest(form) }}
+            {{ form_end(form) }}
+        </div>
+
+        <div class="mt-6">
+            <a href="{{ admin_mode ? path('dashboard_reservations_admin') : path('dashboard_reservations') }}"
+               class="text-[#002EFF] hover:underline">&larr; Retour à la liste</a>
+        </div>
+    </div>
+
+    <script>
+        // Charge les prix des missions depuis Twig
+        const missionPrices = {{ missions|json_encode|raw }};
+
+        // Fonction pour mettre à jour le prix total
+        function updateTotalPrice() {
+            const seatCount = parseInt(document.querySelector('[name="reservation_form[seatCount]"]').value) || 0;
+            const missionSelect = document.querySelector('[name="reservation_form[mission]"]');
+            const missionId = missionSelect.value;
+            const seatPrice = missionPrices[missionId] || 0;
+
+            const totalPriceField = document.querySelector('[name="reservation_form[totalPrice]"]');
+            totalPriceField.value = seatCount * seatPrice;
+        }
+
+        // Initialisation au chargement de la page
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTotalPrice();
+        });
+    </script>
+{% endblock %}

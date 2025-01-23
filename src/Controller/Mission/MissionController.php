@@ -17,12 +17,59 @@ use Symfony\Component\Routing\Attribute\Route;
 class MissionController extends AbstractController
 {
     #[Route(path: '/mission', name: 'page_mission')]
-    public function index(): Response
+    public function index(Request $request, MissionRepository $missionRepository): Response
     {
-        return $this->render('parts/missions/mission.html.twig');
+        $destination = $request->query->get('destination');
+        $date = $request->query->get('date');
+        $price = $request->query->get('price');
+
+        $queryBuilder = $missionRepository->createQueryBuilder('m');
+
+        // Filtre par destination
+        if ($destination) {
+            $queryBuilder->andWhere('m.destination = :destination')
+                ->setParameter('destination', $destination);
+        }
+
+        // Filtre par date
+        if ($date) {
+            $queryBuilder->andWhere('m.date = :date')
+                ->setParameter('date', new \DateTime($date));
+        }
+
+        // Filtre par gamme de prix
+        if ($price) {
+            if ($price === 'cheap') {
+                $queryBuilder->andWhere('m.seatPrice < 1000');
+            } elseif ($price === 'medium') {
+                $queryBuilder->andWhere('m.seatPrice >= 1000 AND m.seatPrice <= 5000');
+            } elseif ($price === 'expensive') {
+                $queryBuilder->andWhere('m.seatPrice > 5000');
+            }
+        }
+
+        $missions = $queryBuilder->getQuery()->getResult();
+
+        // Récupérer toutes les destinations pour le filtre
+        $destinations = $missionRepository->createQueryBuilder('m')
+            ->select('DISTINCT m.destination')
+            ->getQuery()
+            ->getResult();
+
+        return $this->render('parts/missions/mission.html.twig', [
+            'missions' => $missions,
+            'destinations' => array_column($destinations, 'destination'),
+        ]);
     }
 
-    #[Route(path: '/dashboard/mission', name: 'dashboard_mission_index', methods: ['GET'])]
+    #[Route('/mission/{id}', name: 'mission_detail', methods: ['GET'])]
+    public function detail(Mission $mission): Response
+    {
+        return $this->render('parts/missions/mission-detail.html.twig', [
+            'mission' => $mission,
+        ]);
+    }
+        #[Route(path: '/dashboard/mission', name: 'dashboard_mission_index', methods: ['GET'])]
     public function index_dashboard(MissionRepository $missionRepository): Response
     {
         return $this->render('dashboard/mission/index.html.twig', [

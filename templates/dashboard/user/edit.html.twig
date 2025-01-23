@@ -7,14 +7,13 @@
         <h1 class="text-3xl font-bold text-[#1E2A38] mb-8">Modifier l'utilisateur</h1>
 
         <div class="bg-white rounded-lg shadow-md p-6 max-w-3xl">
-            {{ include('dashboard/user/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+            {{ include('dashboard/user/_form.html.twig', {'button_label': 'Enregister'}) }}
         </div>
-
-        <div class="mt-6 flex gap-4">
-            <a href="{{ path('app_user_index') }}" class="inline-flex items-center px-4 py-2 bg-[#1E2A38] text-white rounded-md hover:bg-gray-700 transition-colors">
-                Retour à la liste
-            </a>
+        <div class="flex justify-between mt-6">
             {{ include('dashboard/user/_delete_form.html.twig') }}
+        </div>
+        <div class="mt-6">
+            <a href="{{ path('app_user_index') }}"  class="text-[#002EFF] hover:underline">&larr; Retour à la liste</a>
         </div>
     </div>
 {% endblock %}

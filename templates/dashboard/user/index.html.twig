@@ -19,13 +19,13 @@
                     <thead class="bg-[#1E2A38] text-white">
                     <tr>
                         <th class="px-4 py-2 text-left font-semibold">Id</th>
-                        <th class="px-4 py-2 text-left font-semibold">FirstName</th>
-                        <th class="px-4 py-2 text-left font-semibold">LastName</th>
+                        <th class="px-4 py-2 text-left font-semibold">Prénom</th>
+                        <th class="px-4 py-2 text-left font-semibold">Nom</th>
                         <th class="px-4 py-2 text-left font-semibold">Email</th>
-                        <th class="px-4 py-2 text-left font-semibold">Password</th>
-                        <th class="px-4 py-2 text-left font-semibold">CreatedAt</th>
-                        <th class="px-4 py-2 text-left font-semibold">Roles</th>
-                        <th class="px-4 py-2 text-left font-semibold">IsVerified</th>
+                        <th class="px-4 py-2 text-left font-semibold">Mot de passe</th>
+                        <th class="px-4 py-2 text-left font-semibold">Créé le</th>
+                        <th class="px-4 py-2 text-left font-semibold">Rôles</th>
+                        <th class="px-4 py-2 text-left font-semibold">Vérifié</th>
                         <th class="px-4 py-2 text-left font-semibold">Actions</th>
                     </tr>
                     </thead>
@@ -42,15 +42,16 @@
                             <td class="px-4 py-2">
                                     <span
                                         class="px-2 py-1 rounded-full text-sm {% if user.isVerified %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
-                                        {{ user.isVerified ? 'Yes' : 'No' }}
+                                        {{ user.isVerified ? 'Oui' : 'Non' }}
                                     </span>
                             </td>
                             <td class="px-4 py-2">
                                 <div class="flex gap-3">
                                     <a href="{{ path('app_user_show', {'id': user.id}) }}"
-                                       class="px-3 py-1 text-[#0022FF] border border-[#0022FF] rounded-md hover:bg-[#0022FF] hover:text-white transition-colors">Voir</a>
+                                       class="px-3 py-1 text-gray-700 border border-gray-400 rounded-md hover:bg-gray-400 hover:text-white transition-colors">Voir</a>
                                     <a href="{{ path('app_user_edit', {'id': user.id}) }}"
-                                       class="px-3 py-1 text-[#0022FF] border border-[#0022FF] rounded-md hover:bg-[#0022FF] hover:text-white transition-colors">Éditer</a>
+                                       class="px-3 py-1 text-[#0022FF] border border-[#0022FF] rounded-md hover:bg-[#0022FF] hover:text-white transition-colors">Modifier</a>
+                                    {{ include('dashboard/user/_delete_form.html.twig') }}
                                 </div>
                             </td>
                         </tr>

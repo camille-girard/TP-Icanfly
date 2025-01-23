@@ -15,14 +15,14 @@
             <!-- Panneau de filtre -->
             <div class="w-1/4 bg-[#1E2A38] p-6 text-white rounded-lg">
                 <h3 class="text-2xl font-semibold">Filtrer les missions</h3>
-                <form method="get">
+                <form method="get" action="{{ path('page_mission') }}">
                     <div class="mb-4">
                         <label for="destination" class="block">Destination</label>
                         <select name="destination" id="destination" class="w-full mt-2 p-2 bg-gray-700 text-white rounded">
                             <option value="">Toutes</option>
-                            <option value="mars">Mars</option>
-                            <option value="lune">Lune</option>
-                            <option value="lune">Déploiement Starlink</option>
+                            {% for destination in destinations %}
+                                <option value="{{ destination }}">{{ destination }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="mb-4">
@@ -33,9 +33,9 @@
                         <label for="price" class="block">Gamme de prix</label>
                         <select name="price" id="price" class="w-full mt-2 p-2 bg-gray-700 text-white rounded">
                             <option value="">Toutes</option>
-                            <option value="cheap">Économique</option>
-                            <option value="cheap">Premium</option>
-                            <option value="expensive">Luxe</option>
+                            <option value="cheap">Moins de 1000€</option>
+                            <option value="medium">1000€ - 5000€</option>
+                            <option value="expensive">Plus de 5000€</option>
                         </select>
                     </div>
                     <button type="submit" class="w-full mt-4 p-2 bg-[#002EFF] text-white rounded hover:bg-[#1E2A38]">Appliquer</button>
@@ -44,16 +44,27 @@
 
             <!-- Cartes de mission -->
             <div class="w-3/4 ml-8">
-                <div class="grid grid-cols-3 gap-8">
-                    <div class="bg-white shadow-md rounded-lg p-6">
-                        <img src="" alt="Mission image" class="w-full h-48 object-cover rounded-lg">
-                        <h3 class="text-xl font-semibold mt-4">Nom de la mission</h3>
-                        <p class="mt-2 text-gray-700">Destination de la mission</p>
-                        <p class="mt-2 text-gray-700">Prix : prix de la mission€</p>
-                        <p class="mt-2 text-gray-700">Places disponibles : nombre de place dispo</p>
-                        <a href="" class="inline-block mt-4 bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">Voir les détails</a>
+                {% if missions is empty %}
+                    <p class="text-center text-gray-500">Aucune mission disponible pour le moment.</p>
+                {% else %}
+                    <div class="grid grid-cols-3 gap-8">
+                        {% for mission in missions %}
+                            <div class="bg-white shadow-md rounded-lg p-6">
+                                <img src="{{ mission.image }}" alt="{{ mission.destination }}" class="w-full h-48 object-cover rounded-lg">
+                                <h3 class="text-xl font-semibold mt-4">{{ mission.destination }}</h3>
+                                <p class="mt-2 text-gray-700">
+                                    {{ mission.description|length > 50 ? mission.description[:50] ~ '...' : mission.description }}
+                                </p>
+                                <p class="mt-2 text-gray-700">Prix : {{ mission.seatPrice }}€</p>
+                                <p class="mt-2 text-gray-700">Date : {{ mission.date|date('d/m/Y') }}</p>
+                                <a href="{{ path('mission_detail', {'id': mission.id}) }}"
+                                   class="inline-block mt-4 bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">
+                                    Voir les détails
+                                </a>
+                            </div>
+                        {% endfor %}
                     </div>
-                </div>
+                {% endif %}
             </div>
         </div>
     </div>
