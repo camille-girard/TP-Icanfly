@@ -4,9 +4,7 @@
 
 {% block content %}
     <div class="container mx-auto px-4 py-6 min-h-screen">
-        <h1 class="text-3xl font-bold text-[#1E2A38] mb-6">
-            {{ admin_mode ? 'Gestion des Réservations' : 'Gestion des Réservations' }}
-        </h1>
+        <h1 class="text-3xl font-bold text-[#1E2A38] mb-6">Gestion des Réservations</h1>
 
         <div class="overflow-x-auto bg-white shadow-md rounded-lg">
             <table class="table-auto w-full text-left border-collapse">
@@ -17,10 +15,8 @@
                     <th class="px-4 py-2">Nombre de places</th>
                     <th class="px-4 py-2">Prix total (€)</th>
                     <th class="px-4 py-2">Statut</th>
-                    {% if admin_mode %}
-                        <th class="px-4 py-2">Client</th>
-                        <th class="px-4 py-2">Mission</th>
-                    {% endif %}
+                    <th class="px-4 py-2">Client</th>
+                    <th class="px-4 py-2">Mission</th>
                     <th class="px-4 py-2">Date de réservation</th>
                     <th class="px-4 py-2">Actions</th>
                 </tr>
@@ -33,35 +29,32 @@
                         <td class="px-4 py-2">{{ booking.seatCount }}</td>
                         <td class="px-4 py-2">{{ booking.totalPrice }}</td>
                         <td class="px-4 py-2">{{ booking.status.value }}</td>
-                        {% if admin_mode %}
-                            <td class="px-4 py-2">{{ booking.customer.email }}</td>
-                            <td class="px-4 py-2">
-                                {% if booking.mission is not null %}
-                                    {{ booking.mission.destination }}
-                                {% else %}
-                                    <span class="text-gray-500 italic">Nom indisponible</span>
-                                {% endif %}
-                            </td>
-                        {% endif %}
+                        <td class="px-4 py-2">{{ booking.customer.email }}</td>
+                        <td class="px-4 py-2">
+                            {% if booking.mission is not null %}
+                                {{ booking.mission.destination }}
+                            {% else %}
+                                <span class="text-gray-500 italic">Nom indisponible</span>
+                            {% endif %}
+                        </td>
                         <td class="px-4 py-2">{{ booking.createdAt|date('d/m/Y H:i') }}</td>
                         <td class="px-4 py-2">
                             <div class="flex gap-3">
-                                <a href="{{ admin_mode ? path('admin_reservations_show', {'id': booking.id}) : path('dashboard_reservations_show', {'id': booking.id}) }}"
+                                <a href="{{ path('admin_reservations_show', {'id': booking.id}) }}"
                                    class="px-3 py-1 text-gray-700 border border-gray-400 rounded-md hover:bg-gray-400 hover:text-white transition-colors">
                                     Voir
                                 </a>
-
-                                <a href="{{ admin_mode ? path('admin_reservations_edit', {'id': booking.id}) : path('dashboard_reservations_edit', {'id': booking.id}) }}"
+                                <a href="{{ path('admin_reservations_edit', {'id': booking.id}) }}"
                                    class="px-3 py-1 text-[#0022FF] border border-[#0022FF] rounded-md hover:bg-[#0022FF] hover:text-white transition-colors">
                                     Modifier
                                 </a>
-                                {% include 'dashboard/reservations/_delete_form.html.twig' with { 'booking': booking, 'admin_mode': admin_mode } %}
+                                {% include 'dashboard/reservations/_delete_form.html.twig' with { 'booking': booking, 'admin_mode': true } %}
                             </div>
                         </td>
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="{{ admin_mode ? '9' : '7' }}" class="px-4 py-6 text-center text-gray-500">Aucune réservation trouvée.</td>
+                        <td colspan="9" class="px-4 py-6 text-center text-gray-500">Aucune réservation trouvée.</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -69,7 +62,7 @@
         </div>
 
         <div class="mt-6 text-right">
-            <a href="{{ admin_mode ? path('admin_reservations_new') : path('dashboard_reservations_new') }}"
+            <a href="{{ path('admin_reservations_new') }}"
                class="bg-[#002EFF] text-white px-4 py-2 rounded hover:bg-[#001FCC]">
                 Ajouter une Réservation
             </a>

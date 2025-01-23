@@ -1,0 +1,68 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Modifier la Réservation{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-6 min-h-screen">
+        <h1 class="text-3xl font-bold text-[#1E2A38] mb-6">Modifier la Réservation</h1>
+
+        <div class="bg-white shadow-md rounded-lg p-6">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'reservation-form'}}) }}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    {{ form_label(form.seatCount, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {{ form_widget(form.seatCount, {'attr': {'oninput': 'updateTotalPrice()'}}) }}
+                </div>
+                <div>
+                    {{ form_label(form.totalPrice, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {{ form_widget(form.totalPrice, {'attr': {'readonly': 'readonly'}}) }}
+                </div>
+                <div>
+                    {{ form_label(form.mission, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {{ form_widget(form.mission, {
+                        'attr': {
+                            'onchange': 'updateTotalPrice()',
+                            'data-mission-prices': missions|json_encode
+                        }
+                    }) }}
+                </div>
+                <div>
+                    {{ form_label(form.createdAt, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {{ form_widget(form.createdAt) }}
+                </div>
+                <div>
+                    {{ form_label(form.email, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {{ form_widget(form.email) }}
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </div>
+
+        <div class="mt-6">
+            <a href="{{ path('dashboard_reservations') }}" class="text-[#002EFF] hover:underline">&larr; Retour à la liste</a>
+        </div>
+    </div>
+
+    <script>
+        function updateTotalPrice() {
+            const seatCountInput = document.querySelector('[name="reservation_form[seatCount]"]');
+            const missionSelect = document.querySelector('[name="reservation_form[mission]"]');
+            const totalPriceInput = document.querySelector('[name="reservation_form[totalPrice]"]');
+
+            const seatCount = parseInt(seatCountInput.value) || 0;
+            const selectedMission = missionSelect.options[missionSelect.selectedIndex];
+            const seatPrice = selectedMission.getAttribute('data-price') || 0;
+
+            totalPriceInput.value = seatCount * seatPrice;
+        }
+
+        // Précharge les prix des missions dans le champ `mission`
+        const missionPrices = JSON.parse(document.querySelector('[name="reservation_form[mission]"]').getAttribute('data-mission-prices') || '{}');
+        document.querySelectorAll('[name="reservation_form[mission]"] option').forEach(option => {
+            const missionId = option.value;
+            if (missionPrices[missionId]) {
+                option.setAttribute('data-price', missionPrices[missionId]);
+            }
+        });
+    </script>
+{% endblock %}

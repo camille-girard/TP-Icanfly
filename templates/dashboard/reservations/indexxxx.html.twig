@@ -40,15 +40,15 @@
                         <td class="px-4 py-2">{{ booking.createdAt|date('d/m/Y H:i') }}</td>
                         <td class="px-4 py-2">
                             <div class="flex gap-3">
-                                <a href="{{ path('admin_reservations_show', {'id': booking.id}) }}"
+                                <a href="{{ path('dashboard_reservations_show', {'id': booking.id}) }}"
                                    class="px-3 py-1 text-gray-700 border border-gray-400 rounded-md hover:bg-gray-400 hover:text-white transition-colors">
                                     Voir
                                 </a>
-                                <a href="{{ path('admin_reservations_edit', {'id': booking.id}) }}"
+                                <a href="{{ path('dashboard_reservations_edit', {'id': booking.id}) }}"
                                    class="px-3 py-1 text-[#0022FF] border border-[#0022FF] rounded-md hover:bg-[#0022FF] hover:text-white transition-colors">
                                     Modifier
                                 </a>
-                                {% include 'dashboard/reservations/_delete_form.html.twig' with { 'reservation': booking } %}
+                                {% include 'dashboard/reservations/_delete_form.html.twig' with { 'booking': booking, 'admin_mode': false } %}
                             </div>
                         </td>
                     </tr>
@@ -62,7 +62,7 @@
         </div>
 
         <div class="mt-6 text-right">
-            <a href="{{ path('admin_reservations_new') }}"
+            <a href="{{ path('dashboard_reservations_new') }}"
                class="bg-[#002EFF] text-white px-4 py-2 rounded hover:bg-[#001FCC]">
                 Ajouter une Réservation
             </a>

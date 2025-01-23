@@ -3,96 +3,158 @@
 namespace App\Controller\Reservations;
 
 use App\Entity\Booking;
+use App\Entity\Mission;
+use App\Entity\User;
+use App\Enum\BookingStatus;
 use App\Form\ReservationFormType;
+use App\Repository\BookingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ReservationsController extends AbstractController
 {
-    #[Route('/dashboard/reservations', name: 'dashboard_reservations')]
-    public function index(EntityManagerInterface $em): Response
+    #[Route('/reservations', name: 'dashboard_reservations')]
+    #[Route('/reservations/admin', name: 'dashboard_reservations_admin')]
+    public function index(BookingRepository $reservationRepository, Request $request): Response
     {
-        $user = $this->getUser();
+        $adminMode = $request->get('_route') === 'dashboard_reservations_admin';
 
-        $bookings = $em->getRepository(Booking::class)->findBy(['Customer' => $user], ['createdAt' => 'DESC']);
+        $bookings = $adminMode
+            ? $reservationRepository->findAll()
+            : $reservationRepository->findBy(['Customer' => $this->getUser()]);
 
         return $this->render('dashboard/reservations/index.html.twig', [
             'bookings' => $bookings,
+            'admin_mode' => $adminMode,
         ]);
     }
 
-    #[Route('/dashboard/reservations/admin', name: 'dashboard_reservations_admin')]
-    #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function adminIndex(EntityManagerInterface $em): Response
+    #[Route('/reservations/new', name: 'dashboard_reservations_new')]
+    #[Route('/reservations/admin/new', name: 'admin_reservations_new')]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $bookings = $em->getRepository(Booking::class)->findBy([], ['createdAt' => 'DESC']);
+        $adminMode = $request->get('_route') === 'admin_reservations_new';
+        $reservation = new Booking();
 
-        return $this->render('dashboard/reservations/index_admin.html.twig', [
-            'bookings' => $bookings,
+        $missions = $entityManager->getRepository(Mission::class)->findAll();
+        $missionPrices = [];
+        foreach ($missions as $mission) {
+            $missionPrices[$mission->getId()] = $mission->getSeatPrice();
+        }
+
+        $form = $this->createForm(ReservationFormType::class, $reservation, [
+            'email' => $this->getUser()?->getEmail(),
+            'is_admin' => $adminMode,
         ]);
-    }
 
-    #[Route('/dashboard/reservations/admin/new', name: 'admin_reservations_new')]
-    #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function adminNew(Request $request, EntityManagerInterface $em): Response
-    {
-        $booking = new Booking();
-        $form = $this->createForm(ReservationFormType::class, $booking);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($booking);
-            $em->flush();
+            if ($adminMode) {
+                $customer = $form->get('customer')->getData();
+                $reservation->setCustomer($customer);
+            } else {
+                $reservation->setCustomer($this->getUser());
+            }
 
-            return $this->redirectToRoute('dashboard_reservations_admin');
+            $reservation->setDestination($reservation->getMission()?->getDestination());
+            $reservation->setTotalPrice(
+                ($reservation->getMission()?->getSeatPrice() ?? 0) * $reservation->getSeatCount()
+            );
+            $reservation->setStatus(BookingStatus::PENDING);
+
+            $entityManager->persist($reservation);
+            $entityManager->flush();
+
+            return $this->redirectToRoute($adminMode ? 'dashboard_reservations_admin' : 'dashboard_reservations');
         }
 
-        return $this->render('dashboard/reservations/new_admin.html.twig', [
+        return $this->render('dashboard/reservations/new.html.twig', [
             'form' => $form->createView(),
+            'admin_mode' => $adminMode,
+            'missions' => $missionPrices,
         ]);
     }
 
-    #[Route('/dashboard/reservations/admin/{id}/edit', name: 'admin_reservations_edit')]
-    #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function adminEdit(Booking $booking, Request $request, EntityManagerInterface $em): Response
+    #[Route('/reservations/{id}/edit', name: 'dashboard_reservations_edit')]
+    #[Route('/reservations/admin/{id}/edit', name: 'admin_reservations_edit')]
+    public function edit(Booking $reservation, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(ReservationFormType::class, $booking);
+        $adminMode = $request->get('_route') === 'admin_reservations_edit';
+
+        $missions = $entityManager->getRepository(Mission::class)->findAll();
+        $missionPrices = [];
+        foreach ($missions as $mission) {
+            $missionPrices[$mission->getId()] = $mission->getSeatPrice();
+        }
+
+        $form = $this->createForm(ReservationFormType::class, $reservation, [
+            'email' => $reservation->getCustomer()?->getEmail(),
+            'created_at' => $reservation->getCreatedAt()?->format('d/m/Y H:i'),
+        ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->flush();
+            $reservation->setDestination($reservation->getMission()?->getDestination());
+            $reservation->setTotalPrice(
+                ($reservation->getMission()?->getSeatPrice() ?? 0) * $reservation->getSeatCount()
+            );
 
-            return $this->redirectToRoute('dashboard_reservations_admin');
+            $entityManager->flush();
+
+            return $this->redirectToRoute(
+                $adminMode ? 'dashboard_reservations_admin' : 'dashboard_reservations'
+            );
         }
 
-        return $this->render('dashboard/reservations/edit_admin.html.twig', [
+
+        return $this->render('dashboard/reservations/edit.html.twig', [
             'form' => $form->createView(),
-            'booking' => $booking,
+            'booking' => $reservation,
+            'admin_mode' => $adminMode,
+            'missions' => $missionPrices, // Ajoute les prix des missions ici
         ]);
     }
 
-    #[Route('/dashboard/reservations/admin/{id}', name: 'admin_reservations_show', methods: ['GET'])]
-    #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function adminShow(Booking $booking): Response
+    #[Route('/reservations/{id}/delete', name: 'dashboard_reservations_delete', methods: ['POST'])]
+    #[Route('/reservations/admin/{id}/delete', name: 'admin_reservations_delete', methods: ['POST'])]
+    public function delete(Booking $reservation, Request $request, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('dashboard/reservations/show_admin.html.twig', [
-            'booking' => $booking,
-        ]);
-    }
+        // Vérifie la validité du token CSRF
+        if ($this->isCsrfTokenValid('delete' . $reservation->getId(), $request->request->get('_token'))) {
 
-    #[Route('/dashboard/reservations/admin/{id}/delete', name: 'admin_reservations_delete', methods: ['POST'])]
-    #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function adminDelete(Request $request, Booking $booking, EntityManagerInterface $em): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $booking->getId(), $request->request->get('_token'))) {
-            $em->remove($booking);
-            $em->flush();
+            // Supprime la réservation directement sans restriction
+            $entityManager->remove($reservation);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'La réservation a été supprimée avec succès.');
+        } else {
+            $this->addFlash('error', 'Token CSRF invalide, impossible de supprimer la réservation.');
         }
 
-        return $this->redirectToRoute('dashboard_reservations_admin', [], Response::HTTP_SEE_OTHER);
+        // Redirection en fonction du contexte (admin ou client)
+        return $this->redirectToRoute(
+            $request->get('_route') === 'admin_reservations_delete' ? 'dashboard_reservations_admin' : 'dashboard_reservations'
+        );
+    }
+
+    #[Route('/reservations/{id}', name: 'dashboard_reservations_show')]
+    #[Route('/reservations/admin/{id}', name: 'admin_reservations_show')]
+    public function show(Booking $reservation, Request $request): Response
+    {
+        $adminMode = $request->get('_route') === 'admin_reservations_show';
+
+        if (!$adminMode && $reservation->getCustomer() !== $this->getUser()) {
+            throw $this->createAccessDeniedException('Vous ne pouvez pas voir cette réservation.');
+        }
+
+        return $this->render('dashboard/reservations/show.html.twig', [
+            'booking' => $reservation,
+            'admin_mode' => $adminMode,
+        ]);
     }
 }
