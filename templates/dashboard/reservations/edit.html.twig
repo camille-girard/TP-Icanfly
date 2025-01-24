@@ -38,8 +38,24 @@
             {{ form_end(form) }}
         </div>
 
+        {# Afficher le bouton de paiement et le statut uniquement pour le client #}
+        {% if not admin_mode %}
+            <p class="mt-4">Statut actuel : {{ booking.status.value }}</p>
+            {% if booking.status.value == 'en attente' %}
+                <div class="mt-6">
+                    <a href="{{ path('reservation_payment', {'id': booking.id}) }}"
+                       class="text-white bg-green-500 hover:bg-green-700 px-4 py-2 rounded">
+                        Payer cette réservation
+                    </a>
+                </div>
+            {% endif %}
+        {% endif %}
+        <div class="mt-6 mb-6 flex gap-3">
+            {% include 'dashboard/reservations/_delete_form.html.twig' with { 'booking': booking } %}
+        </div>
         <div class="mt-6">
-            <a href="{{ path('dashboard_reservations') }}" class="text-[#002EFF] hover:underline">&larr; Retour à la liste</a>
+            <a href="{{ admin_mode ? path('dashboard_reservations_admin') : path('dashboard_reservations') }}"
+               class="text-[#002EFF] hover:underline">&larr; Retour à la liste</a>
         </div>
     </div>
 

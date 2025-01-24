@@ -12,6 +12,7 @@ services:
             MERCURE_URL: ${CADDY_MERCURE_URL:-http://php/.well-known/mercure}
             MERCURE_PUBLIC_URL: ${CADDY_MERCURE_PUBLIC_URL:-https://${SERVER_NAME:-localhost}/.well-known/mercure}
             MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+            STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-sk_test_51PVKMCKnwz4ouw1LSrmoBtsZn7HyOyNtvXNN2GXTnYIWjM4oPs3i6N3Yyy0dydrD7wlSyiELUVLFVEGSkd7XkEBY00HUE8FISe} # Ajouté ici
             # The two next lines can be removed after initial installation
             SYMFONY_VERSION: ${SYMFONY_VERSION:-}
             STABILITY: ${STABILITY:-stable}
