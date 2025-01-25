@@ -4,7 +4,6 @@ namespace App\Controller\Reservations;
 
 use App\Entity\Booking;
 use App\Entity\Mission;
-use App\Entity\User;
 use App\Enum\BookingStatus;
 use App\Form\ReservationFormType;
 use App\Repository\BookingRepository;
@@ -20,7 +19,7 @@ class ReservationsController extends AbstractController
     #[Route('/reservations/admin', name: 'dashboard_reservations_admin')]
     public function index(BookingRepository $reservationRepository, Request $request): Response
     {
-        $adminMode = $request->get('_route') === 'dashboard_reservations_admin';
+        $adminMode = 'dashboard_reservations_admin' === $request->get('_route');
 
         $bookings = $adminMode
             ? $reservationRepository->findAll()
@@ -36,7 +35,7 @@ class ReservationsController extends AbstractController
     #[Route('/reservations/admin/new', name: 'admin_reservations_new')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $adminMode = $request->get('_route') === 'admin_reservations_new';
+        $adminMode = 'admin_reservations_new' === $request->get('_route');
         $reservation = new Booking();
 
         $missions = $entityManager->getRepository(Mission::class)->findAll();
@@ -83,7 +82,7 @@ class ReservationsController extends AbstractController
     #[Route('/reservations/admin/{id}/edit', name: 'admin_reservations_edit')]
     public function edit(Booking $reservation, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $adminMode = $request->get('_route') === 'admin_reservations_edit';
+        $adminMode = 'admin_reservations_edit' === $request->get('_route');
 
         $missions = $entityManager->getRepository(Mission::class)->findAll();
         $missionPrices = [];
@@ -111,7 +110,6 @@ class ReservationsController extends AbstractController
             );
         }
 
-
         return $this->render('dashboard/reservations/edit.html.twig', [
             'form' => $form->createView(),
             'booking' => $reservation,
@@ -125,8 +123,7 @@ class ReservationsController extends AbstractController
     public function delete(Booking $reservation, Request $request, EntityManagerInterface $entityManager): Response
     {
         // Vérifie la validité du token CSRF
-        if ($this->isCsrfTokenValid('delete' . $reservation->getId(), $request->request->get('_token'))) {
-
+        if ($this->isCsrfTokenValid('delete'.$reservation->getId(), $request->request->get('_token'))) {
             // Supprime la réservation directement sans restriction
             $entityManager->remove($reservation);
             $entityManager->flush();
@@ -138,7 +135,7 @@ class ReservationsController extends AbstractController
 
         // Redirection en fonction du contexte (admin ou client)
         return $this->redirectToRoute(
-            $request->get('_route') === 'admin_reservations_delete' ? 'dashboard_reservations_admin' : 'dashboard_reservations'
+            'admin_reservations_delete' === $request->get('_route') ? 'dashboard_reservations_admin' : 'dashboard_reservations'
         );
     }
 
@@ -146,7 +143,7 @@ class ReservationsController extends AbstractController
     #[Route('/reservations/admin/{id}', name: 'admin_reservations_show')]
     public function show(Booking $reservation, Request $request): Response
     {
-        $adminMode = $request->get('_route') === 'admin_reservations_show';
+        $adminMode = 'admin_reservations_show' === $request->get('_route');
 
         if (!$adminMode && $reservation->getCustomer() !== $this->getUser()) {
             throw $this->createAccessDeniedException('Vous ne pouvez pas voir cette réservation.');

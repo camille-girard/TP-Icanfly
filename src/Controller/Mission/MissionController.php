@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-
 class MissionController extends AbstractController
 {
     #[Route(path: '/mission', name: 'page_mission')]
@@ -39,11 +38,11 @@ class MissionController extends AbstractController
 
         // Filtre par gamme de prix
         if ($price) {
-            if ($price === 'cheap') {
+            if ('cheap' === $price) {
                 $queryBuilder->andWhere('m.seatPrice < 1000');
-            } elseif ($price === 'medium') {
+            } elseif ('medium' === $price) {
                 $queryBuilder->andWhere('m.seatPrice >= 1000 AND m.seatPrice <= 5000');
-            } elseif ($price === 'expensive') {
+            } elseif ('expensive' === $price) {
                 $queryBuilder->andWhere('m.seatPrice > 5000');
             }
         }
@@ -69,7 +68,8 @@ class MissionController extends AbstractController
             'mission' => $mission,
         ]);
     }
-        #[Route(path: '/dashboard/mission', name: 'dashboard_mission_index', methods: ['GET'])]
+
+    #[Route(path: '/dashboard/mission', name: 'dashboard_mission_index', methods: ['GET'])]
     public function index_dashboard(MissionRepository $missionRepository): Response
     {
         return $this->render('dashboard/mission/index.html.twig', [
@@ -88,11 +88,11 @@ class MissionController extends AbstractController
             $mission = null;
 
             // Create the appropriate child entity
-            if ($type === 'scientific') {
+            if ('scientific' === $type) {
                 $mission = new ScientificMission();
                 $mission->setSpecialEquipement($form->get('specialEquipement')->getData());
                 $mission->setObjective($form->get('objective')->getData());
-            } elseif ($type === 'travel') {
+            } elseif ('travel' === $type) {
                 $mission = new TouristMission();
                 $mission->setHasGuide($form->get('hasGuide')->getData());
                 $mission->setActivities($form->get('activities')->getData());
@@ -117,7 +117,6 @@ class MissionController extends AbstractController
         ]);
     }
 
-
     #[Route('/dashboard/mission/{id}', name: 'dashboard_mission_show', methods: ['GET'])]
     public function show(Mission $mission): Response
     {
@@ -138,10 +137,10 @@ class MissionController extends AbstractController
         ]);
 
         // Set default values for non-mapped fields
-        if ($currentType === 'scientific') {
+        if ('scientific' === $currentType) {
             $form->get('specialEquipement')->setData($mission->getSpecialEquipement());
             $form->get('objective')->setData($mission->getObjective());
-        } elseif ($currentType === 'travel') {
+        } elseif ('travel' === $currentType) {
             $form->get('hasGuide')->setData($mission->hasGuide());
             $form->get('activities')->setData($mission->getActivities());
         }
@@ -150,10 +149,10 @@ class MissionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Update special fields
-            if ($currentType === 'scientific') {
+            if ('scientific' === $currentType) {
                 $mission->setSpecialEquipement($form->get('specialEquipement')->getData());
                 $mission->setObjective($form->get('objective')->getData());
-            } elseif ($currentType === 'travel') {
+            } elseif ('travel' === $currentType) {
                 $mission->setHasGuide($form->get('hasGuide')->getData());
                 $mission->setActivities($form->get('activities')->getData());
             }
