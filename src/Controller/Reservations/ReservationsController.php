@@ -24,7 +24,7 @@ class ReservationsController extends AbstractController
     #[Route('/dashboard/reservations/admin', name: 'dashboard_reservations_admin')]
     public function index(BookingRepository $reservationRepository, Request $request): Response
     {
-        $adminMode = $request->get('_route') === 'dashboard_reservations_admin';
+        $adminMode = 'dashboard_reservations_admin' === $request->get('_route');
 
         if ($adminMode) {
             $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -49,7 +49,7 @@ class ReservationsController extends AbstractController
         SessionInterface $session,
         NotificationService $notificationService
     ): Response {
-        $adminMode = $request->get('_route') === 'admin_reservations_new';
+        $adminMode = 'admin_reservations_new' === $request->get('_route');
 
         if ($adminMode) {
             $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -65,11 +65,7 @@ class ReservationsController extends AbstractController
                 throw $this->createNotFoundException('Mission non trouvée.');
             }
         }
-
         $reservation = new Booking();
-        if ($mission) {
-            $reservation->setMission($mission);
-        }
 
         $missions = $entityManager->getRepository(Mission::class)->findAll();
         $missionPrices = [];
@@ -147,7 +143,7 @@ class ReservationsController extends AbstractController
     #[Route('/dashboard/reservations/admin/{id}/edit', name: 'admin_reservations_edit')]
     public function edit(Booking $reservation, Request $request, EntityManagerInterface $entityManager, NotificationService $notificationService): Response
     {
-        $adminMode = $request->get('_route') === 'admin_reservations_edit';
+        $adminMode = 'admin_reservations_edit' === $request->get('_route');
 
         if ($adminMode) {
             $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -201,7 +197,9 @@ class ReservationsController extends AbstractController
     #[Route('/dashboard/reservations/admin/{id}/delete', name: 'admin_reservations_delete', methods: ['POST'])]
     public function delete(Booking $reservation, Request $request, EntityManagerInterface $entityManager, NotificationService $notificationService): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $reservation->getId(), $request->request->get('_token'))) {
+
+        if ($this->isCsrfTokenValid('delete'.$reservation->getId(), $request->request->get('_token'))) {
+
             $entityManager->remove($reservation);
             $entityManager->flush();
 

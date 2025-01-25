@@ -9,7 +9,7 @@
                 <a href="{{ path('page_about_us') }}" class="px-4 py-2 hover:underline text-white">À propos de
                     nous</a>
                 <a href="{{ path('page_mission') }}" class="px-4 py-2 hover:underline text-white">Les missions</a>
-
+                <a href="{{ path('app_launches') }}" class="px-4 py-2 hover:underline text-white">Partenaires</a>
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <a href="{{ path('app_dashboard') }}" class="px-4 py-2 hover:underline text-white">Mon Profil</a>
                 {% else %}

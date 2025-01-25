@@ -1,0 +1,154 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ launch.name }} - Détails du Lancement SpaceX{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-8">
+        <a href="{{ path('app_launches') }}" class="text-blue-500 hover:underline">Retour aux lancements</a>
+        <div class="bg-gray-100 rounded-lg p-6 mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <img src="{{ launch.links.patch.small }}" alt="{{ launch.name }}" class="w-24 h-24">
+                <div>
+                    <h1 class="text-3xl text-center font-bold text-gray-900 mb-2">{{ launch.name }}</h1>
+                    <p class="text-gray-600">
+                        Lancé le {{ launch.date_local|date('d/m/Y à H:i') }}
+                    </p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                <span class="px-4 py-2 rounded-full text-sm font-semibold
+                    {% if launch.success %}bg-green-100 text-green-800
+                    {% else %}bg-red-100 text-red-800
+                    {% endif %}">
+                    {{ launch.success ? 'Lancement réussi' : 'Lancement échoué' }}
+                </span>
+                </div>
+            </div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4">Informations du Lancement</h2>
+                <div class="space-y-4">
+                    <div class="border-b pb-2">
+                        <p class="text-gray-600">Numéro de vol</p>
+                        <p class="font-medium">{{ launch.flight_number }}</p>
+                    </div>
+                    <div class="border-b pb-2">
+                        <p class="text-gray-600">Date UTC</p>
+                        <p class="font-medium">{{ launch.date_utc|date('d/m/Y H:i:s') }}</p>
+                    </div>
+                    <div class="border-b pb-2">
+                        <p class="text-gray-600">Précision de la date</p>
+                        <p class="font-medium">{{ launch.date_precision }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4">Liens Externes</h2>
+                <div class="space-y-4">
+                    {% if launch.links.webcast %}
+                        <div>
+                            <a href="{{ launch.links.webcast }}" target="_blank"
+                               class="flex items-center text-blue-600 hover:text-blue-800">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                          d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                                          clip-rule="evenodd"/>
+                                </svg>
+                                Webcast
+                            </a>
+                        </div>
+                    {% endif %}
+                    {% if launch.links.youtube_id %}
+                        <iframe class="w-full" width="560" height="315"
+                                src="https://www.youtube.com/embed/{{ launch.links.youtube_id }}"
+                                title="YouTube video player" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    {% endif %}
+                    {% if launch.links.wikipedia %}
+                        <div>
+                            <a href="{{ launch.links.wikipedia }}" target="_blank"
+                               class="flex items-center text-blue-600 hover:text-blue-800">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                          d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                                          clip-rule="evenodd"/>
+                                </svg>
+                                Article Wikipédia
+                            </a>
+                        </div>
+                    {% endif %}
+                    {% if launch.links.article %}
+                        <div>
+                            <a href="{{ launch.links.article }}" target="_blank"
+                               class="flex items-center text-blue-600 hover:text-blue-800">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                          d="M4 4a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                                          clip-rule="evenodd"/>
+                                </svg>
+                                Article
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% if launch.links.flickr.original is not empty %}
+            <div class="bg-white shadow-md rounded-lg p-6 mt-6">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4">Photo</h2>
+                <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    {% for flickr in launch.links.flickr.original %}
+                        <img src="{{ flickr }}" alt="{{ launch.name }}" class="rounded-lg">
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        {% if launch.crew is not empty %}
+            <div class="bg-white shadow-md rounded-lg p-6 mt-6">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4">Équipage</h2>
+                <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    {% for members in launch.crew %}
+                        {% set member  = getCrewLaunch(members.crew) %}
+                        <div class="bg-gray-100 rounded-lg p-4 text-center">
+                            <div class="font-semibold text-gray-900">{{ member.name }}</div>
+                            <div class="text-gray-600">{{ members.role }}</div>
+                            <div class="text-gray-600">{{ member.agency }}</div>
+                            <img src="{{ member.image }}" alt="{{ member.name }}"
+                                 class="w-32 h-32 rounded-md mx-auto mt-4">
+                            <a href="{{ member.wikipedia }}" class="text-blue-600 mt-2" target="_blank">Wikipedia</a>
+                            {% if member.status == 'active' %}
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs mt-2">Actif</span>
+                            {% else %}
+                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs mt-2">Inactif</span>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg p-6 mt-6">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Détails Techniques</h2>
+            <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+
+                {% if launch.cores.0 is defined %}
+                    <div>
+                        <p class="text-gray-600">Numéro de vol du core</p>
+                        <p class="font-medium">{{ launch.cores.0.flight }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">Type d'atterrissage</p>
+                        <p class="font-medium">{{ launch.cores.0.landing_type }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600">Atterrissage réussi</p>
+                        <p class="font-medium">
+                            {{ launch.cores.0.landing_success ? 'Oui' : 'Non' }}
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -42,11 +42,11 @@ class MissionController extends AbstractController
 
         // Filtre par gamme de prix
         if ($price) {
-            if ($price === 'cheap') {
+            if ('cheap' === $price) {
                 $queryBuilder->andWhere('m.seatPrice < 1000');
-            } elseif ($price === 'medium') {
+            } elseif ('medium' === $price) {
                 $queryBuilder->andWhere('m.seatPrice >= 1000 AND m.seatPrice <= 5000');
-            } elseif ($price === 'expensive') {
+            } elseif ('expensive' === $price) {
                 $queryBuilder->andWhere('m.seatPrice > 5000');
             }
         }
@@ -94,11 +94,11 @@ class MissionController extends AbstractController
             $mission = null;
 
             // Create the appropriate child entity
-            if ($type === 'scientific') {
+            if ('scientific' === $type) {
                 $mission = new ScientificMission();
                 $mission->setSpecialEquipement($form->get('specialEquipement')->getData());
                 $mission->setObjective($form->get('objective')->getData());
-            } elseif ($type === 'travel') {
+            } elseif ('travel' === $type) {
                 $mission = new TouristMission();
                 $mission->setHasGuide($form->get('hasGuide')->getData());
                 $mission->setActivities($form->get('activities')->getData());
@@ -147,6 +147,15 @@ class MissionController extends AbstractController
         $form = $this->createForm(MissionType::class, $mission, [
             'current_type' => $currentType,
         ]);
+
+        // Set default values for non-mapped fields
+        if ('scientific' === $currentType) {
+            $form->get('specialEquipement')->setData($mission->getSpecialEquipement());
+            $form->get('objective')->setData($mission->getObjective());
+        } elseif ('travel' === $currentType) {
+            $form->get('hasGuide')->setData($mission->hasGuide());
+            $form->get('activities')->setData($mission->getActivities());
+        }
 
         $form->handleRequest($request);
 

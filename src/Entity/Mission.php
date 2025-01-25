@@ -254,5 +254,4 @@ class Mission
     {
         return $this instanceof ScientificMission ? 'scientific' : ($this instanceof TouristMission ? 'travel' : 'other');
     }
-
 }
