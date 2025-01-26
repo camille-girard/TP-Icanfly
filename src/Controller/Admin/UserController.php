@@ -10,10 +10,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_CLIENT')]
 #[Route('/dashboard/user')]
 final class UserController extends AbstractController
 {
+    #[IsGranted('ROLE_ADMIN')]
     #[Route(name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
@@ -22,6 +25,7 @@ final class UserController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -42,9 +46,14 @@ final class UserController extends AbstractController
         ]);
     }
 
+
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN') && $this->getUser() !== $user) {
+            throw $this->createAccessDeniedException('Vous ne pouvez pas voir les informations d\'autres utilisateurs.');
+        }
+
         return $this->render('dashboard/user/show.html.twig', [
             'user' => $user,
         ]);
@@ -53,10 +62,22 @@ final class UserController extends AbstractController
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN') && $this->getUser() !== $user) {
+            throw $this->createAccessDeniedException('Vous ne pouvez pas modifier les informations d\'autres utilisateurs.');
+        }
+
+        $originalRoles = $user->getRoles();
+
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            if (!$user->isVerified()){
+                $this->addFlash('error', 'Vous ne pouvez pas modifier les rôles d\'un utilisateur non vérifié.');
+                $user->setRoles($originalRoles);
+            }
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
@@ -71,6 +92,10 @@ final class UserController extends AbstractController
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN') && $this->getUser() !== $user) {
+            throw $this->createAccessDeniedException('Vous ne pouvez pas supprimer d\'autres utilisateurs.');
+        }
+
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($user);
             $entityManager->flush();

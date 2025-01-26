@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 
 class MissionController extends AbstractController
@@ -69,7 +70,9 @@ class MissionController extends AbstractController
             'mission' => $mission,
         ]);
     }
-        #[Route(path: '/dashboard/mission', name: 'dashboard_mission_index', methods: ['GET'])]
+
+    #[IsGranted('ROLE_OPERATOR')]
+    #[Route(path: '/dashboard/mission', name: 'dashboard_mission_index', methods: ['GET'])]
     public function index_dashboard(MissionRepository $missionRepository): Response
     {
         return $this->render('dashboard/mission/index.html.twig', [
@@ -77,6 +80,7 @@ class MissionController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_OPERATOR')]
     #[Route('/dashboard/mission/new', name: 'dashboard_mission_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -118,6 +122,7 @@ class MissionController extends AbstractController
     }
 
 
+    #[IsGranted('ROLE_OPERATOR')]
     #[Route('/dashboard/mission/{id}', name: 'dashboard_mission_show', methods: ['GET'])]
     public function show(Mission $mission): Response
     {
@@ -126,6 +131,7 @@ class MissionController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_OPERATOR')]
     #[Route('/dashboard/mission/{id}/edit', name: 'dashboard_mission_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Mission $mission, EntityManagerInterface $entityManager): Response
     {
@@ -169,6 +175,7 @@ class MissionController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_OPERATOR')]
     #[Route('/dashboard/mission/{id}', name: 'dashboard_mission_delete', methods: ['POST'])]
     public function delete(Request $request, Mission $mission, EntityManagerInterface $entityManager): Response
     {

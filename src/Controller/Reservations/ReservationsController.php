@@ -14,14 +14,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_CLIENT')]
 class ReservationsController extends AbstractController
 {
-    #[Route('/reservations', name: 'dashboard_reservations')]
-    #[Route('/reservations/admin', name: 'dashboard_reservations_admin')]
+    #[Route('/dashboard/reservations', name: 'dashboard_reservations')]
+    #[Route('/dashboard/reservations/admin', name: 'dashboard_reservations_admin')]
     public function index(BookingRepository $reservationRepository, Request $request): Response
     {
         $adminMode = $request->get('_route') === 'dashboard_reservations_admin';
+
+        if ($adminMode) {
+            $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        }
 
         $bookings = $adminMode
             ? $reservationRepository->findAll()
@@ -33,8 +39,8 @@ class ReservationsController extends AbstractController
         ]);
     }
 
-    #[Route('/reservations/new', name: 'dashboard_reservations_new')]
-    #[Route('/reservations/admin/new', name: 'admin_reservations_new')]
+    #[Route('/dashboard/reservations/new', name: 'dashboard_reservations_new')]
+    #[Route('/dashboard/reservations/admin/new', name: 'admin_reservations_new')]
     public function new(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -42,7 +48,26 @@ class ReservationsController extends AbstractController
         SessionInterface $session
     ): Response {
         $adminMode = $request->get('_route') === 'admin_reservations_new';
+
+        if ($adminMode) {
+            $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        }
+
+        $missionId = $request->query->get('id');
+
+        $mission = null;
+
+        if ($missionId) {
+            $mission = $entityManager->getRepository(Mission::class)->find($missionId);
+            if (!$mission) {
+                throw $this->createNotFoundException('Mission non trouvée.');
+            }
+        }
+
         $reservation = new Booking();
+        if ($mission) {
+            $reservation->setMission($mission);
+        }
 
         $missions = $entityManager->getRepository(Mission::class)->findAll();
         $missionPrices = [];
@@ -102,15 +127,21 @@ class ReservationsController extends AbstractController
             'form' => $form->createView(),
             'admin_mode' => $adminMode,
             'missions' => $missionPrices,
+            'selected_mission' => $mission,
         ]);
     }
 
 
-    #[Route('/reservations/{id}/edit', name: 'dashboard_reservations_edit')]
-    #[Route('/reservations/admin/{id}/edit', name: 'admin_reservations_edit')]
+
+    #[Route('/dashboard/reservations/{id}/edit', name: 'dashboard_reservations_edit')]
+    #[Route('/dashboard/reservations/admin/{id}/edit', name: 'admin_reservations_edit')]
     public function edit(Booking $reservation, Request $request, EntityManagerInterface $entityManager): Response
     {
         $adminMode = $request->get('_route') === 'admin_reservations_edit';
+
+        if ($adminMode) {
+            $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        }
 
         $missions = $entityManager->getRepository(Mission::class)->findAll();
         $missionPrices = [];
@@ -147,8 +178,8 @@ class ReservationsController extends AbstractController
         ]);
     }
 
-    #[Route('/reservations/{id}/delete', name: 'dashboard_reservations_delete', methods: ['POST'])]
-    #[Route('/reservations/admin/{id}/delete', name: 'admin_reservations_delete', methods: ['POST'])]
+    #[Route('/dashboard/reservations/{id}/delete', name: 'dashboard_reservations_delete', methods: ['POST'])]
+    #[Route('/dashboard/reservations/admin/{id}/delete', name: 'admin_reservations_delete', methods: ['POST'])]
     public function delete(Booking $reservation, Request $request, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $reservation->getId(), $request->request->get('_token'))) {
@@ -165,11 +196,15 @@ class ReservationsController extends AbstractController
         );
     }
 
-    #[Route('/reservations/{id}', name: 'dashboard_reservations_show')]
-    #[Route('/reservations/admin/{id}', name: 'admin_reservations_show')]
+    #[Route('/dashboard/reservations/{id}', name: 'dashboard_reservations_show')]
+    #[Route('/dashboard/reservations/admin/{id}', name: 'admin_reservations_show')]
     public function show(Booking $reservation, Request $request): Response
     {
         $adminMode = $request->get('_route') === 'admin_reservations_show';
+
+        if ($adminMode) {
+            $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        }
 
         if (!$adminMode && $reservation->getCustomer() !== $this->getUser()) {
             throw $this->createAccessDeniedException('Vous ne pouvez pas voir cette réservation.');
@@ -181,7 +216,7 @@ class ReservationsController extends AbstractController
         ]);
     }
 
-    #[Route('/reservations/{id}/payment', name: 'reservation_payment')]
+    #[Route('/dashboard/reservations/{id}/payment', name: 'reservation_payment')]
     public function payment(Booking $booking, StripeService $stripeService, SessionInterface $session): Response
     {
         if (!$this->getUser() || $booking->getCustomer() !== $this->getUser()) {
