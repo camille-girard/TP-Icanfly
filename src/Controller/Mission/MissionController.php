@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Service\NotificationService;
+use App\Repository\BookingRepository;
 
 
 class MissionController extends AbstractController
@@ -133,29 +135,22 @@ class MissionController extends AbstractController
 
     #[IsGranted('ROLE_OPERATOR')]
     #[Route('/dashboard/mission/{id}/edit', name: 'dashboard_mission_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Mission $mission, EntityManagerInterface $entityManager): Response
-    {
-        // Determine the type of mission
+    public function edit(
+        Request $request,
+        Mission $mission,
+        EntityManagerInterface $entityManager,
+        NotificationService $notificationService,
+        BookingRepository $bookingRepository
+    ): Response {
         $currentType = $mission instanceof ScientificMission ? 'scientific' : 'travel';
 
-        // Create the form with current type
         $form = $this->createForm(MissionType::class, $mission, [
             'current_type' => $currentType,
         ]);
 
-        // Set default values for non-mapped fields
-        if ($currentType === 'scientific') {
-            $form->get('specialEquipement')->setData($mission->getSpecialEquipement());
-            $form->get('objective')->setData($mission->getObjective());
-        } elseif ($currentType === 'travel') {
-            $form->get('hasGuide')->setData($mission->hasGuide());
-            $form->get('activities')->setData($mission->getActivities());
-        }
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Update special fields
             if ($currentType === 'scientific') {
                 $mission->setSpecialEquipement($form->get('specialEquipement')->getData());
                 $mission->setObjective($form->get('objective')->getData());
@@ -166,6 +161,23 @@ class MissionController extends AbstractController
 
             $entityManager->flush();
 
+            // Notify all users who booked the mission
+            $bookings = $bookingRepository->findBy(['Mission' => $mission]);
+            foreach ($bookings as $booking) {
+                $customer = $booking->getCustomer();
+                if ($customer) { // Skip if the user is null
+                    $notificationService->sendNotification(
+                        $customer,
+                        sprintf('La mission "%s" a été modifiée.', $mission->getDestination()),
+                        'mail/notification_email.html.twig',
+                        [
+                            'missionName' => $mission->getDestination(),
+                            'changeDate' => (new \DateTime())->format('d/m/Y H:i'),
+                        ]
+                    );
+                }
+            }
+
             return $this->redirectToRoute('dashboard_mission_index');
         }
 
@@ -175,13 +187,40 @@ class MissionController extends AbstractController
         ]);
     }
 
+
     #[IsGranted('ROLE_OPERATOR')]
     #[Route('/dashboard/mission/{id}', name: 'dashboard_mission_delete', methods: ['POST'])]
-    public function delete(Request $request, Mission $mission, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$mission->getId(), $request->getPayload()->getString('_token'))) {
+    public function delete(
+        Request $request,
+        Mission $mission,
+        EntityManagerInterface $entityManager,
+        NotificationService $notificationService,
+        BookingRepository $bookingRepository
+    ): Response {
+        if ($this->isCsrfTokenValid('delete' . $mission->getId(), $request->get('_token'))) {
+            // Notify all users who booked the mission
+            $bookings = $bookingRepository->findBy(['Mission' => $mission]);
+            foreach ($bookings as $booking) {
+                $customer = $booking->getCustomer();
+                if ($customer) { // Skip if the user is null
+                    $notificationService->sendNotification(
+                        $customer,
+                        sprintf('La mission "%s" a été annulée.', $mission->getDestination()),
+                        'mail/notification_email.html.twig',
+                        [
+                            'missionName' => $mission->getDestination(),
+                            'cancelDate' => (new \DateTime())->format('d/m/Y H:i'),
+                        ]
+                    );
+                }
+            }
+
             $entityManager->remove($mission);
             $entityManager->flush();
+
+            $this->addFlash('success', 'La mission a été supprimée avec succès.');
+        } else {
+            $this->addFlash('error', 'Token CSRF invalide, impossible de supprimer la mission.');
         }
 
         return $this->redirectToRoute('dashboard_mission_index', [], Response::HTTP_SEE_OTHER);

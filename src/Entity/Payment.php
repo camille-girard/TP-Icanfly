@@ -28,6 +28,7 @@ class Payment
     private ?PaymentType $paymentType = null;
 
     #[ORM\ManyToOne(targetEntity: Mission::class, inversedBy: 'payments')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Mission $mission = null;
 
     public function __construct()

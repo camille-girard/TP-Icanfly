@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Service\NotificationService;
 
 #[IsGranted('ROLE_CLIENT')]
 class ReservationsController extends AbstractController
@@ -45,7 +46,8 @@ class ReservationsController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         StripeService $stripeService,
-        SessionInterface $session
+        SessionInterface $session,
+        NotificationService $notificationService
     ): Response {
         $adminMode = $request->get('_route') === 'admin_reservations_new';
 
@@ -119,6 +121,16 @@ class ReservationsController extends AbstractController
                 return $this->redirect($checkoutSession->url);
             }
 
+            $notificationService->sendNotification(
+                $reservation->getCustomer(), // The User entity
+                'Votre réservation pour la mission ' .  $reservation->getMission()->getDestination() . ' a été enregistrée avec succès.',
+                'mail/notification_email.html.twig',
+                [
+                    'missionName' => $reservation->getMission()->getDestination(),
+                    'reservationDate' => (new \DateTime())->format('d/m/Y H:i'),
+                ]
+            );
+
             // Rediriger après enregistrement
             return $this->redirectToRoute($adminMode ? 'dashboard_reservations_admin' : 'dashboard_reservations');
         }
@@ -131,11 +143,9 @@ class ReservationsController extends AbstractController
         ]);
     }
 
-
-
     #[Route('/dashboard/reservations/{id}/edit', name: 'dashboard_reservations_edit')]
     #[Route('/dashboard/reservations/admin/{id}/edit', name: 'admin_reservations_edit')]
-    public function edit(Booking $reservation, Request $request, EntityManagerInterface $entityManager): Response
+    public function edit(Booking $reservation, Request $request, EntityManagerInterface $entityManager, NotificationService $notificationService): Response
     {
         $adminMode = $request->get('_route') === 'admin_reservations_edit';
 
@@ -164,6 +174,15 @@ class ReservationsController extends AbstractController
 
             $entityManager->flush();
 
+            $notificationService->sendNotification(
+                $reservation->getCustomer(), // The User entity
+                'Votre réservation pour la mission ' .  $reservation->getMission()->getDestination() . ' a été modifiée.',
+                'mail/notification_email.html.twig',
+                [
+                    'missionName' => $reservation->getMission()->getDestination(),
+                ]
+            );
+
             return $this->redirectToRoute(
                 $adminMode ? 'dashboard_reservations_admin' : 'dashboard_reservations'
             );
@@ -180,13 +199,21 @@ class ReservationsController extends AbstractController
 
     #[Route('/dashboard/reservations/{id}/delete', name: 'dashboard_reservations_delete', methods: ['POST'])]
     #[Route('/dashboard/reservations/admin/{id}/delete', name: 'admin_reservations_delete', methods: ['POST'])]
-    public function delete(Booking $reservation, Request $request, EntityManagerInterface $entityManager): Response
+    public function delete(Booking $reservation, Request $request, EntityManagerInterface $entityManager, NotificationService $notificationService): Response
     {
         if ($this->isCsrfTokenValid('delete' . $reservation->getId(), $request->request->get('_token'))) {
             $entityManager->remove($reservation);
             $entityManager->flush();
 
             $this->addFlash('success', 'La réservation a été supprimée avec succès.');
+            $notificationService->sendNotification(
+                $reservation->getCustomer(), // The User entity
+                'Votre réservation pour la mission ' .  $reservation->getMission()->getDestination() . ' a été annulé.',
+                'mail/notification_email.html.twig',
+                [
+                    'missionName' => $reservation->getMission()->getDestination(),
+                ]
+            );
         } else {
             $this->addFlash('error', 'Token CSRF invalide, impossible de supprimer la réservation.');
         }

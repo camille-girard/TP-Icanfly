@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Service\NotificationService;
 
 #[IsGranted('ROLE_CLIENT')]
 #[Route('/dashboard/user')]
@@ -60,7 +61,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, User $user, EntityManagerInterface $entityManager, NotificationService $notificationService): Response
     {
         if (!$this->isGranted('ROLE_ADMIN') && $this->getUser() !== $user) {
             throw $this->createAccessDeniedException('Vous ne pouvez pas modifier les informations d\'autres utilisateurs.');
@@ -79,6 +80,13 @@ final class UserController extends AbstractController
             }
 
             $entityManager->flush();
+
+            $notificationService->sendNotification(
+                $user, // The User entity
+                'Votre profil a été modifié avec succès.',
+                'mail/notification_email.html.twig',
+                []
+            );
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
