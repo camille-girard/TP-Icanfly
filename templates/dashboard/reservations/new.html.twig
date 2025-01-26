@@ -1,12 +1,10 @@
 {% extends 'dashboard.html.twig' %}
 
-{% block title %}{{ admin_mode ? 'Ajouter une Réservation' : 'Nouvelle Réservation' }}{% endblock %}
+{% block title %}Créer une Nouvelle Réservation{% endblock %}
 
 {% block content %}
     <div class="container mx-auto px-4 py-6 min-h-screen">
-        <h1 class="text-3xl font-bold text-[#1E2A38] mb-6">
-            {{ admin_mode ? 'Ajouter une Réservation' : 'Créer une Nouvelle Réservation' }}
-        </h1>
+        <h1 class="text-3xl font-bold text-[#1E2A38] mb-6">Créer une Nouvelle Réservation</h1>
 
         <div class="bg-white shadow-md rounded-lg p-6">
             {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'reservation-form'}}) }}
@@ -17,7 +15,7 @@
                 </div>
                 <div>
                     {{ form_label(form.totalPrice, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
-                    {{ form_widget(form.totalPrice) }}
+                    {{ form_widget(form.totalPrice, {'attr': {'readonly': 'readonly'}}) }}
                 </div>
                 <div>
                     {{ form_label(form.mission, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
@@ -30,9 +28,19 @@
                     </div>
                 {% endif %}
             </div>
-            {{ form_rest(form) }}
             {{ form_end(form) }}
         </div>
+
+        {# Afficher le bouton de paiement après création de la réservation #}
+        {% if booking is defined and booking.status.value == 'en attente' %}
+            <p>Statut actuel : En attente</p>
+            <div class="mt-6">
+                <a href="{{ path('reservation_payment', {'id': booking.id}) }}"
+                   class="text-white bg-green-500 hover:bg-green-700 px-4 py-2 rounded">
+                    Payer cette réservation
+                </a>
+            </div>
+        {% endif %}
 
         <div class="mt-6">
             <a href="{{ admin_mode ? path('dashboard_reservations_admin') : path('dashboard_reservations') }}"
@@ -41,10 +49,8 @@
     </div>
 
     <script>
-        // Charge les prix des missions depuis Twig
         const missionPrices = {{ missions|json_encode|raw }};
 
-        // Fonction pour mettre à jour le prix total
         function updateTotalPrice() {
             const seatCount = parseInt(document.querySelector('[name="reservation_form[seatCount]"]').value) || 0;
             const missionSelect = document.querySelector('[name="reservation_form[mission]"]');
@@ -55,7 +61,6 @@
             totalPriceField.value = seatCount * seatPrice;
         }
 
-        // Initialisation au chargement de la page
         document.addEventListener('DOMContentLoaded', () => {
             updateTotalPrice();
         });

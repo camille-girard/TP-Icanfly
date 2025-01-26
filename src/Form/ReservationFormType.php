@@ -66,6 +66,15 @@ class ReservationFormType extends AbstractType
             ]);
         }
 
+        if ($options['is_new'] && !$options['is_admin']) {
+            $builder->add('save_and_pay', SubmitType::class, [
+                'label' => 'Enregistrer et Payer',
+                'attr' => [
+                    'class' => 'mt-6 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors',
+                ],
+            ]);
+        }
+
         $builder->add('save', SubmitType::class, [
             'label' => 'Enregistrer',
             'attr' => [
@@ -93,6 +102,7 @@ class ReservationFormType extends AbstractType
             'created_at' => null,
             'email' => null,
             'is_admin' => false,
+            'is_new' => false, // Par défaut, ce n'est pas une nouvelle réservation
         ]);
     }
 }

@@ -4,14 +4,15 @@ namespace App\Controller\Reservations;
 
 use App\Entity\Booking;
 use App\Entity\Mission;
-use App\Entity\User;
 use App\Enum\BookingStatus;
 use App\Form\ReservationFormType;
 use App\Repository\BookingRepository;
+use App\Service\StripeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ReservationsController extends AbstractController
@@ -34,8 +35,12 @@ class ReservationsController extends AbstractController
 
     #[Route('/reservations/new', name: 'dashboard_reservations_new')]
     #[Route('/reservations/admin/new', name: 'admin_reservations_new')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
+    public function new(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        StripeService $stripeService,
+        SessionInterface $session
+    ): Response {
         $adminMode = $request->get('_route') === 'admin_reservations_new';
         $reservation = new Booking();
 
@@ -48,11 +53,13 @@ class ReservationsController extends AbstractController
         $form = $this->createForm(ReservationFormType::class, $reservation, [
             'email' => $this->getUser()?->getEmail(),
             'is_admin' => $adminMode,
+            'is_new' => !$adminMode, // Spécifie si nous sommes dans une création côté client
         ]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Définir les champs nécessaires en fonction du mode
             if ($adminMode) {
                 $customer = $form->get('customer')->getData();
                 $reservation->setCustomer($customer);
@@ -69,6 +76,25 @@ class ReservationsController extends AbstractController
             $entityManager->persist($reservation);
             $entityManager->flush();
 
+            // Gérer le paiement pour les clients
+            if (!$adminMode && $form->has('save_and_pay') && $form->get('save_and_pay')->isClicked()) {
+                // Créez une session Stripe
+                $checkoutSession = $stripeService->createCheckoutSession(
+                    'eur',
+                    $reservation->getMission()->getDestination(),
+                    $reservation->getTotalPrice() * 100,
+                    $this->generateUrl('dashboard_reservations', [], 0), // Success URL
+                    $this->generateUrl('dashboard_reservations', [], 0)  // Cancel URL
+                );
+
+                // Enregistrer l'ID de session Stripe dans la session Symfony
+                $session->set('stripe_session_id_' . $reservation->getId(), $checkoutSession->id);
+
+                // Rediriger directement vers Stripe
+                return $this->redirect($checkoutSession->url);
+            }
+
+            // Rediriger après enregistrement
             return $this->redirectToRoute($adminMode ? 'dashboard_reservations_admin' : 'dashboard_reservations');
         }
 
@@ -78,6 +104,7 @@ class ReservationsController extends AbstractController
             'missions' => $missionPrices,
         ]);
     }
+
 
     #[Route('/reservations/{id}/edit', name: 'dashboard_reservations_edit')]
     #[Route('/reservations/admin/{id}/edit', name: 'admin_reservations_edit')]
@@ -111,12 +138,12 @@ class ReservationsController extends AbstractController
             );
         }
 
-
         return $this->render('dashboard/reservations/edit.html.twig', [
             'form' => $form->createView(),
             'booking' => $reservation,
+            'status' => $reservation->getStatus()?->value, // Passez la valeur brute pour Twig
             'admin_mode' => $adminMode,
-            'missions' => $missionPrices, // Ajoute les prix des missions ici
+            'missions' => $missionPrices,
         ]);
     }
 
@@ -124,10 +151,7 @@ class ReservationsController extends AbstractController
     #[Route('/reservations/admin/{id}/delete', name: 'admin_reservations_delete', methods: ['POST'])]
     public function delete(Booking $reservation, Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Vérifie la validité du token CSRF
         if ($this->isCsrfTokenValid('delete' . $reservation->getId(), $request->request->get('_token'))) {
-
-            // Supprime la réservation directement sans restriction
             $entityManager->remove($reservation);
             $entityManager->flush();
 
@@ -136,7 +160,6 @@ class ReservationsController extends AbstractController
             $this->addFlash('error', 'Token CSRF invalide, impossible de supprimer la réservation.');
         }
 
-        // Redirection en fonction du contexte (admin ou client)
         return $this->redirectToRoute(
             $request->get('_route') === 'admin_reservations_delete' ? 'dashboard_reservations_admin' : 'dashboard_reservations'
         );
@@ -156,5 +179,61 @@ class ReservationsController extends AbstractController
             'booking' => $reservation,
             'admin_mode' => $adminMode,
         ]);
+    }
+
+    #[Route('/reservations/{id}/payment', name: 'reservation_payment')]
+    public function payment(Booking $booking, StripeService $stripeService, SessionInterface $session): Response
+    {
+        if (!$this->getUser() || $booking->getCustomer() !== $this->getUser()) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce paiement.');
+        }
+
+        if ($booking->getStatus() !== BookingStatus::PENDING) {
+            throw $this->createAccessDeniedException('Le paiement est déjà effectué ou annulé.');
+        }
+
+        $checkoutSession = $stripeService->createCheckoutSession(
+            'eur',
+            $booking->getMission()->getDestination(),
+            $booking->getTotalPrice() * 100,
+            $this->generateUrl('dashboard_reservations', [], 0),
+            $this->generateUrl('dashboard_reservations', [], 0)
+        );
+
+        $session->set('stripe_session_id_' . $booking->getId(), $checkoutSession->id);
+
+        return $this->redirect($checkoutSession->url);
+    }
+
+    #[Route('/stripe/webhook', name: 'stripe_webhook', methods: ['POST'])]
+    public function stripeWebhook(Request $request, BookingRepository $bookingRepo, SessionInterface $session, EntityManagerInterface $entityManager): Response
+    {
+        $payload = $request->getContent();
+        $sigHeader = $request->headers->get('Stripe-Signature');
+        $secret = $_ENV['STRIPE_WEBHOOK_SECRET'];
+
+        try {
+            $event = \Stripe\Webhook::constructEvent($payload, $sigHeader, $secret);
+
+            if ($event->type === 'checkout.session.completed') {
+                $sessionStripeId = $event->data->object->id;
+
+                foreach ($session->all() as $key => $value) {
+                    if (str_contains($key, 'stripe_session_id_') && $value === $sessionStripeId) {
+                        $bookingId = str_replace('stripe_session_id_', '', $key);
+                        $booking = $bookingRepo->find($bookingId);
+
+                        if ($booking) {
+                            $booking->setStatus(BookingStatus::CONFIRMED);
+                            $entityManager->flush();
+                        }
+                    }
+                }
+            }
+        } catch (\UnexpectedValueException | \Stripe\Exception\SignatureVerificationException $e) {
+            return new Response('Webhook Error: ' . $e->getMessage(), 400);
+        }
+
+        return new Response('Success', 200);
     }
 }

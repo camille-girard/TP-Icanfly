@@ -17,43 +17,33 @@
                 </tr>
                 </thead>
                 <tbody class="text-[#1E2A38]">
-                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                <tr>
                     <td class="px-4 py-2 font-bold">ID</td>
                     <td class="px-4 py-2">{{ booking.id }}</td>
                 </tr>
-                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                <tr>
                     <td class="px-4 py-2 font-bold">Destination</td>
                     <td class="px-4 py-2">{{ booking.destination }}</td>
                 </tr>
-                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                <tr>
                     <td class="px-4 py-2 font-bold">Nombre de places</td>
                     <td class="px-4 py-2">{{ booking.seatCount }}</td>
                 </tr>
-                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                <tr>
                     <td class="px-4 py-2 font-bold">Prix total (€)</td>
                     <td class="px-4 py-2">{{ booking.totalPrice }}</td>
                 </tr>
-                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                <tr>
                     <td class="px-4 py-2 font-bold">Statut</td>
                     <td class="px-4 py-2">{{ booking.status.value }}</td>
                 </tr>
                 {% if admin_mode %}
-                    <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                    <tr>
                         <td class="px-4 py-2 font-bold">Client</td>
                         <td class="px-4 py-2">{{ booking.customer.email }}</td>
                     </tr>
-                    <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
-                        <td class="px-4 py-2 font-bold">Mission</td>
-                        <td class="px-4 py-2">
-                            {% if booking.mission is not null %}
-                                {{ booking.mission.destination }}
-                            {% else %}
-                                <span class="text-gray-500 italic">Non attribuée</span>
-                            {% endif %}
-                        </td>
-                    </tr>
                 {% endif %}
-                <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                <tr>
                     <td class="px-4 py-2 font-bold">Date de réservation</td>
                     <td class="px-4 py-2">{{ booking.createdAt|date('d/m/Y H:i') }}</td>
                 </tr>
@@ -61,14 +51,12 @@
             </table>
         </div>
 
-        <div class="mt-6 mb-6 ml-4 flex justify-between">
-            <div class="flex gap-3">
-                <a href="{{ admin_mode ? path('admin_reservations_edit', {'id': booking.id}) : path('dashboard_reservations_edit', {'id': booking.id}) }}"
-                   class="px-3 py-1 text-[#0022FF] border border-[#0022FF] rounded-md hover:bg-[#0022FF] hover:text-white transition-colors">
-                    Modifier
-                </a>
-                {% include 'dashboard/reservations/_delete_form.html.twig' with { 'booking': booking, 'admin_mode': admin_mode } %}
-            </div>
+        <div class="mt-6 mb-6 flex gap-3">
+            <a href="{{ admin_mode ? path('admin_reservations_edit', {'id': booking.id}) : path('dashboard_reservations_edit', {'id': booking.id}) }}"
+               class="px-3 py-1 text-[#0022FF] border border-[#0022FF] rounded-md hover:bg-[#0022FF] hover:text-white transition-colors">
+                Modifier
+            </a>
+            {% include 'dashboard/reservations/_delete_form.html.twig' with { 'booking': booking } %}
         </div>
 
         <div class="mt-6">
