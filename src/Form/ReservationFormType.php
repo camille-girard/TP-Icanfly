@@ -38,6 +38,7 @@ class ReservationFormType extends AbstractType
                 'choice_label' => 'destination',
                 'label' => 'Mission',
                 'placeholder' => 'Choisissez une mission',
+                'data' => $options['data']->getMission() ?? null,
                 'attr' => [
                     'class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
                     'onchange' => 'updateTotalPrice()',

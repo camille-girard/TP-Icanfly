@@ -14,24 +14,24 @@ class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $user = $options['data'] ?? null;
         $builder
             ->add('firstName')
             ->add('lastName')
             ->add('email')
             ->add('password')
-            ->add('createdAt', null, [
-                'widget' => 'single_text',
-            ])
             ->add('roles', ChoiceType::class, [
                 'choices' => [
                     'Admin' => 'ROLE_ADMIN',
-                    'User' => 'ROLE_USER',
+                    'Client' => 'ROLE_CLIENT',
+                    'Operator' => 'ROLE_OPERATOR',
                 ],
                 'multiple' => true,
                 'expanded' => true,
-            ])
-            ->add('isVerified');
-        /*
+                'disabled' => !$user->isVerified(),
+            ]);
+            /*->add('isVerified');
+
         ->add('missions', EntityType::class, [
             'class' => Mission::class,
             'choice_label' => 'id',

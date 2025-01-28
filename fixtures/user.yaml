@@ -5,7 +5,7 @@ App\Entity\User:
         email: 'alice.durand@example.com'
         hashpassword: 'password123'
         createdAt: <(new \DateTimeImmutable('2023-01-01'))>
-        roles: ['ROLE_SUPER_ADMIN']
+        roles: ['ROLE_ADMIN']
         bookings:
             - '@booking1'
         missions: []

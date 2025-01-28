@@ -33,7 +33,9 @@
                         <td class="px-4 py-2">{{ booking.totalPrice }}</td>
                         <td class="px-4 py-2">{{ booking.status.value }}</td>
                         {% if admin_mode %}
-                            <td class="px-4 py-2">{{ booking.customer.email }}</td>
+                            <td class="px-4 py-2">
+                                {{ booking.customer.email | default('null') }}
+                            </td>
                         {% endif %}
                         <td class="px-4 py-2">{{ booking.createdAt|date('d/m/Y H:i') }}</td>
                         <td class="px-4 py-2">

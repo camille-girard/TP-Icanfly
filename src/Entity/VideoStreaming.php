@@ -24,7 +24,7 @@ class VideoStreaming
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\ManyToOne(targetEntity: Mission::class, inversedBy: 'videoStreamings')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Mission $Mission = null;
 
     public function getId(): ?int

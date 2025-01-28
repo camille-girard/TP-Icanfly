@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Notification de Mission</title>
+</head>
+<body>
+<h1>Bonjour {{ user.firstName }} {{ user.lastName }},</h1>
+
+<p>
+    {% if cancelDate is defined %}
+        La mission <strong>{{ missionName }}</strong> a été annulée le {{ cancelDate }}.
+    {% elseif changeDate is defined %}
+        La mission <strong>{{ missionName }}</strong> a été modifiée le {{ changeDate }}.
+    {% endif %}
+</p>
+
+<p>Merci pour votre compréhension,</p>
+<p>L'équipe ICanFly</p>
+</body>
+</html>
