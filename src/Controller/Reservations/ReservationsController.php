@@ -7,6 +7,7 @@ use App\Entity\Mission;
 use App\Enum\BookingStatus;
 use App\Form\ReservationFormType;
 use App\Repository\BookingRepository;
+use App\Service\NotificationService;
 use App\Service\StripeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,7 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use App\Service\NotificationService;
 
 #[IsGranted('ROLE_CLIENT')]
 class ReservationsController extends AbstractController
@@ -47,7 +47,7 @@ class ReservationsController extends AbstractController
         EntityManagerInterface $entityManager,
         StripeService $stripeService,
         SessionInterface $session,
-        NotificationService $notificationService
+        NotificationService $notificationService,
     ): Response {
         $adminMode = 'admin_reservations_new' === $request->get('_route');
 
@@ -111,7 +111,7 @@ class ReservationsController extends AbstractController
                 );
 
                 // Enregistrer l'ID de session Stripe dans la session Symfony
-                $session->set('stripe_session_id_' . $reservation->getId(), $checkoutSession->id);
+                $session->set('stripe_session_id_'.$reservation->getId(), $checkoutSession->id);
 
                 // Rediriger directement vers Stripe
                 return $this->redirect($checkoutSession->url);
@@ -119,7 +119,7 @@ class ReservationsController extends AbstractController
 
             $notificationService->sendNotification(
                 $reservation->getCustomer(), // The User entity
-                'Votre réservation pour la mission ' .  $reservation->getMission()->getDestination() . ' a été enregistrée avec succès.',
+                'Votre réservation pour la mission '.$reservation->getMission()->getDestination().' a été enregistrée avec succès.',
                 'mail/notification_email.html.twig',
                 [
                     'missionName' => $reservation->getMission()->getDestination(),
@@ -172,7 +172,7 @@ class ReservationsController extends AbstractController
 
             $notificationService->sendNotification(
                 $reservation->getCustomer(), // The User entity
-                'Votre réservation pour la mission ' .  $reservation->getMission()->getDestination() . ' a été modifiée.',
+                'Votre réservation pour la mission '.$reservation->getMission()->getDestination().' a été modifiée.',
                 'mail/notification_email.html.twig',
                 [
                     'missionName' => $reservation->getMission()->getDestination(),
@@ -197,16 +197,14 @@ class ReservationsController extends AbstractController
     #[Route('/dashboard/reservations/admin/{id}/delete', name: 'admin_reservations_delete', methods: ['POST'])]
     public function delete(Booking $reservation, Request $request, EntityManagerInterface $entityManager, NotificationService $notificationService): Response
     {
-
         if ($this->isCsrfTokenValid('delete'.$reservation->getId(), $request->request->get('_token'))) {
-
             $entityManager->remove($reservation);
             $entityManager->flush();
 
             $this->addFlash('success', 'La réservation a été supprimée avec succès.');
             $notificationService->sendNotification(
                 $reservation->getCustomer(), // The User entity
-                'Votre réservation pour la mission ' .  $reservation->getMission()->getDestination() . ' a été annulé.',
+                'Votre réservation pour la mission '.$reservation->getMission()->getDestination().' a été annulé.',
                 'mail/notification_email.html.twig',
                 [
                     'missionName' => $reservation->getMission()->getDestination(),
@@ -217,7 +215,7 @@ class ReservationsController extends AbstractController
         }
 
         return $this->redirectToRoute(
-            $request->get('_route') === 'admin_reservations_delete' ? 'dashboard_reservations_admin' : 'dashboard_reservations'
+            'admin_reservations_delete' === $request->get('_route') ? 'dashboard_reservations_admin' : 'dashboard_reservations'
         );
     }
 
@@ -225,7 +223,7 @@ class ReservationsController extends AbstractController
     #[Route('/dashboard/reservations/admin/{id}', name: 'admin_reservations_show')]
     public function show(Booking $reservation, Request $request): Response
     {
-        $adminMode = $request->get('_route') === 'admin_reservations_show';
+        $adminMode = 'admin_reservations_show' === $request->get('_route');
 
         if ($adminMode) {
             $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -248,7 +246,7 @@ class ReservationsController extends AbstractController
             throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce paiement.');
         }
 
-        if ($booking->getStatus() !== BookingStatus::PENDING) {
+        if (BookingStatus::PENDING !== $booking->getStatus()) {
             throw $this->createAccessDeniedException('Le paiement est déjà effectué ou annulé.');
         }
 
@@ -260,7 +258,7 @@ class ReservationsController extends AbstractController
             $this->generateUrl('dashboard_reservations', [], 0)
         );
 
-        $session->set('stripe_session_id_' . $booking->getId(), $checkoutSession->id);
+        $session->set('stripe_session_id_'.$booking->getId(), $checkoutSession->id);
 
         return $this->redirect($checkoutSession->url);
     }
@@ -275,7 +273,7 @@ class ReservationsController extends AbstractController
         try {
             $event = \Stripe\Webhook::constructEvent($payload, $sigHeader, $secret);
 
-            if ($event->type === 'checkout.session.completed') {
+            if ('checkout.session.completed' === $event->type) {
                 $sessionStripeId = $event->data->object->id;
 
                 foreach ($session->all() as $key => $value) {
@@ -290,8 +288,8 @@ class ReservationsController extends AbstractController
                     }
                 }
             }
-        } catch (\UnexpectedValueException | \Stripe\Exception\SignatureVerificationException $e) {
-            return new Response('Webhook Error: ' . $e->getMessage(), 400);
+        } catch (\UnexpectedValueException|\Stripe\Exception\SignatureVerificationException $e) {
+            return new Response('Webhook Error: '.$e->getMessage(), 400);
         }
 
         return new Response('Success', 200);

@@ -63,11 +63,11 @@ class SpaceXServiceAPI
         }
     }
 
-
     public function getCrewMembers(string $id): array
     {
         try {
             $response = $this->httpClient->request('GET', "https://api.spacexdata.com/v4/crew/{$id}");
+
             return $this->processResponse($response);
         } catch (\Exception|TransportExceptionInterface $e) {
             throw new \RuntimeException("Impossible de récupérer les membres d'équipage : {$e->getMessage()}");

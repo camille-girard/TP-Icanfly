@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service;
 
 use App\Entity\Notification;
@@ -8,7 +9,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 
 class NotificationService
-    {
+{
     private MailerInterface $mailer;
     private EntityManagerInterface $entityManager;
 
@@ -19,8 +20,8 @@ class NotificationService
     }
 
     /**
-    * Sends a notification email and logs it in the database.
-    */
+     * Sends a notification email and logs it in the database.
+     */
     public function sendNotification(User $user, string $content, string $template = 'mail/notification_email.html.twig', array $templateData = []): void
     {
         // Build the email using TemplatedEmail
