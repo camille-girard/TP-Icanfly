@@ -14,9 +14,10 @@
             {% endif %}
             {% if is_granted('ROLE_OPERATOR') %}
                 <li><a href="{{ path('dashboard_mission_index') }}" class="block py-2 px-4 rounded hover:bg-gray-700">Gestion des Missions</a></li>
+                <li><a href="{{ path('dashboard_lives_index') }}" class="block py-2 px-4 rounded hover:bg-gray-700">Gestion des Lives</a></li>
             {% endif %}
             {% if is_granted('ROLE_ADMIN') %}
-                <li><a href="{{ path('dashboard_reservations_admin') }}" class="block py-2 px-4 rounded hover:bg-gray-700">Gestion des réservations</a></li>
+                <li><a href="{{ path('dashboard_reservations_admin') }}" class="block py-2 px-4 rounded hover:bg-gray-700">Gestion des Réservations</a></li>
                 <li><a href="{{ path('app_user_index') }}" class="block py-2 px-4 rounded hover:bg-gray-700">Gestion Utilisateurs</a></li>
             {% endif %}
             <li><a href="{{ path('app_logout') }}" class="block py-2 px-4 rounded hover:bg-gray-700">Déconnexion</a></li>

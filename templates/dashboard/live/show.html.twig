@@ -1,0 +1,65 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Détail du Live{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-6 min-h-screen">
+        <h1 class="text-3xl font-bold text-[#1E2A38] mb-6">Détail du Live</h1>
+
+        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+            <table class="table-auto w-full text-left border-collapse">
+                <thead class="bg-[#1E2A38] text-white">
+                <tr>
+                    <th class="px-4 py-2">Champ</th>
+                    <th class="px-4 py-2">Valeur</th>
+                </tr>
+                </thead>
+                <tbody class="text-[#1E2A38]">
+                <tr>
+                    <td class="px-4 py-2 font-bold">ID</td>
+                    <td class="px-4 py-2">{{ video_streaming.id }}</td>
+                </tr>
+                <tr>
+                    <td class="px-4 py-2 font-bold">Mission</td>
+                    <td class="px-4 py-2">{{ video_streaming.Mission ? video_streaming.Mission.destination : 'Aucune mission' }}</td>
+                </tr>
+                <tr>
+                    <td class="px-4 py-2 font-bold">URL</td>
+                    <td class="px-4 py-2">
+                        <a href="{{ video_streaming.url }}" target="_blank" class="text-blue-500 underline">
+                            {{ video_streaming.url }}
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="px-4 py-2 font-bold">Début</td>
+                    <td class="px-4 py-2">{{ video_streaming.startDate ? video_streaming.startDate|date('d/m/Y H:i') : 'N/A' }}</td>
+                </tr>
+                <tr>
+                    <td class="px-4 py-2 font-bold">Fin</td>
+                    <td class="px-4 py-2">{{ video_streaming.endDate ? video_streaming.endDate|date('d/m/Y H:i') : 'N/A' }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-6 mb-6 flex gap-3">
+            <a href="{{ path('dashboard_lives_edit', {'id': video_streaming.id}) }}"
+               class="px-3 py-1 text-[#0022FF] border border-[#0022FF] rounded-md hover:bg-[#0022FF] hover:text-white transition-colors">
+                Modifier
+            </a>
+            <form method="post" action="{{ path('dashboard_lives_delete', {'id': video_streaming.id}) }}"
+                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce live ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ video_streaming.id) }}">
+                <button class="px-3 py-1 text-red-500 border border-red-500 rounded-md hover:bg-red-500 hover:text-white transition-colors">
+                    Supprimer
+                </button>
+            </form>
+        </div>
+
+        <div class="mt-6">
+            <a href="{{ path('dashboard_lives_index') }}"
+               class="text-[#002EFF] hover:underline">&larr; Retour à la liste</a>
+        </div>
+    </div>
+{% endblock %}

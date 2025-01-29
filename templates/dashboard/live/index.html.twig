@@ -1,0 +1,72 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block title %}Tableau de bord - Lives{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-6 min-h-screen">
+        <h1 class="text-3xl font-bold text-[#1E2A38] mb-6">Gestion des Lives Vidéo</h1>
+
+        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+            <table class="table-auto w-full text-left border-collapse">
+                <thead class="bg-[#1E2A38] text-white">
+                <tr>
+                    <th class="px-4 py-2">ID</th>
+                    <th class="px-4 py-2">Mission</th>
+                    <th class="px-4 py-2">URL</th>
+                    <th class="px-4 py-2">Début</th>
+                    <th class="px-4 py-2">Fin</th>
+                    <th class="px-4 py-2">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for video in video_streamings %}
+                    <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
+                        <td class="px-4 py-2">{{ video.id }}</td>
+                        <td class="px-4 py-2">
+                            {% if video.Mission is not null %}
+                                {{ video.Mission.destination }}
+                            {% else %}
+                                <span class="text-gray-500">Aucune mission associée</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-2 text-sm text-gray-800">
+                            {{ video.url }}
+                        </td>
+                        <td class="px-4 py-2">{{ video.startDate ? video.startDate|date('d/m/Y H:i') : 'N/A' }}</td>
+                        <td class="px-4 py-2">{{ video.endDate ? video.endDate|date('d/m/Y H:i') : 'N/A' }}</td>
+                        <td class="px-4 py-2">
+                            <div class="flex gap-3">
+                                <a href="{{ path('dashboard_lives_show', {'id': video.id}) }}"
+                                   class="px-3 py-1 text-gray-700 border border-gray-400 rounded-md hover:bg-gray-400 hover:text-white transition-colors">
+                                    Voir
+                                </a>
+                                <a href="{{ path('dashboard_lives_edit', {'id': video.id}) }}"
+                                   class="px-3 py-1 text-[#0022FF] border border-[#0022FF] rounded-md hover:bg-[#0022FF] hover:text-white transition-colors">
+                                    Modifier
+                                </a>
+                                <form method="post" action="{{ path('dashboard_lives_delete', {'id': video.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce live ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ video.id) }}">
+                                    <button class="px-3 py-1 text-red-500 border border-red-500 rounded-md hover:bg-red-500 hover:text-white transition-colors">
+                                        Supprimer
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="px-4 py-6 text-center text-gray-500">Aucun live disponible.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-6 text-right">
+            <a href="{{ path('dashboard_lives_new') }}"
+               class="bg-[#002EFF] text-white px-4 py-2 rounded hover:bg-[#001FCC']">
+                Ajouter un Live
+            </a>
+        </div>
+    </div>
+{% endblock %}
