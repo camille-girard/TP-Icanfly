@@ -30,12 +30,12 @@ class UserType extends AbstractType
                 'expanded' => true,
                 'disabled' => !$user->isVerified(),
             ]);
-            /*->add('isVerified');
+        /*->add('isVerified');
 
         ->add('missions', EntityType::class, [
-            'class' => Mission::class,
-            'choice_label' => 'id',
-            'multiple' => true,
+        'class' => Mission::class,
+        'choice_label' => 'id',
+        'multiple' => true,
         ]);
         */
     }

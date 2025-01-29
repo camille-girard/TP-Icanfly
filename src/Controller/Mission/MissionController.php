@@ -6,16 +6,15 @@ use App\Entity\Mission;
 use App\Entity\ScientificMission;
 use App\Entity\TouristMission;
 use App\Form\MissionType;
+use App\Repository\BookingRepository;
 use App\Repository\MissionRepository;
+use App\Service\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use App\Service\NotificationService;
-use App\Repository\BookingRepository;
-
 
 class MissionController extends AbstractController
 {
@@ -42,11 +41,11 @@ class MissionController extends AbstractController
 
         // Filtre par gamme de prix
         if ($price) {
-            if ($price === 'cheap') {
+            if ('cheap' === $price) {
                 $queryBuilder->andWhere('m.seatPrice < 1000');
-            } elseif ($price === 'medium') {
+            } elseif ('medium' === $price) {
                 $queryBuilder->andWhere('m.seatPrice >= 1000 AND m.seatPrice <= 5000');
-            } elseif ($price === 'expensive') {
+            } elseif ('expensive' === $price) {
                 $queryBuilder->andWhere('m.seatPrice > 5000');
             }
         }
@@ -94,11 +93,11 @@ class MissionController extends AbstractController
             $mission = null;
 
             // Create the appropriate child entity
-            if ($type === 'scientific') {
+            if ('scientific' === $type) {
                 $mission = new ScientificMission();
                 $mission->setSpecialEquipement($form->get('specialEquipement')->getData());
                 $mission->setObjective($form->get('objective')->getData());
-            } elseif ($type === 'travel') {
+            } elseif ('travel' === $type) {
                 $mission = new TouristMission();
                 $mission->setHasGuide($form->get('hasGuide')->getData());
                 $mission->setActivities($form->get('activities')->getData());
@@ -123,7 +122,6 @@ class MissionController extends AbstractController
         ]);
     }
 
-
     #[IsGranted('ROLE_OPERATOR')]
     #[Route('/dashboard/mission/{id}', name: 'dashboard_mission_show', methods: ['GET'])]
     public function show(Mission $mission): Response
@@ -140,7 +138,7 @@ class MissionController extends AbstractController
         Mission $mission,
         EntityManagerInterface $entityManager,
         NotificationService $notificationService,
-        BookingRepository $bookingRepository
+        BookingRepository $bookingRepository,
     ): Response {
         $currentType = $mission instanceof ScientificMission ? 'scientific' : 'travel';
 
@@ -148,13 +146,22 @@ class MissionController extends AbstractController
             'current_type' => $currentType,
         ]);
 
+        // Set default values for non-mapped fields
+        if ('scientific' === $currentType) {
+            $form->get('specialEquipement')->setData($mission->getSpecialEquipement());
+            $form->get('objective')->setData($mission->getObjective());
+        } elseif ('travel' === $currentType) {
+            $form->get('hasGuide')->setData($mission->hasGuide());
+            $form->get('activities')->setData($mission->getActivities());
+        }
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($currentType === 'scientific') {
+            if ('scientific' === $currentType) {
                 $mission->setSpecialEquipement($form->get('specialEquipement')->getData());
                 $mission->setObjective($form->get('objective')->getData());
-            } elseif ($currentType === 'travel') {
+            } elseif ('travel' === $currentType) {
                 $mission->setHasGuide($form->get('hasGuide')->getData());
                 $mission->setActivities($form->get('activities')->getData());
             }
@@ -187,7 +194,6 @@ class MissionController extends AbstractController
         ]);
     }
 
-
     #[IsGranted('ROLE_OPERATOR')]
     #[Route('/dashboard/mission/{id}', name: 'dashboard_mission_delete', methods: ['POST'])]
     public function delete(
@@ -195,9 +201,9 @@ class MissionController extends AbstractController
         Mission $mission,
         EntityManagerInterface $entityManager,
         NotificationService $notificationService,
-        BookingRepository $bookingRepository
+        BookingRepository $bookingRepository,
     ): Response {
-        if ($this->isCsrfTokenValid('delete' . $mission->getId(), $request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$mission->getId(), $request->get('_token'))) {
             // Notify all users who booked the mission
             $bookings = $bookingRepository->findBy(['Mission' => $mission]);
             foreach ($bookings as $booking) {
