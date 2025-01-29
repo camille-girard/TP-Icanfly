@@ -1,0 +1,6 @@
+<form method="post" action="{{ path('dashboard_lives_delete', { 'id': video_streaming.id }) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce live ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ video_streaming.id) }}">
+    <button class="px-3 py-1 text-red-500 border border-red-500 rounded-md hover:bg-red-500 hover:text-white transition-colors">
+        Supprimer
+    </button>
+</form>

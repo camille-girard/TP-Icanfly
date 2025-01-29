@@ -11,34 +11,30 @@
     </header>
 
     <!-- Liste des lives -->
-    <div class="container mx-auto mt-8">
+    <div class="container mx-auto mt-8 mb-8">
         <h2 class="text-3xl font-bold mb-6">Suivez nos missions en direct !</h2>
 
         <!-- Cartes des lives -->
-        <div class="grid grid-cols-3 gap-8">
-            <!-- Live 1 -->
-            <div class="bg-white shadow-md rounded-lg p-6">
-                <img src="{{ asset('images/watch_lives.jpg') }}" alt="Live image" class="w-full h-48 object-cover rounded-lg">
-                <h3 class="text-xl font-semibold mt-4">Live de la mission Mars</h3>
-                <p class="mt-2 text-gray-700">Description de la mission et de l'événement en direct.</p>
-                <a href="#" class="inline-block mt-4 bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">Voir le live</a>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {% for video in video_streamings %}
+                <div class="bg-white shadow-md rounded-lg p-6">
 
-            <!-- Live 2 -->
-            <div class="bg-white shadow-md rounded-lg p-6">
-                <img src="{{ asset('images/watch_lives.jpg') }}" alt="Live image" class="w-full h-48 object-cover rounded-lg">
-                <h3 class="text-xl font-semibold mt-4">Live de la mission Lune</h3>
-                <p class="mt-2 text-gray-700">Description de la mission et de l'événement en direct.</p>
-                <a href="#" class="inline-block mt-4 bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">Voir le live</a>
-            </div>
+                    {% set video_id = video.url|split('?')[0]|replace({'https://www.youtube.com/live/': ''}) %}
 
-            <!-- Live 3 -->
-            <div class="bg-white shadow-md rounded-lg p-6">
-                <img src="{{ asset('images/watch_lives.jpg') }}" alt="Live image" class="w-full h-48 object-cover rounded-lg">
-                <h3 class="text-xl font-semibold mt-4">Live du lancement Starlink</h3>
-                <p class="mt-2 text-gray-700">Description de la mission et de l'événement en direct.</p>
-                <a href="#" class="inline-block mt-4 bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">Voir le live</a>
-            </div>
+                    <img src="{{ video.thumbnail }}" alt="Miniature YouTube du live" class="w-full h-48 object-cover rounded-lg">
+
+
+                    <h3 class="text-xl font-semibold mt-4">Live de la mission {{ video.mission.destination }}</h3>
+                    <p class="mt-2 text-gray-700">Début: {{ video.startDate|date('d/m/Y H:i') }}</p>
+                    <p class="mt-2 text-gray-700">Fin: {{ video.endDate|date('d/m/Y H:i') }}</p>
+                    <a href="{{ path('page_live_detail', { 'id': video.id }) }}"
+                       class="inline-block mt-4 bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">
+                        Voir le live
+                    </a>
+                </div>
+            {% else %}
+                <p class="text-gray-500 col-span-3">Aucun live disponible pour le moment.</p>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}
