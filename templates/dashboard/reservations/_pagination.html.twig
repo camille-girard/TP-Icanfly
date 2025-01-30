@@ -1,0 +1,18 @@
+<div class="mt-6 flex justify-center space-x-2">
+    {% if bookings.currentPageNumber > 1 %}
+        <button class="pagination-btn px-3 py-1 border border-gray-400 rounded-md hover:bg-gray-400 hover:text-white transition-colors"
+                data-page="{{ bookings.currentPageNumber - 1 }}">«</button>
+    {% endif %}
+
+    {% for page in range(1, bookings.pageCount) %}
+        <button class="pagination-btn px-3 py-1 border rounded-md {{ page == bookings.currentPageNumber ? 'bg-blue-500 text-white' : 'bg-gray-300 hover:bg-gray-400 hover:text-white transition-colors' }}"
+                data-page="{{ page }}">
+            {{ page }}
+        </button>
+    {% endfor %}
+
+    {% if bookings.currentPageNumber < bookings.pageCount %}
+        <button class="pagination-btn px-3 py-1 border border-gray-400 rounded-md hover:bg-gray-400 hover:text-white transition-colors"
+                data-page="{{ bookings.currentPageNumber + 1 }}">»</button>
+    {% endif %}
+</div>

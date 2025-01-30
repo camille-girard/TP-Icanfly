@@ -9,6 +9,8 @@ use App\Form\ReservationFormType;
 use App\Repository\BookingRepository;
 use App\Service\NotificationService;
 use App\Service\StripeService;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +24,7 @@ class ReservationsController extends AbstractController
 {
     #[Route('/dashboard/reservations', name: 'dashboard_reservations')]
     #[Route('/dashboard/reservations/admin', name: 'dashboard_reservations_admin')]
-    public function index(BookingRepository $reservationRepository, Request $request): Response
+    public function index(BookingRepository $bookingRepository, Request $request, PaginatorInterface $paginator): Response
     {
         $adminMode = 'dashboard_reservations_admin' === $request->get('_route');
 
@@ -30,15 +32,35 @@ class ReservationsController extends AbstractController
             $this->denyAccessUnlessGranted('ROLE_ADMIN');
         }
 
-        $bookings = $adminMode
-            ? $reservationRepository->findAll()
-            : $reservationRepository->findBy(['Customer' => $this->getUser()]);
+        // Utilise la méthode du repository
+        $query = $bookingRepository->findAllPaginated($adminMode, $this->getUser());
+
+        // Récupére la page actuelle (par défaut = 1)
+        $page = $request->query->getInt('page', 1);
+
+        // Pagine la requête
+        $bookings = $paginator->paginate($query, $page, 5); // 5 résultats par page
+
+        // Vérifie si la requête est AJAX
+        if ($request->isXmlHttpRequest()) {
+            return $this->json([
+                'content' => $this->renderView('dashboard/reservations/_reservation_list.html.twig', [
+                    'bookings' => $bookings,
+                    'admin_mode' => $adminMode,
+                ]),
+                'pagination' => $this->renderView('dashboard/reservations/_pagination.html.twig', [
+                    'bookings' => $bookings,
+                    'admin_mode' => $adminMode,
+                ])
+            ]);
+        }
 
         return $this->render('dashboard/reservations/index.html.twig', [
             'bookings' => $bookings,
             'admin_mode' => $adminMode,
         ]);
     }
+
 
     #[Route('/dashboard/reservations/new', name: 'dashboard_reservations_new')]
     #[Route('/dashboard/reservations/admin/new', name: 'admin_reservations_new')]
