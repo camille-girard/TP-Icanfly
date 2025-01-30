@@ -15,7 +15,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class LivesController extends AbstractController
 {
-
     #[Route('/lives', name: 'page_lives', methods: ['GET'])]
     public function index(VideoStreamingRepository $videoStreamingRepository, YouTubeService $youTubeService): Response
     {
@@ -30,12 +29,12 @@ class LivesController extends AbstractController
         ]);
     }
 
-        #[Route('/lives/{id}', name: 'page_live_detail', methods: ['GET'])]
+    #[Route('/lives/{id}', name: 'page_live_detail', methods: ['GET'])]
     public function detail(VideoStreaming $videoStreaming): Response
     {
         // Transformation de l'URL YouTube pour éviter les cookies et s'assurer du bon format
-        $videoUrl = str_replace("watch?v=", "embed/", $videoStreaming->getUrl());
-        $videoUrl = str_replace("youtube.com", "youtube-nocookie.com", $videoUrl);
+        $videoUrl = str_replace('watch?v=', 'embed/', $videoStreaming->getUrl());
+        $videoUrl = str_replace('youtube.com', 'youtube-nocookie.com', $videoUrl);
 
         return $this->render('other/detail-lives.html.twig', [
             'video_streaming' => $videoStreaming,
@@ -96,7 +95,7 @@ class LivesController extends AbstractController
     #[Route('/dashboard/lives/{id}/delete', name: 'dashboard_lives_delete', methods: ['POST'])]
     public function delete(Request $request, VideoStreaming $videoStreaming, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $videoStreaming->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$videoStreaming->getId(), $request->request->get('_token'))) {
             $entityManager->remove($videoStreaming);
             $entityManager->flush();
         }

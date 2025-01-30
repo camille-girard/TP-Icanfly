@@ -254,4 +254,19 @@ class Mission
     {
         return $this instanceof ScientificMission ? 'scientific' : ($this instanceof TouristMission ? 'travel' : 'other');
     }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'destination' => $this->destination,
+            'description' => $this->description,
+            'date' => $this->date->format('Y-m-d H:i:s'),
+            'seatPrice' => $this->seatPrice,
+            'image' => $this->image,
+            'duration' => $this->duration->format('H:i:s'),
+            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
+            'type' => $this->getType(),
+        ];
+    }
 }
