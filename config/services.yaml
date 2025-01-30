@@ -5,6 +5,7 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+        public: false
 
     App\:
         resource: '../src/'
@@ -17,3 +18,11 @@ services:
     App\Service\YouTubeService:
         arguments:
             $apiKey: '%youtube_api_key%'
+
+    # Déclaration du contrôleur d'exception
+    App\Controller\Other\ExceptionController:
+        public: true
+        tags: ['controller.service_arguments']
+        arguments:
+            $twig: '@twig'
+            $kernel: '@kernel'

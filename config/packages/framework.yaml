@@ -9,7 +9,9 @@ framework:
     #esi: true
     #fragments: true
     test: true
-        
+
+    # Configuration of the custom error controller
+    error_controller: 'App\Controller\Other\ExceptionController::show'
 
 when@test:
     framework:
