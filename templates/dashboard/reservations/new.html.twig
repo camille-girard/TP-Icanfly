@@ -51,6 +51,17 @@
     <script>
         const missionPrices = {{ missions|json_encode|raw }};
 
+        function validateSeatCountInput() {
+            let seatCountInput = document.querySelector('[name="reservation_form[seatCount]"]');
+            let totalPriceField = document.querySelector('[name="reservation_form[totalPrice]"]');
+
+            if (seatCountInput.value < 1) {
+                seatCountInput.value = 1;
+            }
+
+            updateTotalPrice();
+        }
+
         function updateTotalPrice() {
             const seatCount = parseInt(document.querySelector('[name="reservation_form[seatCount]"]').value) || 0;
             const missionSelect = document.querySelector('[name="reservation_form[mission]"]');
@@ -58,11 +69,14 @@
             const seatPrice = missionPrices[missionId] || 0;
 
             const totalPriceField = document.querySelector('[name="reservation_form[totalPrice]"]');
-            totalPriceField.value = seatCount * seatPrice;
+            totalPriceField.value = Math.max(seatCount * seatPrice, 0); // Empêche les valeurs négatives
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            let seatCountInput = document.querySelector('[name="reservation_form[seatCount]"]');
+            seatCountInput.addEventListener('input', validateSeatCountInput);
             updateTotalPrice();
         });
     </script>
+
 {% endblock %}
