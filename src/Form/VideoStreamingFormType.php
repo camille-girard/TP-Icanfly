@@ -2,8 +2,8 @@
 
 namespace App\Form;
 
-use App\Entity\VideoStreaming;
 use App\Entity\Mission;
+use App\Entity\VideoStreaming;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -19,23 +19,23 @@ class VideoStreamingFormType extends AbstractType
         $builder
             ->add('url', TextType::class, [
                 'label' => 'URL du Live',
-                'attr' => ['class' => 'form-control']
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('startDate', DateTimeType::class, [
                 'widget' => 'single_text',
                 'label' => 'Date de début',
-                'attr' => ['class' => 'form-control']
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('endDate', DateTimeType::class, [
                 'widget' => 'single_text',
                 'label' => 'Date de fin',
-                'attr' => ['class' => 'form-control']
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('mission', EntityType::class, [
                 'class' => Mission::class,
                 'choice_label' => 'destination',
                 'label' => 'Mission associée',
-                'attr' => ['class' => 'form-control']
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Enregistrer',

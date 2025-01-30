@@ -25,6 +25,7 @@
         "symfony/mailer": "7.1.*",
         "symfony/runtime": "7.1.*",
         "symfony/security-bundle": "7.1.*",
+        "symfony/serializer": "7.1.*",
         "symfony/twig-bundle": "7.1.*",
         "symfony/validator": "7.1.*",
         "symfony/yaml": "7.1.*",
@@ -74,7 +75,8 @@
             "@auto-scripts"
         ],
         "phpstan": "phpstan analyse --memory-limit=1G",
-        "csfix": "php-cs-fixer fix"
+        "csfix": "php-cs-fixer fix",
+        "test": "phpunit"
     },
     "conflict": {
         "symfony/symfony": "*"
