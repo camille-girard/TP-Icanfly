@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class ReservationFormType extends AbstractType
 {
@@ -23,12 +24,19 @@ class ReservationFormType extends AbstractType
                 'label' => 'Nombre de places',
                 'attr' => [
                     'class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
-                    'oninput' => 'updateTotalPrice()',
+                    'oninput' => 'validateSeatCountInput()', // Ajout du script JS pour empêcher les valeurs négatives
+                    'min' => 1, // Empêche les valeurs négatives dans l’input HTML
+                ],
+                'constraints' => [
+                    new Assert\GreaterThan([
+                        'value' => 0,
+                        'message' => 'Le nombre de places doit être supérieur à 0.',
+                    ]),
                 ],
             ])
             ->add('totalPrice', IntegerType::class, [
                 'label' => 'Prix total (€)',
-                'disabled' => true,
+                'disabled' => true, // Empêche l'utilisateur de modifier manuellement le prix
                 'attr' => [
                     'class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
                 ],
@@ -41,7 +49,7 @@ class ReservationFormType extends AbstractType
                 'data' => $options['data']->getMission() ?? null,
                 'attr' => [
                     'class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
-                    'onchange' => 'updateTotalPrice()',
+                    'onchange' => 'updateTotalPrice()', // Met à jour le prix total lorsque la mission change
                 ],
             ]);
 

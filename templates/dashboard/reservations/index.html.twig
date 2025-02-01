@@ -24,50 +24,41 @@
                     <th class="px-4 py-2">Actions</th>
                 </tr>
                 </thead>
-                <tbody class="text-[#1E2A38]">
-                {% for booking in bookings %}
-                    <tr class="border-t border-[#F5F7F1] hover:bg-[#002EFF1A]">
-                        <td class="px-4 py-2">{{ booking.id }}</td>
-                        <td class="px-4 py-2">{{ booking.destination }}</td>
-                        <td class="px-4 py-2">{{ booking.seatCount }}</td>
-                        <td class="px-4 py-2">{{ booking.totalPrice }}</td>
-                        <td class="px-4 py-2">{{ booking.status.value }}</td>
-                        {% if admin_mode %}
-                            <td class="px-4 py-2">
-                                {{ booking.customer.email | default('null') }}
-                            </td>
-                        {% endif %}
-                        <td class="px-4 py-2">{{ booking.createdAt|date('d/m/Y H:i') }}</td>
-                        <td class="px-4 py-2">
-                            <div class="flex gap-3">
-                                <a href="{{ admin_mode ? path('admin_reservations_show', {'id': booking.id}) : path('dashboard_reservations_show', {'id': booking.id}) }}"
-                                   class="px-3 py-1 text-gray-700 border border-gray-400 rounded-md hover:bg-gray-400 hover:text-white transition-colors">
-                                    Voir
-                                </a>
-
-                                <a href="{{ admin_mode ? path('admin_reservations_edit', {'id': booking.id}) : path('dashboard_reservations_edit', {'id': booking.id}) }}"
-                                   class="px-3 py-1 text-[#0022FF] border border-[#0022FF] rounded-md hover:bg-[#0022FF] hover:text-white transition-colors">
-                                    Modifier
-                                </a>
-
-                                {% include 'dashboard/reservations/_delete_form.html.twig' with { 'booking': booking, 'admin_mode': admin_mode } %}
-                            </div>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="{{ admin_mode ? '8' : '6' }}" class="px-4 py-6 text-center text-gray-500">Aucune réservation trouvée.</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
+                <!-- Liste des réservations -->
+                {% include 'dashboard/reservations/_reservation_list.html.twig' %}
             </table>
         </div>
-
         <div class="mt-6 text-right">
             <a href="{{ admin_mode ? path('admin_reservations_new') : path('dashboard_reservations_new') }}"
                class="bg-[#002EFF] text-white px-4 py-2 rounded hover:bg-[#001FCC]">
                 Ajouter une Réservation
             </a>
         </div>
+        <!-- Pagination -->
+        <div id="pagination-controls" class="mt-6 flex justify-center">
+            {% include 'dashboard/reservations/_pagination.html.twig' %}
+        </div>
+
     </div>
+
+    <!-- Script AJAX pour gérer la pagination -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.body.addEventListener('click', function (event) {
+                if (event.target.classList.contains('pagination-btn')) {
+                    let page = event.target.dataset.page;
+                    let url = new URL(window.location.href);
+                    url.searchParams.set('page', page);
+
+                    fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                        .then(response => response.json())
+                        .then(data => {
+                            document.getElementById('reservations-container').innerHTML = data.content;
+                            document.getElementById('pagination-controls').innerHTML = data.pagination;
+                        })
+                        .catch(error => console.error('Erreur de chargement:', error));
+                }
+            });
+        });
+    </script>
 {% endblock %}

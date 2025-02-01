@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}403 - Accès Refusé{% endblock %}
+
+{% block body %}
+    <div class="flex items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat"
+         style="background-image: url('{{ asset('images/milky_way.jpg') }}');">
+        <div class="bg-white bg-opacity-90 backdrop-blur-md shadow-lg rounded-lg p-8 max-w-lg text-center">
+            <h1 class="text-6xl font-extrabold text-red-600 mb-4">403</h1>
+            <h2 class="text-2xl font-semibold text-gray-800">Accès Refusé</h2>
+            <p class="text-gray-600 mt-4">Désolé, vous n'avez pas la permission d'accéder à cette page.</p>
+
+            <div class="mt-6">
+                <a href="{{ path('app_home') }}"
+                   class="px-6 py-3 bg-blue-600 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
+                    Retour à la page d'accueil
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

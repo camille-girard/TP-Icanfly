@@ -60,6 +60,17 @@
     </div>
 
     <script>
+        function validateSeatCountInput() {
+            let seatCountInput = document.querySelector('[name="reservation_form[seatCount]"]');
+            let totalPriceInput = document.querySelector('[name="reservation_form[totalPrice]"]');
+
+            if (seatCountInput.value < 1) {
+                seatCountInput.value = 1;
+            }
+
+            updateTotalPrice();
+        }
+
         function updateTotalPrice() {
             const seatCountInput = document.querySelector('[name="reservation_form[seatCount]"]');
             const missionSelect = document.querySelector('[name="reservation_form[mission]"]');
@@ -69,7 +80,7 @@
             const selectedMission = missionSelect.options[missionSelect.selectedIndex];
             const seatPrice = selectedMission.getAttribute('data-price') || 0;
 
-            totalPriceInput.value = seatCount * seatPrice;
+            totalPriceInput.value = Math.max(seatCount * seatPrice, 0); // Empêche un prix négatif
         }
 
         // Précharge les prix des missions dans le champ `mission`
@@ -79,6 +90,12 @@
             if (missionPrices[missionId]) {
                 option.setAttribute('data-price', missionPrices[missionId]);
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            let seatCountInput = document.querySelector('[name="reservation_form[seatCount]"]');
+            seatCountInput.addEventListener('input', validateSeatCountInput);
+            updateTotalPrice();
         });
     </script>
 {% endblock %}
