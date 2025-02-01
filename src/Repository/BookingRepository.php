@@ -4,8 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Booking;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Booking>
@@ -20,10 +20,10 @@ class BookingRepository extends ServiceEntityRepository
     /**
      * Retourne une requête paginée des réservations.
      *
-     * @param bool $adminMode Indique si l'utilisateur est administrateur.
-     * @param mixed $user L'utilisateur connecté (peut être null pour l'admin).
+     * @param bool  $adminMode indique si l'utilisateur est administrateur
+     * @param mixed $user      L'utilisateur connecté (peut être null pour l'admin)
      *
-     * @return Query La requête Doctrine pour la pagination.
+     * @return Query la requête Doctrine pour la pagination
      */
     public function findAllPaginated(bool $adminMode, $user = null): Query
     {
@@ -41,9 +41,9 @@ class BookingRepository extends ServiceEntityRepository
     /**
      * Recherche des réservations par statut.
      *
-     * @param string $status Le statut de la réservation.
+     * @param string $status le statut de la réservation
      *
-     * @return Booking[] Retourne un tableau d'objets Booking.
+     * @return Booking[] retourne un tableau d'objets Booking
      */
     public function findByStatus(string $status): array
     {
@@ -58,10 +58,10 @@ class BookingRepository extends ServiceEntityRepository
     /**
      * Recherche une réservation spécifique par ID et utilisateur.
      *
-     * @param int $id L'identifiant de la réservation.
-     * @param mixed $user L'utilisateur connecté.
+     * @param int   $id   L'identifiant de la réservation
+     * @param mixed $user L'utilisateur connecté
      *
-     * @return Booking|null Retourne une réservation ou null si non trouvée.
+     * @return Booking|null retourne une réservation ou null si non trouvée
      */
     public function findOneByIdAndUser(int $id, $user): ?Booking
     {
