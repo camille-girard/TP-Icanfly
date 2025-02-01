@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Notification;
+use App\Repository\NotificationRepository;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -43,13 +44,6 @@ class NotificationService
         // Send the email
         $this->mailer->send($email);
 
-        // Log the notification in the database
-        $notification = new Notification();
-        $notification->setContent($content);
-        $notification->setSentDate(new \DateTime());
-        $notification->setCustomer($user);
-
-        $this->entityManager->persist($notification);
-        $this->entityManager->flush();
+        $this->notificationRepository->saveNotification($user, $content);
     }
 }

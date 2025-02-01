@@ -26,44 +26,15 @@ class MissionController extends AbstractController
         $date = $request->query->get('date');
         $price = $request->query->get('price');
 
-        $queryBuilder = $missionRepository->createQueryBuilder('m');
-
-        // Filtre par destination
-        if ($destination) {
-            $queryBuilder->andWhere('m.destination = :destination')
-                ->setParameter('destination', $destination);
-        }
-
-        // Filtre par date
-        if ($date) {
-            $queryBuilder->andWhere('m.date = :date')
-                ->setParameter('date', new \DateTime($date));
-        }
-
-        // Filtre par gamme de prix
-        if ($price) {
-            if ('cheap' === $price) {
-                $queryBuilder->andWhere('m.seatPrice < 1000');
-            } elseif ('medium' === $price) {
-                $queryBuilder->andWhere('m.seatPrice >= 1000 AND m.seatPrice <= 5000');
-            } elseif ('expensive' === $price) {
-                $queryBuilder->andWhere('m.seatPrice > 5000');
-            }
-        }
-
-        $missions = $queryBuilder->getQuery()->getResult();
-
-        // Récupérer toutes les destinations pour le filtre
-        $destinations = $missionRepository->createQueryBuilder('m')
-            ->select('DISTINCT m.destination')
-            ->getQuery()
-            ->getResult();
+        $missions = $missionRepository->findFilteredMissions($destination, $date, $price);
+        $destinations = array_column($missionRepository->findDistinctDestinations(), 'destination');
 
         return $this->render('parts/missions/mission.html.twig', [
             'missions' => $missions,
-            'destinations' => array_column($destinations, 'destination'),
+            'destinations' => $destinations,
         ]);
     }
+
 
     #[Route('/mission/{id}', name: 'mission_detail', methods: ['GET'])]
     public function detail(Mission $mission): Response
@@ -77,10 +48,19 @@ class MissionController extends AbstractController
     #[Route(path: '/dashboard/mission', name: 'dashboard_mission_index', methods: ['GET'])]
     public function index_dashboard(MissionRepository $missionRepository): Response
     {
+        $user = $this->getUser();
+
+        if (in_array('ROLE_ADMIN', $user->getRoles())) {
+            $missions = $missionRepository->findAll();
+        } else {
+            $missions = $missionRepository->findByOperator($user->getId());
+        }
+
         return $this->render('dashboard/mission/index.html.twig', [
-            'missions' => $missionRepository->findAll(),
+            'missions' => $missions,
         ]);
     }
+
 
     #[IsGranted('ROLE_OPERATOR')]
     #[Route('/dashboard/mission/new', name: 'dashboard_mission_new', methods: ['GET', 'POST'])]
