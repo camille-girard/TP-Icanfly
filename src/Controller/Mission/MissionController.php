@@ -91,6 +91,7 @@ class MissionController extends AbstractController
             $mission->setSeatPrice($form->get('seatPrice')->getData());
             $mission->setImage($form->get('image')->getData());
             $mission->setDuration($form->get('duration')->getData());
+            $mission->setOperator($this->getUser());
 
             $entityManager->persist($mission);
             $entityManager->flush();

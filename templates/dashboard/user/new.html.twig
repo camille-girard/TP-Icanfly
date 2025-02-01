@@ -3,9 +3,15 @@
 {% block title %}Nouveau utilisateur{% endblock %}
 
 {% block content %}
-    <h1>Create new User</h1>
+    <div class="px-6 py-8 bg-[#F5F7FA] min-h-screen">
+        <h1 class="text-3xl font-bold text-[#1E2A38] mb-8">Créer un nouvel utilisateur</h1>
 
-    {{ include('dashboard/user/_form.html.twig') }}
+        <div class="bg-white rounded-lg shadow-md p-6 max-w-3xl">
+            {{ include('dashboard/user/_form.html.twig', {'button_label': 'Créer'}) }}
+        </div>
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
+        <div class="mt-6">
+            <a href="{{ path('app_user_index') }}" class="text-[#002EFF] hover:underline">&larr; Retour à la liste</a>
+        </div>
+    </div>
 {% endblock %}

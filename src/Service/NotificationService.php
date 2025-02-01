@@ -14,11 +14,13 @@ class NotificationService
 {
     private MailerInterface $mailer;
     private EntityManagerInterface $entityManager;
+    private NotificationRepository $notificationRepository;
 
-    public function __construct(MailerInterface $mailer, EntityManagerInterface $entityManager)
+    public function __construct(MailerInterface $mailer, EntityManagerInterface $entityManager, NotificationRepository $notificationRepository)
     {
         $this->mailer = $mailer;
         $this->entityManager = $entityManager;
+        $this->notificationRepository = $notificationRepository;
     }
 
     /**

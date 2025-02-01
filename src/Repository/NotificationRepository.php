@@ -24,7 +24,8 @@ class NotificationRepository extends ServiceEntityRepository
         $notification->setSentDate(new \DateTime());
         $notification->setCustomer($user);
 
-        $this->_em->persist($notification);
-        $this->_em->flush();
+        $em = $this->getEntityManager();
+        $em->persist($notification);
+        $em->flush();
     }
 }

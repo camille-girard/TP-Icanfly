@@ -6,12 +6,7 @@
     <div class="px-6 py-8 bg-[#F5F7FA] min-h-screen">
         <div class="flex justify-between">
             <h1 class="text-3xl font-bold text-[#1E2A38] mb-8">Liste des utilisateurs</h1>
-            <div>
-                <a href="{{ path('app_user_new') }}"
-                   class="inline-flex items-center px-4 py-2 bg-[#0022FF] text-white rounded-md hover:bg-blue-600 transition-colors">
-                    Créer un nouvel utilisateur
-                </a>
-            </div>
+
         </div>
         <div class="bg-white rounded-lg shadow-md overflow-hidden">
             <div class="overflow-x-auto">
@@ -63,6 +58,13 @@
                     </tbody>
                 </table>
             </div>
+
+        </div>
+        <div class="mt-6 text-right">
+            <a href="{{ path('app_user_new') }}"
+               class="bg-[#002EFF] text-white px-4 py-2 rounded hover:bg-[#001FCC]">
+                Créer un nouvel utilisateur
+            </a>
         </div>
     </div>
 {% endblock %}

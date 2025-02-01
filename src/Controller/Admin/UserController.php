@@ -12,6 +12,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use App\Security\EmailVerifier;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+
 
 #[IsGranted('ROLE_CLIENT')]
 #[Route('/dashboard/user')]
@@ -28,15 +33,32 @@ final class UserController extends AbstractController
 
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, EmailVerifier $emailVerifier, UserPasswordHasherInterface $userPasswordHasher): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $user->setRoles(['ROLE_USER']);
+
+            /** @var string $password */
+            $password = $form->get('password')->getData();
+
+            // encode the plain password
+            $user->setPassword($userPasswordHasher->hashPassword($user, $password));
+
             $entityManager->persist($user);
             $entityManager->flush();
+
+            // Envoyer un e-mail de confirmation
+            $emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+                (new TemplatedEmail())
+                    ->from(new Address('mailer@icanfly.com', 'ICanFly'))
+                    ->to((string) $user->getEmail())
+                    ->subject('Veuillez confirmer votre e-mail')
+                    ->htmlTemplate('mail/confirmation_email.html.twig')
+            );
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
