@@ -73,4 +73,16 @@ class BookingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findUpcomingMissions(\DateTime $date): array
+    {
+        return $this->createQueryBuilder('b')
+            ->leftJoin('b.mission', 'm')
+            ->where('m.date BETWEEN :start AND :end')
+            ->setParameter('start', $date->format('Y-m-d 00:00:00'))
+            ->setParameter('end', $date->format('Y-m-d 23:59:59'))
+            ->getQuery()
+            ->getResult();
+    }
+
 }
