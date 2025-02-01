@@ -25,7 +25,7 @@ class ExceptionController
     public function show(HttpExceptionInterface $exception): Response
     {
         $statusCode = $exception->getStatusCode();
-        $template = $statusCode === 404 ? 'bundles/TwigBundle/Exception/error404.html.twig' : 'bundles/TwigBundle/Exception/error403.html.twig';
+        $template = 404 === $statusCode ? 'bundles/TwigBundle/Exception/error404.html.twig' : 'bundles/TwigBundle/Exception/error403.html.twig';
 
         $content = $this->twig->render($template, [
             'exception' => $exception,

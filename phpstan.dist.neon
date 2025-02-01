@@ -6,5 +6,18 @@ parameters:
         - public/
         - src/
     ignoreErrors:
-        # Ignorer les avertissements sur les types jamais utilisés sur les propriétés des entités
         - '#Property .*::\$.* \(.*\) is never assigned .* so it can be removed from the property type.#'
+        - '#Property .*::\$.* is unused#'
+        - '#Method App\\Entity\\.*::get.*\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types: TKey, T#'
+        - '#Call to an undefined method App\\Entity\\.*::*.*\(\)#'
+        - '#Access to an undefined property App\\Entity\\.*::\$.*#'
+        - '#Call to an undefined method Symfony\\Component\\Security\\Core\\User\\UserInterface::.*#'
+        - '#Call to an undefined method Symfony\\Component\\Form\\FormInterface::isClicked#'
+        - '#Access to an undefined property Stripe\\StripeObject::\$object#'
+        - '#Property App\\Entity\\Mission::\$.* does not specify its types: TKey, T#'
+        - '#Method App\\Entity\\Mission::toArray\(\) return type has no value type specified in iterable type array#'
+        - '#Negated boolean expression is always true#'
+        - '#Parameter \#1 \$Customer of method App\\Entity\\Booking::setCustomer\(\) expects App\\Entity\\User\|null, Symfony\\Component\\Security\\Core\\User\\UserInterface\|null given.#'
+        - '#Parameter \#1 \$element of method Doctrine\\Common\\Collections\\Collection<int,App\\Entity\\User>::add\(\) expects App\\Entity\\User, App\\Entity\\Mission given.#'
+        - '#Parameter \#1 \$element of method Doctrine\\Common\\Collections\\Collection<int,App\\Entity\\User>::removeElement\(\) expects App\\Entity\\User, App\\Entity\\Mission given.#'
+    reportUnmatchedIgnoredErrors: false

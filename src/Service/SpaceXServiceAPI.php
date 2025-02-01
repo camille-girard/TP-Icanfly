@@ -16,6 +16,9 @@ class SpaceXServiceAPI
         $this->httpClient = $httpClient;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function fetchLaunches(string $endpoint): array
     {
         try {
@@ -27,31 +30,53 @@ class SpaceXServiceAPI
         }
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function processResponse(ResponseInterface $response): array
     {
+        if (200 !== $response->getStatusCode()) {
+            throw new \RuntimeException("Erreur lors de la récupération des données : {$response->getContent()}");
+        }
+
         return $response->toArray();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getAllLaunches(): array
     {
         return $this->fetchLaunches('/');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getLatestLaunches(): array
     {
         return $this->fetchLaunches('/latest');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getUpcomingLaunches(): array
     {
         return $this->fetchLaunches('/upcoming');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getPastLaunches(): array
     {
         return $this->fetchLaunches('/past');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getLaunchDetails(string $id): array
     {
         try {
@@ -63,6 +88,9 @@ class SpaceXServiceAPI
         }
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getCrewMembers(string $id): array
     {
         try {

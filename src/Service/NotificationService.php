@@ -6,6 +6,7 @@ use App\Entity\Notification;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 
 class NotificationService
@@ -21,6 +22,10 @@ class NotificationService
 
     /**
      * Sends a notification email and logs it in the database.
+     *
+     * @param array<string, mixed> $templateData
+     *
+     * @throws TransportExceptionInterface
      */
     public function sendNotification(User $user, string $content, string $template = 'mail/notification_email.html.twig', array $templateData = []): void
     {

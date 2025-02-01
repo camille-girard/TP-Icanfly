@@ -14,6 +14,9 @@ class GetCrewLaunchRuntime implements RuntimeExtensionInterface
         $this->spaceXService = $spaceXService;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getCrewLaunchRuntime(string $crewid): array
     {
         try {
