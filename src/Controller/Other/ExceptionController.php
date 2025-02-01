@@ -10,8 +10,8 @@ use Twig\Environment;
 
 class ExceptionController
 {
-    private $twig;
-    private $kernel;
+    private Environment $twig;
+    private KernelInterface $kernel;
 
     public function __construct(Environment $twig, KernelInterface $kernel)
     {
