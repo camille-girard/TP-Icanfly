@@ -9,9 +9,8 @@ use App\Form\ReservationFormType;
 use App\Repository\BookingRepository;
 use App\Service\NotificationService;
 use App\Service\StripeService;
-use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,7 +50,7 @@ class ReservationsController extends AbstractController
                 'pagination' => $this->renderView('dashboard/reservations/_pagination.html.twig', [
                     'bookings' => $bookings,
                     'admin_mode' => $adminMode,
-                ])
+                ]),
             ]);
         }
 
@@ -60,7 +59,6 @@ class ReservationsController extends AbstractController
             'admin_mode' => $adminMode,
         ]);
     }
-
 
     #[Route('/dashboard/reservations/new', name: 'dashboard_reservations_new')]
     #[Route('/dashboard/reservations/admin/new', name: 'admin_reservations_new')]
