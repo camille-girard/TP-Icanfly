@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Security\Voter\MissionVoter;
 
 class MissionController extends AbstractController
 {
@@ -140,6 +141,9 @@ class MissionController extends AbstractController
         NotificationService $notificationService,
         BookingRepository $bookingRepository,
     ): Response {
+
+        $this->denyAccessUnlessGranted('MISSION_EDIT', $mission);
+
         $currentType = $mission instanceof ScientificMission ? 'scientific' : 'travel';
 
         $form = $this->createForm(MissionType::class, $mission, [
@@ -203,6 +207,8 @@ class MissionController extends AbstractController
         NotificationService $notificationService,
         BookingRepository $bookingRepository,
     ): Response {
+        $this->denyAccessUnlessGranted('MISSION_DELETE', $mission);
+
         if ($this->isCsrfTokenValid('delete'.$mission->getId(), $request->get('_token'))) {
             // Notify all users who booked the mission
             $bookings = $bookingRepository->findBy(['Mission' => $mission]);
