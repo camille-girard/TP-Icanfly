@@ -3,34 +3,45 @@
 namespace App\Controller\Other;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
 
 class ExceptionController
 {
-    private Environment $twig;
-    private KernelInterface $kernel;
-
-    public function __construct(Environment $twig, KernelInterface $kernel)
-    {
-        $this->twig = $twig;
-        $this->kernel = $kernel;
+    public function __construct(
+        private Environment $twig,
+        private KernelInterface $kernel,
+    ) {
     }
 
     /**
-     * @Route("/error", name="error")
+     * @throws \Throwable
      */
-    public function show(HttpExceptionInterface $exception): Response
+    #[Route(path: '/error', name: 'error')]
+    public function show(\Throwable $exception): Response
     {
+        if (!$exception instanceof HttpException) {
+            throw $exception;
+        }
+
         $statusCode = $exception->getStatusCode();
-        $template = 404 === $statusCode ? 'bundles/TwigBundle/Exception/error404.html.twig' : 'bundles/TwigBundle/Exception/error403.html.twig';
 
-        $content = $this->twig->render($template, [
-            'exception' => $exception,
-        ]);
+        if (!in_array($statusCode, [403, 404])) {
+            throw $exception;
+        }
 
-        return new Response($content, $statusCode);
+        try {
+            $template = sprintf('bundles/TwigBundle/Exception/error%d.html.twig', $statusCode);
+            $content = $this->twig->render($template, [
+                'exception' => $exception,
+                'status_code' => $statusCode,
+            ]);
+
+            return new Response($content, $statusCode);
+        } catch (\Throwable $e) {
+            throw $exception;
+        }
     }
 }
