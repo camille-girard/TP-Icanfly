@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Mission;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,9 +17,20 @@ class MissionRepository extends ServiceEntityRepository
         parent::__construct($registry, Mission::class);
     }
 
-    public function findAllMissions(): Mission
+    public function baseQuery(): QueryBuilder
     {
         return $this->createQueryBuilder('m')
+            ->select('m')
+            ->orderBy('m.date', 'ASC');
+    }
+
+    /**
+     * @return Mission[]
+     */
+    public function findAllMissions(?int $page = null): array
+    {
+        return $this->baseQuery()
+            ->setMaxResults($page)
             ->getQuery()
             ->getResult();
     }
