@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Security\Voter\MissionVoter;
 
 class MissionController extends AbstractController
 {
@@ -25,44 +26,15 @@ class MissionController extends AbstractController
         $date = $request->query->get('date');
         $price = $request->query->get('price');
 
-        $queryBuilder = $missionRepository->createQueryBuilder('m');
-
-        // Filtre par destination
-        if ($destination) {
-            $queryBuilder->andWhere('m.destination = :destination')
-                ->setParameter('destination', $destination);
-        }
-
-        // Filtre par date
-        if ($date) {
-            $queryBuilder->andWhere('m.date = :date')
-                ->setParameter('date', new \DateTime($date));
-        }
-
-        // Filtre par gamme de prix
-        if ($price) {
-            if ('cheap' === $price) {
-                $queryBuilder->andWhere('m.seatPrice < 1000');
-            } elseif ('medium' === $price) {
-                $queryBuilder->andWhere('m.seatPrice >= 1000 AND m.seatPrice <= 5000');
-            } elseif ('expensive' === $price) {
-                $queryBuilder->andWhere('m.seatPrice > 5000');
-            }
-        }
-
-        $missions = $queryBuilder->getQuery()->getResult();
-
-        // Récupérer toutes les destinations pour le filtre
-        $destinations = $missionRepository->createQueryBuilder('m')
-            ->select('DISTINCT m.destination')
-            ->getQuery()
-            ->getResult();
+        $missions = $missionRepository->findFilteredMissions($destination, $date, $price);
+        $destinations = array_column($missionRepository->findDistinctDestinations(), 'destination');
 
         return $this->render('parts/missions/mission.html.twig', [
             'missions' => $missions,
-            'destinations' => array_column($destinations, 'destination'),
+            'destinations' => $destinations,
         ]);
     }
+
 
     #[Route('/mission/{id}', name: 'mission_detail', methods: ['GET'])]
     public function detail(Mission $mission): Response
@@ -76,10 +48,19 @@ class MissionController extends AbstractController
     #[Route(path: '/dashboard/mission', name: 'dashboard_mission_index', methods: ['GET'])]
     public function index_dashboard(MissionRepository $missionRepository): Response
     {
+        $user = $this->getUser();
+
+        if (in_array('ROLE_ADMIN', $user->getRoles())) {
+            $missions = $missionRepository->findAll();
+        } else {
+            $missions = $missionRepository->findByOperator($user->getId());
+        }
+
         return $this->render('dashboard/mission/index.html.twig', [
-            'missions' => $missionRepository->findAll(),
+            'missions' => $missions,
         ]);
     }
+
 
     #[IsGranted('ROLE_OPERATOR')]
     #[Route('/dashboard/mission/new', name: 'dashboard_mission_new', methods: ['GET', 'POST'])]
@@ -110,6 +91,7 @@ class MissionController extends AbstractController
             $mission->setSeatPrice($form->get('seatPrice')->getData());
             $mission->setImage($form->get('image')->getData());
             $mission->setDuration($form->get('duration')->getData());
+            $mission->setOperator($this->getUser());
 
             $entityManager->persist($mission);
             $entityManager->flush();
@@ -140,6 +122,9 @@ class MissionController extends AbstractController
         NotificationService $notificationService,
         BookingRepository $bookingRepository,
     ): Response {
+
+        $this->denyAccessUnlessGranted('MISSION_EDIT', $mission);
+
         $currentType = $mission instanceof ScientificMission ? 'scientific' : 'travel';
 
         $form = $this->createForm(MissionType::class, $mission, [
@@ -172,7 +157,7 @@ class MissionController extends AbstractController
             $bookings = $bookingRepository->findBy(['Mission' => $mission]);
             foreach ($bookings as $booking) {
                 $customer = $booking->getCustomer();
-                if ($customer) { // Skip if the user is null
+                if ($customer) {
                     $notificationService->sendNotification(
                         $customer,
                         sprintf('La mission "%s" a été modifiée.', $mission->getDestination()),
@@ -203,12 +188,14 @@ class MissionController extends AbstractController
         NotificationService $notificationService,
         BookingRepository $bookingRepository,
     ): Response {
+        $this->denyAccessUnlessGranted('MISSION_DELETE', $mission);
+
         if ($this->isCsrfTokenValid('delete'.$mission->getId(), $request->get('_token'))) {
             // Notify all users who booked the mission
             $bookings = $bookingRepository->findBy(['Mission' => $mission]);
             foreach ($bookings as $booking) {
                 $customer = $booking->getCustomer();
-                if ($customer) { // Skip if the user is null
+                if ($customer) {
                     $notificationService->sendNotification(
                         $customer,
                         sprintf('La mission "%s" a été annulée.', $mission->getDestination()),

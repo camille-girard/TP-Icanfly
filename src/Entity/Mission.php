@@ -53,6 +53,10 @@ class Mission
     #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'mission')]
     private Collection $payments;
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?User $operator = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -268,5 +272,16 @@ class Mission
             'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
             'type' => $this->getType(),
         ];
+    }
+
+    public function getOperator(): ?User
+    {
+        return $this->operator;
+    }
+
+    public function setOperator(?User $operator): self
+    {
+        $this->operator = $operator;
+        return $this;
     }
 }

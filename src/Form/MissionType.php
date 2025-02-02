@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Mission;
 use App\Entity\Spaceship;
+use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -53,6 +54,11 @@ class MissionType extends AbstractType
                 'attr' => [
                     'class' => 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-[#002EFF] focus:border-[#002EFF]',
                 ],
+            ])
+            ->add('operator', EntityType::class, [
+                'class' => User::class,
+                'choice_label' => 'email',
+                'required' => true,
             ])
             ->add('image', null, [
                 'label' => 'Image',
