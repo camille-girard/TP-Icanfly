@@ -130,4 +130,10 @@ class Booking
 
         return $this;
     }
+
+    public function getStatusLabel(): string
+    {
+        return $this->status->value;
+    }
+
 }

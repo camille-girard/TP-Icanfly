@@ -157,7 +157,7 @@ class MissionController extends AbstractController
             $bookings = $bookingRepository->findBy(['Mission' => $mission]);
             foreach ($bookings as $booking) {
                 $customer = $booking->getCustomer();
-                if ($customer) { // Skip if the user is null
+                if ($customer) {
                     $notificationService->sendNotification(
                         $customer,
                         sprintf('La mission "%s" a été modifiée.', $mission->getDestination()),
@@ -195,7 +195,7 @@ class MissionController extends AbstractController
             $bookings = $bookingRepository->findBy(['Mission' => $mission]);
             foreach ($bookings as $booking) {
                 $customer = $booking->getCustomer();
-                if ($customer) { // Skip if the user is null
+                if ($customer) {
                     $notificationService->sendNotification(
                         $customer,
                         sprintf('La mission "%s" a été annulée.', $mission->getDestination()),

@@ -75,4 +75,15 @@ class MissionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findUpcomingMissions(\DateTime $date): array
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.date > :date')
+            ->setParameter('date', $date->format('Y-m-d H:i:s'))
+            ->orderBy('m.date', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
 }

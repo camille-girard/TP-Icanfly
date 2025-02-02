@@ -102,13 +102,13 @@ final class UserController extends AbstractController
             $entityManager->flush();
 
             $notificationService->sendNotification(
-                $user, // The User entity
+                $user,
                 'Votre profil a été modifié avec succès.',
                 'mail/notification_email.html.twig',
                 []
             );
 
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_edit', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('dashboard/user/edit.html.twig', [
