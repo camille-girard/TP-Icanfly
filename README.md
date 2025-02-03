@@ -8,7 +8,6 @@
 Avant de commencer, assurez-vous d'avoir ces outils installés :
 - **[Docker](https://www.docker.com/get-started)** (avec Docker Compose)
 - **[Composer](https://getcomposer.org/)** (pour gérer les dépendances PHP)
-- **[Node.js & npm](https://nodejs.org/)** (pour gérer Tailwind CSS et les assets)
 
 ---
 
