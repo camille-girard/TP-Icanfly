@@ -32,24 +32,12 @@ docker-compose up -d
 docker-compose exec php composer install
 ```
 
-### **4️⃣ Installer les dépendances Frontend**
-(Tailwind CSS)
-```bash
-npm install
-```
-
-### **5️⃣ Compiler les assets avec Tailwind**
-```bash
-npm run dev  # Mode développement
-npm run build  # Mode production
-```
-
-### **6️⃣ Appliquer la base de données**
+### **4️⃣ Appliquer la base de données**
 ```bash
 docker-compose exec php bin/console doctrine:migrations:migrate
 ```
 
-### **7️⃣ Charger les données de test (Utilisateur: alice)**
+### **5️⃣ Charger les données de test (Utilisateur: alice)**
 ```bash
 docker-compose exec php bin/console hautelook:fixtures:load
 ```
@@ -57,10 +45,7 @@ docker-compose exec php bin/console hautelook:fixtures:load
 
 ---
 
-## **🚀 Démarrer le serveur Symfony**
-```bash
-docker-compose exec php symfony server:start -d
-```
+## **🚀 Accéder à l'interface ICanFly**
 Accédez au projet sur **[http://localhost](http://localhost)** 🌍
 
 ---
@@ -82,12 +67,12 @@ Adminer est accessible à l'adresse suivante :
 ## **👥 Rôles & Comptes de Test**
 Le projet dispose de **4 rôles utilisateurs** avec des comptes de test :
 
-| Rôle      | Email                         | Mot de passe   |
-|-----------|------------------------------|---------------|
-| **Admin** | alice.durand@example.com     | password123  |
-| **User**  | bob.martin@example.com       | password123  |
-| **Operator** | operator@example.com      | password123  |
-| **Client**   | client@example.com        | password123  |
+| Rôle      | Email                    | Mot de passe |
+|-----------|--------------------------|--------------|
+| **Admin** | alice.durand@example.com | password123  |
+| **User**  | bob.martin@example.com   | password123  |
+| **Operator** | ....                     | ....         |
+| **Client**   | ....                     | ....         |
 
 ---
 
@@ -98,8 +83,6 @@ Le projet dispose de **4 rôles utilisateurs** avec des comptes de test :
 | **SpaceX API**  | Récupération des données de lancement et missions spatiales |
 | **YouTube API** | Intégration des vidéos en direct et archives des missions |
 | **Stripe API**  | Gestion des paiements pour les réservations |
-| **Mailer API**  | Envoi des notifications et confirmations    |
-
 ---
 
 
@@ -123,9 +106,7 @@ Le projet dispose de **4 rôles utilisateurs** avec des comptes de test :
 ## **🔧 Commandes Utiles**
 ### **🎯 Développement**
 ```bash
-symfony server:start   # Démarrer le serveur
-npm run dev            # Compiler les assets en mode dev
-php bin/console cache:clear  # Nettoyer le cache
+docker compose exec php bash   # Pour ouvrir le container Docker et faire les commandes symfony
 ```
 
 ### **📊 Base de données**
@@ -144,10 +125,7 @@ php bin/phpunit  # Exécuter les tests unitaires
 ## **📌 Auteurs**
 👨‍🚀 **Philippe Delente** - Étudiant en développement  
 👩‍🚀 **Catalina Danila** - Étudiant en développement  
-👩‍🚀 **Camille Girard** - Étudiant en développement  
-📧 Contact : **[philippe.delente@gmail.com](mailto:philippe.delente@gmail.com)**
- /  **[catalinadanila6@gmail.com](mailto:catalinadanila6@gmail.com)**
- /  **[camille.girard1995@gmail.com](mailto:camille.girard1995@gmail.com)**
+👩‍🚀 **Camille Girard** - Étudiant en développement
 
 ---
 
