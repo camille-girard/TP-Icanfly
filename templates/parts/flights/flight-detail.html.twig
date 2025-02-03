@@ -1,62 +1,69 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détail du vol{% endblock %}
+{% block title %}{{ flight.destination }} - Détail du vol{% endblock %}
 
 {% block body %}
-    <header class="bg-cover bg-center h-96" style="background-image: url('{{ asset('images/reserve_now.jpg') }}');">
+    <!-- Section d'en-tête avec image -->
+    <header class="relative bg-cover bg-center h-[500px]" style="background-image: url('{{ asset('images/reserve_now.jpg') }}');">
         <div class="flex justify-center items-center h-full bg-black bg-opacity-50">
-            <h1 class="text-5xl font-extrabold text-white">Détail du vol</h1>
+            <h1 class="text-5xl font-extrabold text-white">{{ flight.destination }}</h1>
         </div>
     </header>
-    <div class="container mx-auto mt-8">
+
+    <!-- Contenu principal -->
+    <div class="container mx-auto mt-8 space-y-10 mb-8">
+        <!-- Détails du vol -->
         <section class="bg-white shadow-md rounded-lg p-6 mb-8">
             <h2 class="text-3xl font-bold mb-4">{{ flight.destination }}</h2>
-            <p class="text-lg text-gray-700">
-                <strong>Date :</strong> {{ flight.date|date("d M Y") }}
-            </p>
-            <p class="text-lg text-gray-700">
-                <strong>Prix :</strong> {{ flight.seatPrice }} €
-            </p>
-            <p class="text-lg text-gray-700">
-                <strong>Places disponibles :</strong> {{ flight|length }}
-            </p>
-            <p class="text-lg text-gray-700 mt-4">
-                <strong>Description :</strong> {{ flight.description }}
-            </p>
+            <p class="text-lg text-gray-700"><strong>Description :</strong> {{ flight.description }}</p>
+            <p class="text-lg text-gray-700"><strong>Prix par place :</strong> {{ flight.seatPrice }} €</p>
+            <p class="text-lg text-gray-700"><strong>Date :</strong> {{ flight.date|date("d/m/Y") }}</p>
+            <p class="text-lg text-gray-700"><strong>Places disponibles :</strong> {{ flight|length }}</p>
         </section>
 
-        <section class="bg-[#1E2A38] text-white p-6 rounded-lg mb-8">
-            <h2 class="text-2xl font-bold">Compte à rebours avant le lancement</h2>
-            <p id="countdown" class="text-3xl font-semibold">00:00:00</p>
+        <!-- Compte à rebours avant le vol -->
+        <section class="bg-gradient-to-r from-[#1E2A38] to-[#002EFF] text-white p-8 rounded-lg">
+            <h2 class="text-3xl font-bold mb-4">Compte à rebours avant le vol</h2>
+            <div id="countdown" class="text-4xl font-semibold text-center">00:00:00</div>
         </section>
-        <script>
-            const countdownElement = document.getElementById('countdown');
-            const launchDate = new Date("{{ flight.date|date('Y-m-d H:i:s') }}").getTime();
 
-            function updateCountdown() {
-                const now = new Date().getTime();
-                const distance = launchDate - now;
+        <!-- Boutons d'action -->
+        <section class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+            <a href="{{ path('page_flight') }}"
+               class="inline-block bg-gray-500 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-gray-600 transition">
+                Retour à la liste
+            </a>
+            <a href="{{ path('dashboard_reservations_new', { id: flight.id }) }}"
+               class="inline-block bg-[#002EFF] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-[#001FCC] transition">
+                Réserver une place
+            </a>
+        </section>
+    </div>
 
-                if (distance <= 0) {
-                    countdownElement.innerHTML = "Lancement en cours !";
-                    return;
-                }
+    <!-- Script pour le compte à rebours -->
+    <script>
+        const countdownElement = document.getElementById('countdown');
+        const launchDate = new Date("{{ flight.date|date('Y-m-d H:i:s') }}").getTime();
 
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = launchDate - now;
 
-                countdownElement.innerHTML = `${days}j ${hours}h ${minutes}m ${seconds}s`;
+            if (distance <= 0) {
+                countdownElement.innerHTML = "Décollage en cours !";
+                return;
             }
 
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
-        </script>
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        <section class="mb-8">
-            <a href="{{ path('dashboard_reservations_new') }}" class="bg-[#002EFF] text-white px-6 py-2 rounded hover:bg-[#1E2A38]">Réserver une place</a>
-        </section>
+            countdownElement.innerHTML = `${days}j ${hours}h ${minutes}m ${seconds}s`;
+        }
 
-    </div>
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+
 {% endblock %}
