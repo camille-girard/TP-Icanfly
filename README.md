@@ -2,7 +2,7 @@
 
 ## **Projet Symfony 4IW2**
 
-ICandFly est une application web de réservation de missions spatiales. 
+ICanFly est une application web de réservation de missions spatiales. 
 Elle permet de consulter les prochaines missions, de réserver des places, procéder au paiement et de suivre les lancements/missions en direct.
 
 
