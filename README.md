@@ -68,14 +68,38 @@ Adminer est accessible à l'adresse suivante :
 ---
 
 ## **👥 Rôles & Comptes de Test**
+
 Le projet dispose de **4 rôles utilisateurs** avec des comptes de test :
 
-| Rôle      | Email                      | Mot de passe |
-|-----------|----------------------------|-----------|
-| **Admin** | catalinadanila6@gmail.com  | ESGI2024  |
-| **User**  | bob.martin@example.com     | password123 |
-| **Operator** | philippe.delente@gmail.com | MyGes24   |
-| **Client**   | ntcami12@gmail.com | Client123 |
+| Rôle      | Email                     | Mot de passe |
+|-----------|---------------------------|--------------|
+| **Admin** | catalinadanila6@gmail.com | ESGI2025     |
+| **User**  | user@exemple.com          | password123  |
+| **Operator** | philippe.delente@gmail.com | MyGes24      |
+| **Client**   | ntcami12@gmail.com      | Client123    |
+
+---
+
+## **🔒 Hiérarchie des Rôles**
+
+Les rôles sont structurés de la manière suivante :
+
+- **User** : Lorsqu'un utilisateur s'inscrit, son compte a initialement le rôle `ROLE_USER`. Ce rôle signifie que l'email n'est pas encore vérifié.
+- **Client** : Une fois l'adresse email confirmée, l'utilisateur devient automatiquement `ROLE_CLIENT`. Il peut voir et modifier son profil, gérer ses réservations et se déconnecter.
+- **Operator** : Ce rôle peut, en plus des actions d'un client, modifier et supprimer **uniquement ses propres missions** grâce à un système de **Voters**. Il peut aussi gérer les diffusions en direct.
+- **Admin** : A tous les droits, y compris la gestion des utilisateurs et la gestion **de toutes** les réservations clients.
+
+---
+
+## **🔐 Système de Voters**
+
+Le projet utilise les **Voters Personnalisé** pour gérer les permissions sur les missions :
+
+- Un **opérateur** peut uniquement modifier ou supprimer **ses propres missions**.
+- L'**admin** a un accès complet pour modifier ou supprimer n'importe quelle mission.
+- Les Voters sont appliqués sur les actions d'édition et de suppression des missions.
+
+Les **Voters** permettent d'assurer une gestion granulaire des permissions et d'éviter qu'un opérateur modifie les missions d'un autre.
 
 ---
 
