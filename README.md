@@ -70,12 +70,38 @@ Adminer est accessible à l'adresse suivante :
 ## **👥 Rôles & Comptes de Test**
 Le projet dispose de **4 rôles utilisateurs** avec des comptes de test :
 
-| Rôle      | Email                    | Mot de passe |
-|-----------|--------------------------|--------------|
-| **Admin** | alice.durand@example.com | password123  |
-| **User**  | bob.martin@example.com   | password123  |
-| **Operator** | ....                     | ....         |
-| **Client**   | ....                     | ....         |
+| Rôle      | Email                      | Mot de passe |
+|-----------|----------------------------|-----------|
+| **Admin** | catalinadanila6@gmail.com  | ESGI2024  |
+| **User**  | bob.martin@example.com     | password123 |
+| **Operator** | philippe.delente@gmail.com | MyGes24   |
+| **Client**   | ntcami12@gmail.com | Client123 |
+
+---
+
+## **📱 Notifications Automatiques**
+
+L'application envoie automatiquement des notifications par e-mail lorsque certaines actions sont effectuées :
+
+- Lorsqu'une réservation est créée, modifiée ou annulée, l'utilisateur concerné reçoit un e-mail de confirmation.
+- Lorsqu'une mission est mise à jour, les utilisateurs ayant réservé des places sont notifiés des modifications.
+- Lorsqu'un profil utilisateur est modifié, un e-mail est envoyé pour informer des changements.
+
+---
+
+## **⚙️ Commandes Personnalisées**
+
+Une commande personnalisée a été ajoutée pour envoyer des rappels de mission :
+
+### **🛡️ `app:send-mission-reminder`**
+
+Cette commande est exécutée automatiquement chaque jour à 08h via un **cron job**. Elle vérifie si des missions commencent dans les 24 heures suivantes et, si c'est le cas, elle envoie une notification aux utilisateurs ayant des réservations pour leur rappeler que leur mission approche et qu'ils doivent se préparer pour le décollage.
+
+Commande manuelle :
+
+```bash
+php bin/console app:send-mission-reminder
+```
 
 ---
 
@@ -86,8 +112,19 @@ Le projet dispose de **4 rôles utilisateurs** avec des comptes de test :
 | **SpaceX API**  | Récupération des données de lancement et missions spatiales |
 | **YouTube API** | Intégration des vidéos en direct et archives des missions |
 | **Stripe API**  | Gestion des paiements pour les réservations |
+
 ---
 
+## **💳 Stripe (Paiement)**
+
+### **Tester un paiement**
+Utilisez une **carte de test Stripe** pour simuler un paiement :
+- **Numéro** : `4242 4242 4242 4242`
+- **Expiration** : `12/34`
+- **CVC** : `123`
+- **ZIP** : `75001`
+
+---
 
 ## **📁 Structure du Projet**
 ```

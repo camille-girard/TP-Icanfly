@@ -54,7 +54,7 @@ final class UserController extends AbstractController
             // Envoyer un e-mail de confirmation
             $emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
-                    ->from(new Address('mailer@icanfly.com', 'ICanFly'))
+                    ->from(new Address('contact@bytemeuh-online.fr', 'ICanFly'))
                     ->to((string) $user->getEmail())
                     ->subject('Veuillez confirmer votre e-mail')
                     ->htmlTemplate('mail/confirmation_email.html.twig')
@@ -82,7 +82,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, EntityManagerInterface $entityManager, NotificationService $notificationService): Response
+    public function edit(Request $request, User $user, EntityManagerInterface $entityManager, NotificationService $notificationService, UserPasswordHasherInterface $userPasswordHasher): Response
     {
         if (!$this->isGranted('ROLE_ADMIN') && $this->getUser() !== $user) {
             throw $this->createAccessDeniedException('Vous ne pouvez pas modifier les informations d\'autres utilisateurs.');
@@ -97,6 +97,11 @@ final class UserController extends AbstractController
             if (!$user->isVerified()) {
                 $this->addFlash('error', 'Vous ne pouvez pas modifier les rôles d\'un utilisateur non vérifié.');
                 $user->setRoles($originalRoles);
+            }
+
+            $newPassword = $form->get('password')->getData();
+            if ($newPassword) {
+                $user->setPassword($userPasswordHasher->hashPassword($user, $newPassword));
             }
 
             $entityManager->flush();
@@ -116,6 +121,7 @@ final class UserController extends AbstractController
             'form' => $form,
         ]);
     }
+
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response

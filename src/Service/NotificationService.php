@@ -34,7 +34,7 @@ class NotificationService
     {
         // Build the email using TemplatedEmail
         $email = (new TemplatedEmail())
-        ->from('contact@icanfly.com')
+        ->from('contact@bytemeuh-online.fr')
         ->to($user->getEmail())
         ->subject('Nouvelle notification')
         ->htmlTemplate($template)
